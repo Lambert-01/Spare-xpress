@@ -1,0 +1,196 @@
+[2026-01-03 10:34:41] QUERY DEBUG:
+  Query: UPDATE categories_enhanced SET
+            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,
+            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,
+            meta_keywords = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssissssssssi' (length: 12)
+  Parameters: 12
+  Parameter details:
+    [0] Type: s, Value: 'Body Parts'
+    [1] Type: s, Value: 'body-parts'
+    [2] Type: i, Value: NULL
+    [3] Type: s, Value: 'uploads/categories/body-parts_category.png'
+    [4] Type: s, Value: 'bi-grid'
+    [5] Type: s, Value: 'Exterior and interior body components'
+    [6] Type: s, Value: 'medium'
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: 1
+    [11] Type: i, Value: 6
+  Match: YES
+
+[2026-01-03 10:36:12] QUERY DEBUG:
+  Query: UPDATE categories_enhanced SET
+            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,
+            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,
+            meta_keywords = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssissssssssi' (length: 12)
+  Parameters: 12
+  Parameter details:
+    [0] Type: s, Value: 'Brake System'
+    [1] Type: s, Value: 'brake-system'
+    [2] Type: i, Value: NULL
+    [3] Type: s, Value: 'uploads/categories/brake-system_category.png'
+    [4] Type: s, Value: 'bi-grid'
+    [5] Type: s, Value: 'Brakes, rotors, pads, and components'
+    [6] Type: s, Value: 'medium'
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: 1
+    [11] Type: i, Value: 2
+  Match: YES
+
+[2026-01-03 10:38:43] QUERY DEBUG:
+  Query: UPDATE categories_enhanced SET
+            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,
+            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,
+            meta_keywords = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssissssssssi' (length: 12)
+  Parameters: 12
+  Parameter details:
+    [0] Type: s, Value: 'Electrical'
+    [1] Type: s, Value: 'electrical'
+    [2] Type: i, Value: NULL
+    [3] Type: s, Value: 'uploads/categories/electrical_category.png'
+    [4] Type: s, Value: 'bi-grid'
+    [5] Type: s, Value: 'Batteries, alternators, starters, wiring'
+    [6] Type: s, Value: 'medium'
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: 1
+    [11] Type: i, Value: 4
+  Match: YES
+
+[2026-01-03 10:40:19] QUERY DEBUG:
+  Query: UPDATE categories_enhanced SET
+            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,
+            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,
+            meta_keywords = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssissssssssi' (length: 12)
+  Parameters: 12
+  Parameter details:
+    [0] Type: s, Value: 'Engine Parts'
+    [1] Type: s, Value: 'engine-parts'
+    [2] Type: i, Value: NULL
+    [3] Type: s, Value: 'uploads/categories/engine-parts_category.png'
+    [4] Type: s, Value: 'bi-grid'
+    [5] Type: s, Value: 'Engine components and accessories'
+    [6] Type: s, Value: 'medium'
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: 1
+    [11] Type: i, Value: 1
+  Match: YES
+
+[2026-01-03 10:51:51] QUERY DEBUG:
+  Query: UPDATE vehicle_brands_enhanced SET
+            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,
+            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,
+            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssssssissssssii' (length: 15)
+  Parameters: 15
+  Parameter details:
+    [0] Type: s, Value: 'BMWs'
+    [1] Type: s, Value: 'bmws'
+    [2] Type: s, Value: '../../uploads/brands/bmw_logo.svg'
+    [3] Type: s, Value: '../../uploads/brands/bmw_brand.jpg'
+    [4] Type: s, Value: 'German luxury car manufacturer'
+    [5] Type: s, Value: 'Germany'
+    [6] Type: i, Value: 1916
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: ''
+    [11] Type: s, Value: ''
+    [12] Type: s, Value: ''
+    [13] Type: i, Value: 1
+    [14] Type: i, Value: 4
+  Match: YES
+
+[2026-01-03 10:52:00] QUERY DEBUG:
+  Query: UPDATE vehicle_brands_enhanced SET
+            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,
+            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,
+            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssssssissssssii' (length: 15)
+  Parameters: 15
+  Parameter details:
+    [0] Type: s, Value: 'BMW'
+    [1] Type: s, Value: 'bmw'
+    [2] Type: s, Value: '../../uploads/brands/bmw_logo.svg'
+    [3] Type: s, Value: '../../uploads/brands/bmw_brand.jpg'
+    [4] Type: s, Value: 'German luxury car manufacturer'
+    [5] Type: s, Value: 'Germany'
+    [6] Type: i, Value: 1916
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: ''
+    [11] Type: s, Value: ''
+    [12] Type: s, Value: ''
+    [13] Type: i, Value: 1
+    [14] Type: i, Value: 4
+  Match: YES
+
+[2026-01-07 07:41:54] QUERY DEBUG:
+  Query: UPDATE vehicle_brands_enhanced SET
+            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,
+            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,
+            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssssssissssssii' (length: 15)
+  Parameters: 15
+  Parameter details:
+    [0] Type: s, Value: 'BAIC'
+    [1] Type: s, Value: 'baic'
+    [2] Type: s, Value: 'uploads/brands/BAIC.png'
+    [3] Type: s, Value: ''
+    [4] Type: s, Value: 'Chinese passenger car and SUV manufacturer'
+    [5] Type: s, Value: 'China'
+    [6] Type: i, Value: 1958
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: 'nlambert833@gmail.com'
+    [10] Type: s, Value: '0790311401'
+    [11] Type: s, Value: ''
+    [12] Type: s, Value: ''
+    [13] Type: i, Value: 1
+    [14] Type: i, Value: 23
+  Match: YES
+
+[2026-01-07 07:42:08] QUERY DEBUG:
+  Query: UPDATE vehicle_brands_enhanced SET
+            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,
+            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,
+            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?
+            WHERE id = ?
+  Type string: 'ssssssissssssii' (length: 15)
+  Parameters: 15
+  Parameter details:
+    [0] Type: s, Value: 'BAIC'
+    [1] Type: s, Value: 'baic'
+    [2] Type: s, Value: 'uploads/brands/BAIC.png'
+    [3] Type: s, Value: ''
+    [4] Type: s, Value: 'Chinese passenger car and SUV manufacturer'
+    [5] Type: s, Value: 'China'
+    [6] Type: i, Value: 1958
+    [7] Type: s, Value: ''
+    [8] Type: s, Value: ''
+    [9] Type: s, Value: ''
+    [10] Type: s, Value: ''
+    [11] Type: s, Value: ''
+    [12] Type: s, Value: ''
+    [13] Type: i, Value: 1
+    [14] Type: i, Value: 23
+  Match: YES
+

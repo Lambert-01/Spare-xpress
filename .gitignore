@@ -1,0 +1,19 @@
+# Exclude installed libraries and dependencies
+lib/
+composer.lock
+
+# Exclude backup directories
+backup_*/
+
+# Exclude documentation and research files
+document/
+
+# Exclude environment files
+*.env
+
+# Exclude log files
+*.log
+
+# Exclude temporary files
+*.tmp
+*.swp

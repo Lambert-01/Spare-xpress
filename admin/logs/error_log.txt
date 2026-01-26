@@ -1,0 +1,50 @@
+[2026-01-03 10:34:40] SUCCESS: Update category API called | Context: {"post_data":{"category_id":"6","update_category":"1","category_name":"Body Parts","parent_id":"","icon_class":"bi-grid","display_priority":"medium","existing_category_image":"","description":"Exterior and interior body components","seo_title":"","seo_description":"","meta_keywords":"","is_active":"on"}}
+[2026-01-03 10:34:41] SUCCESS: Category data prepared | Context: {"id":6,"category_name":"Body Parts","slug":"body-parts","parent_id":null,"is_active":1}
+[2026-01-03 10:34:41] SUCCESS: Existing image: 
+[2026-01-03 10:34:41] SUCCESS: New image upload detected | Context: {"file":"Screenshot 2026-01-03 113420.png"}
+[2026-01-03 10:34:41] SUCCESS: Image uploaded successfully: uploads/categories/body-parts_category.png
+[2026-01-03 10:34:41] SUCCESS: Update query prepared | Context: {"query":"UPDATE categories_enhanced SET\r\n            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,\r\n            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,\r\n            meta_keywords = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:34:41] SUCCESS: Category updated successfully for ID: 6
+[2026-01-03 10:36:12] SUCCESS: Update category API called | Context: {"post_data":{"category_id":"2","update_category":"1","category_name":"Brake System","parent_id":"","icon_class":"bi-grid","display_priority":"medium","existing_category_image":"","description":"Brakes, rotors, pads, and components","seo_title":"","seo_description":"","meta_keywords":"","is_active":"on"}}
+[2026-01-03 10:36:12] SUCCESS: Category data prepared | Context: {"id":2,"category_name":"Brake System","slug":"brake-system","parent_id":null,"is_active":1}
+[2026-01-03 10:36:12] SUCCESS: Existing image: 
+[2026-01-03 10:36:12] SUCCESS: New image upload detected | Context: {"file":"Screenshot 2026-01-03 113554.png"}
+[2026-01-03 10:36:12] SUCCESS: Image uploaded successfully: uploads/categories/brake-system_category.png
+[2026-01-03 10:36:12] SUCCESS: Update query prepared | Context: {"query":"UPDATE categories_enhanced SET\r\n            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,\r\n            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,\r\n            meta_keywords = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:36:12] SUCCESS: Category updated successfully for ID: 2
+[2026-01-03 10:38:43] SUCCESS: Update category API called | Context: {"post_data":{"category_id":"4","update_category":"1","category_name":"Electrical","parent_id":"","icon_class":"bi-grid","display_priority":"medium","existing_category_image":"","description":"Batteries, alternators, starters, wiring","seo_title":"","seo_description":"","meta_keywords":"","is_active":"on"}}
+[2026-01-03 10:38:43] SUCCESS: Category data prepared | Context: {"id":4,"category_name":"Electrical","slug":"electrical","parent_id":null,"is_active":1}
+[2026-01-03 10:38:43] SUCCESS: Existing image: 
+[2026-01-03 10:38:43] SUCCESS: New image upload detected | Context: {"file":"Screenshot 2026-01-03 113824.png"}
+[2026-01-03 10:38:43] SUCCESS: Image uploaded successfully: uploads/categories/electrical_category.png
+[2026-01-03 10:38:43] SUCCESS: Update query prepared | Context: {"query":"UPDATE categories_enhanced SET\r\n            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,\r\n            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,\r\n            meta_keywords = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:38:43] SUCCESS: Category updated successfully for ID: 4
+[2026-01-03 10:40:19] SUCCESS: Update category API called | Context: {"post_data":{"category_id":"1","update_category":"1","category_name":"Engine Parts","parent_id":"","icon_class":"bi-grid","display_priority":"medium","existing_category_image":"","description":"Engine components and accessories","seo_title":"","seo_description":"","meta_keywords":"","is_active":"on"}}
+[2026-01-03 10:40:19] SUCCESS: Category data prepared | Context: {"id":1,"category_name":"Engine Parts","slug":"engine-parts","parent_id":null,"is_active":1}
+[2026-01-03 10:40:19] SUCCESS: Existing image: 
+[2026-01-03 10:40:19] SUCCESS: New image upload detected | Context: {"file":"Screenshot 2026-01-03 113954.png"}
+[2026-01-03 10:40:19] SUCCESS: Image uploaded successfully: uploads/categories/engine-parts_category.png
+[2026-01-03 10:40:19] SUCCESS: Update query prepared | Context: {"query":"UPDATE categories_enhanced SET\r\n            category_name = ?, slug = ?, parent_id = ?, category_image = ?, icon_class = ?,\r\n            description = ?, display_priority = ?, seo_title = ?, seo_description = ?,\r\n            meta_keywords = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:40:19] SUCCESS: Category updated successfully for ID: 1
+[2026-01-03 10:51:51] SUCCESS: Update brand API called | Context: {"post_data":{"brand_id":"4","update_brand":"1","brand_name":"BMWs","country":"Germany","founded_year":"1916","website":"","contact_email":"","contact_phone":"","existing_logo":"..\/..\/uploads\/brands\/bmw_logo.svg","existing_brand_image":"..\/..\/uploads\/brands\/bmw_brand.jpg","description":"German luxury car manufacturer","manufacturer_details":"","seo_title":"","seo_description":"","is_active":"on"}}
+[2026-01-03 10:51:51] SUCCESS: Brand data prepared | Context: {"id":4,"brand_name":"BMWs","slug":"bmws","is_active":1}
+[2026-01-03 10:51:51] SUCCESS: Existing logo: ../../uploads/brands/bmw_logo.svg
+[2026-01-03 10:51:51] SUCCESS: Update query prepared | Context: {"query":"UPDATE vehicle_brands_enhanced SET\r\n            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,\r\n            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,\r\n            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:51:51] SUCCESS: Brand updated successfully for ID: 4
+[2026-01-03 10:52:00] SUCCESS: Update brand API called | Context: {"post_data":{"brand_id":"4","update_brand":"1","brand_name":"BMW","country":"Germany","founded_year":"1916","website":"","contact_email":"","contact_phone":"","existing_logo":"..\/..\/uploads\/brands\/bmw_logo.svg","existing_brand_image":"..\/..\/uploads\/brands\/bmw_brand.jpg","description":"German luxury car manufacturer","manufacturer_details":"","seo_title":"","seo_description":"","is_active":"on"}}
+[2026-01-03 10:52:00] SUCCESS: Brand data prepared | Context: {"id":4,"brand_name":"BMW","slug":"bmw","is_active":1}
+[2026-01-03 10:52:00] SUCCESS: Existing logo: ../../uploads/brands/bmw_logo.svg
+[2026-01-03 10:52:00] SUCCESS: Update query prepared | Context: {"query":"UPDATE vehicle_brands_enhanced SET\r\n            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,\r\n            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,\r\n            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-03 10:52:00] SUCCESS: Brand updated successfully for ID: 4
+[2026-01-03 10:57:06] SUCCESS: Add brand API called | Context: {"post_data":{"add_brand":"1","brand_name":"Range rover","country":"","founded_year":"","website":"","contact_email":"","contact_phone":"","description":"","manufacturer_details":"","seo_title":"","seo_description":"","is_active":"on"}}
+[2026-01-03 10:57:06] SUCCESS: Brand added successfully: Range rover
+[2026-01-07 07:41:54] SUCCESS: Update brand API called | Context: {"post_data":{"brand_id":"23","update_brand":"1","brand_name":"BAIC","country":"China","founded_year":"1958","website":"","contact_email":"nlambert833@gmail.com","contact_phone":"0790311401","existing_logo":"uploads\/brands\/BAIC.png","existing_brand_image":"","description":"Chinese passenger car and SUV manufacturer","manufacturer_details":"","seo_title":"","seo_description":"","is_active":"on"}}
+[2026-01-07 07:41:54] SUCCESS: Brand data prepared | Context: {"id":23,"brand_name":"BAIC","slug":"baic","is_active":1}
+[2026-01-07 07:41:54] SUCCESS: Existing logo: uploads/brands/BAIC.png
+[2026-01-07 07:41:54] SUCCESS: Update query prepared | Context: {"query":"UPDATE vehicle_brands_enhanced SET\r\n            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,\r\n            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,\r\n            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-07 07:41:54] SUCCESS: Brand updated successfully for ID: 23
+[2026-01-07 07:42:08] SUCCESS: Update brand API called | Context: {"post_data":{"brand_id":"23","update_brand":"1","brand_name":"BAIC","country":"China","founded_year":"1958","website":"","contact_email":"","contact_phone":"","existing_logo":"uploads\/brands\/BAIC.png","existing_brand_image":"","description":"Chinese passenger car and SUV manufacturer","manufacturer_details":"","seo_title":"","seo_description":"","is_active":"on"}}
+[2026-01-07 07:42:08] SUCCESS: Brand data prepared | Context: {"id":23,"brand_name":"BAIC","slug":"baic","is_active":1}
+[2026-01-07 07:42:08] SUCCESS: Existing logo: uploads/brands/BAIC.png
+[2026-01-07 07:42:08] SUCCESS: Update query prepared | Context: {"query":"UPDATE vehicle_brands_enhanced SET\r\n            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,\r\n            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,\r\n            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?\r\n            WHERE id = ?"}
+[2026-01-07 07:42:09] SUCCESS: Brand updated successfully for ID: 23
