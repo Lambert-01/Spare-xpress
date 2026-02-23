@@ -100,6 +100,9 @@
 <script src="/lib/wow/wow.min.js"></script>
 <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
 
+<!-- Premium Animations & Interactions -->
+<script src="/js/animations.js"></script>
+
 <!-- Template Javascript -->
 <script src="/js/main.js"></script>
 </body>

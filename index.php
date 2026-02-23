@@ -58,63 +58,139 @@ $critical_css = "
 ";
 ?>
 
-<!-- Hero Section Start -->
-<div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
+<!-- Hero Section Start - Premium Design -->
+<div class="container-fluid bg-mesh-gradient bg-particles py-5 position-relative overflow-hidden" style="min-height: 600px;">
+    <!-- Animated background elements -->
+    <div class="position-absolute w-100 h-100 top-0 start-0" style="z-index: 0;">
+        <div class="position-absolute" style="top: 10%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; animation: float 6s ease-in-out infinite;"></div>
+        <div class="position-absolute" style="top: 60%; right: 15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; animation: float 8s ease-in-out infinite reverse;"></div>
+    </div>
+
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row align-items-center g-5 py-4">
+            <!-- Hero Content -->
+            <div class="col-lg-7 fade-in">
                 <div class="hero-content">
-                    <h1 class="display-4 fw-bold mb-4">
-                        <span class="text-primary">Spare Xpress</span><br>
-                        <span class="text-dark">Your Auto Parts Store</span>
+                    <!-- Badge -->
+                    <div class="mb-4">
+                        <span class="badge-modern badge-new">
+                            <i class="fas fa-star me-2"></i>Rwanda's Trusted Auto Parts Store
+                        </span>
+                    </div>
+                    
+                    <!-- Main Heading -->
+                    <h1 class="display-3 fw-bold mb-4" style="line-height: 1.2;">
+                        <span class="text-white">Premium</span>
+                        <span class="text-gradient-accent d-block">Auto Parts</span>
+                        <span class="text-white">For Every Vehicle</span>
                     </h1>
-                    <p class="lead mb-4 text-muted">
-                        Find genuine auto parts for all vehicle brands. Fast delivery across Rwanda with expert support.
+                    
+                    <!-- Subheading -->
+                    <p class="lead mb-4 text-white fs-5" style="max-width: 600px; opacity: 0.95;">
+                        Genuine automotive parts for all vehicle brands. Fast delivery across Rwanda with expert technical support and competitive pricing.
                     </p>
+                    
+                    <!-- Trust Indicators - Vibrant Design -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-4">
+                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);">
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
+                                    <i class="fas fa-shield-alt fa-2x text-white"></i>
+                                </div>
+                                <h6 class="text-white fw-bold mb-1">Genuine Parts</h6>
+                                <small class="text-white" style="opacity: 0.95;">100% Authentic</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
+                                    <i class="fas fa-truck fa-2x text-white"></i>
+                                </div>
+                                <h6 class="text-white fw-bold mb-1">Fast Delivery</h6>
+                                <small class="text-white" style="opacity: 0.95;">Same Day</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);">
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
+                                    <i class="fas fa-headset fa-2x text-white"></i>
+                                </div>
+                                <h6 class="text-white fw-bold mb-1">Expert Support</h6>
+                                <small class="text-white" style="opacity: 0.95;">24/7 Available</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Buttons -->
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="pages/shop.php" class="btn btn-primary btn-lg px-4 py-3">
-                            <i class="fas fa-shopping-cart me-2"></i>Browse Parts
+                        <a href="pages/shop.php" class="btn btn-accent btn-lg px-5 py-3 hover-lift">
+                            <i class="fas fa-shopping-cart me-2"></i>Shop Now
                         </a>
-                        <a href="pages/brands.php" class="btn btn-info btn-lg px-4 py-3">
+                        <a href="pages/brands.php" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
                             <i class="fas fa-tags me-2"></i>Browse Brands
                         </a>
-                        <a href="pages/order_request.php" class="btn btn-warning btn-lg px-4 py-3">
+                        <a href="pages/order_request.php" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
                             <i class="fas fa-star me-2"></i>Special Orders
-                        </a>
-                        <a href="#contact" class="btn btn-outline-primary btn-lg px-4 py-3">
-                            <i class="fas fa-phone me-2"></i>Contact Us
                         </a>
                     </div>
                 </div>
-            </div> 
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <img src="img/logo/logox.jpg" alt="Spare Xpress" class="img-fluid rounded shadow" style="max-width: 400px;">
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="col-lg-5 text-center fade-in">
+                <div class="position-relative" data-parallax="0.3">
+                    <div class="glass-card p-4 rounded-2xl">
+                        <img src="img/logo/logox.jpg" alt="Spare Xpress" class="img-fluid rounded-xl shadow-2xl" style="max-width: 100%;">
+                    </div>
+                    <!-- Floating Elements -->
+                    <div class="position-absolute glass-card px-4 py-2 rounded-full" style="top: -10px; right: -10px; animation: float 4s ease-in-out infinite;">
+                        <span class="fw-bold text-white"><i class="fas fa-check-circle text-success me-2"></i>Verified Quality</span>
+                    </div>
+                    <div class="position-absolute glass-card px-4 py-2 rounded-full" style="bottom: 20px; left: -20px; animation: float 5s ease-in-out infinite reverse;">
+                        <span class="fw-bold text-white"><i class="fas fa-shipping-fast text-info me-2"></i>Same Day Delivery</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Floating Animation CSS -->
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+</style>
 <!-- Hero Section End -->
 
 <!-- Brands Section Start -->
 <div class="container-fluid py-5 bg-light">
     <div class="container">
-        <div class="text-center mb-5">
-            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">Shop by Brand</h4>
-            <h1 class="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">Popular Brands in Rwanda</h1>
+        <div class="text-center mb-5 fade-in">
+            <div class="mb-3">
+                <span class="badge-modern badge-bestseller">
+                    <i class="fas fa-car me-2"></i>Popular Brands
+                </span>
+            </div>
+            <h2 class="mb-3 fw-bold">
+                <span class="text-gradient">Shop by Vehicle Brand</span>
+            </h2>
+            <p class="lead text-muted mb-0" style="max-width: 600px; margin: 0 auto;">
+                Explore our extensive collection of genuine parts for leading automotive brands
+            </p>
         </div>
         <div class="row g-4 justify-content-center">
             <?php
             $rowCount = 0;
             foreach ($brands as $index => $brand) {
-                // Determine animation class based on row
-                $animationClass = ($rowCount < 3) ? 'wow slideInRight' : 'wow slideInLeft';
-                $delay = 0.5 + ($index % 3) * 0.2; // Stagger delays
+                // Stagger animation delays
+                $animationClass = 'fade-in';
                 $brandClass = ($index < 3) ? 'upper-brand' : 'lower-brand';
 
-                echo '<div class="col-lg-2 col-md-3 col-sm-4 col-6 ' . $animationClass . '" data-wow-delay="' . $delay . 's">';
-                echo '<a href="pages/models.php?brand=' . strtolower($brand['slug']) . '" class="d-flex flex-column align-items-center justify-content-center p-4 bg-white rounded shadow-sm brand-link hover-lift ' . $brandClass . '" style="animation-delay: ' . ($index * 0.2) . 's;">';
+                echo '<div class="col-lg-2 col-md-3 col-sm-4 col-6 ' . $animationClass . '">';
+                echo '<a href="pages/models.php?brand=' . strtolower($brand['slug']) . '" class="d-block text-decoration-none">';
+                echo '<div class="glass-card p-4 text-center hover-lift transition ' . $brandClass . '" style="min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">';
 
                 // Get brand logo
                 $logoSrc = 'img/no-image.png'; // Default fallback
@@ -143,17 +219,13 @@ $critical_css = "
                         // Try simpleicons for other brands
                         $logoSrc = 'https://cdn.simpleicons.org/' . $brand['slug'] . '/007bff';
                     }
-
-                    if (isset($specialLogos[$brand['slug']])) {
-                        $logoSrc = $specialLogos[$brand['slug']];
-                    } else {
-                        // Try simpleicons with the slug
-                        $logoSrc = 'https://cdn.simpleicons.org/' . $brand['slug'] . '/007bff';
-                    }
                 }
 
-                echo '<img src="' . $logoSrc . '" alt="' . $brand['name'] . ' logo" class="mb-2" style="width: 48px; height: 48px; object-fit: contain;" onerror="this.src=\'img/no-image.png\';">';
-                echo '<span class="fw-bold text-primary text-center">' . $brand['name'] . '</span>';
+                echo '<div class="mb-3">';
+                echo '<img src="' . $logoSrc . '" alt="' . htmlspecialchars($brand['name']) . ' logo" class="hover-scale transition" style="width: 56px; height: 56px; object-fit: contain;" onerror="this.src=\'img/no-image.png\';">';
+                echo '</div>';
+                echo '<span class="fw-bold text-primary d-block">' . htmlspecialchars($brand['name']) . '</span>';
+                echo '</div>';
                 echo '</a>';
                 echo '</div>';
 
@@ -166,6 +238,8 @@ $critical_css = "
         </div>
     </div>
 </div>
+<!-- Brands Section End -->
+
 <!-- Brands Section End -->
 
 <!-- Categories Section Start -->

@@ -12,6 +12,22 @@ header('Access-Control-Allow-Origin: *');
 
 try {
     $brand_id = isset($_GET['brand_id']) ? (int)$_GET['brand_id'] : 0;
+    $brand_name = isset($_GET['brand']) ? trim($_GET['brand']) : '';
+
+    // If brand name is provided but not ID, look up the ID
+    if (empty($brand_id) && !empty($brand_name)) {
+        $brand_lookup_sql = "SELECT id FROM vehicle_brands_enhanced WHERE brand_name = ? AND is_active = 1 LIMIT 1";
+        $brand_stmt = $conn->prepare($brand_lookup_sql);
+        $brand_stmt->bind_param("s", $brand_name);
+        $brand_stmt->execute();
+        $brand_result = $brand_stmt->get_result();
+        
+        if ($brand_result->num_rows > 0) {
+            $brand_row = $brand_result->fetch_assoc();
+            $brand_id = (int)$brand_row['id'];
+        }
+        $brand_stmt->close();
+    }
 
     if (empty($brand_id)) {
         echo json_encode([
@@ -21,10 +37,13 @@ try {
         exit;
     }
 
-    // Get models for the specified brand
-    $model_sql = "SELECT m.id, m.model_name
+    // Get models for the specified brand with product count
+    $model_sql = "SELECT m.id, m.model_name, COUNT(DISTINCT p.id) as count
                   FROM vehicle_models_enhanced m
+                  LEFT JOIN products_enhanced p ON p.model_id = m.id
                   WHERE m.brand_id = ? AND m.is_active = 1
+                  GROUP BY m.id, m.model_name
+                  HAVING count > 0
                   ORDER BY m.model_name";
 
     $stmt = $conn->prepare($model_sql);
@@ -36,7 +55,8 @@ try {
     while ($row = $result->fetch_assoc()) {
         $models[] = [
             'id' => (int)$row['id'],
-            'model_name' => $row['model_name']
+            'name' => $row['model_name'],
+            'count' => (int)$row['count']
         ];
     }
 
