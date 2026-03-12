@@ -1,12 +1,11 @@
 <?php
 // Update customer profile API endpoint
-header('Content-Type: application/json');
+ob_start();
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start(['secure' => false]);
 include '../includes/config.php';
-
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+ob_clean();
+header('Content-Type: application/json');
 
 // Check if customer is logged in
 if (!isset($_SESSION['customer_id']) || !isset($_SESSION['customer_name']) || !isset($_SESSION['customer_email'])) {

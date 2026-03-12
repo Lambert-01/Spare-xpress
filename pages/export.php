@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start(['secure' => false]);
 include_once '../includes/config.php';
 include_once '../includes/header.php';
 include_once '../includes/navigation.php';

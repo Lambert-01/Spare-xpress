@@ -17,7 +17,7 @@ if (!$notification_id) {
 }
 
 $stmt = $conn->prepare("UPDATE notifications SET is_read = 1 WHERE id = ?");
-$stmt->bind_param("i", $notification_id);
+$stmt->bind_param("i", $notification_id);m
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true]);
@@ -26,5 +26,4 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-$conn->close();
-?>
+$conn->close()

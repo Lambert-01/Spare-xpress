@@ -1,8 +1,7 @@
 <?php
 // Start session check at the very beginning
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start(['secure' => false]);
 
 // Check if already logged in
 if (isset($_SESSION['customer_id'])) {

@@ -1,8 +1,6 @@
 <?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/includes/session_init.php';
+spx_session_start(['secure' => false]);
 
 include 'includes/config.php';
 

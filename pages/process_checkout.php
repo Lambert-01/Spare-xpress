@@ -2,12 +2,18 @@
 // Process checkout and create order
 // SPARE XPRESS LTD - Order Processing
 
-session_start();
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start();
 include '../includes/config.php';
+
+// Always respond with JSON (avoid HTML warnings breaking fetch().json())
+header('Content-Type: application/json; charset=utf-8');
+ini_set('display_errors', '0');
 
 // Check if user is logged in
 if (!isset($_SESSION['customer_id'])) {
-    header('Location: login.php?redirect=checkout.php');
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Please log in to continue.']);
     exit();
 }
 
@@ -39,6 +45,7 @@ if (empty($payment_method)) $errors[] = 'Payment method is required';
 if (empty($cart_data)) $errors[] = 'Cart is empty';
 
 if (!empty($errors)) {
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
     exit();
 }
@@ -127,13 +134,13 @@ try {
             " . (int)$order_db_id . ",
             " . (int)$item['id'] . ",
             '" . $conn->real_escape_string($item['name']) . "',
-            '" . $conn->real_escape_string($item['brand']) . "',
-            '" . $conn->real_escape_string($item['model']) . "',
+            '" . $conn->real_escape_string($item['brand'] ?? '') . "',
+            '" . $conn->real_escape_string($item['model'] ?? '') . "',
             " . ($vehicle_year ? (int)$vehicle_year : 'NULL') . ",
-            '" . $conn->real_escape_string($item['image']) . "',
-            " . (float)$item['price'] . ",
-            " . (int)$item['quantity'] . ",
-            " . (float)$item['subtotal'] . "
+            '" . $conn->real_escape_string($item['image'] ?? '') . "',
+            " . (float)($item['price'] ?? 0) . ",
+            " . (int)($item['quantity'] ?? 0) . ",
+            " . (float)($item['subtotal'] ?? 0) . "
         )";
 
         if (!$conn->query($item_sql)) {
@@ -185,7 +192,7 @@ try {
             unlink($pdfPath);
         }
 
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         // Log production errors for monitoring
         error_log("[PRODUCTION] Email error for order $order_id: " . $e->getMessage());
         // Don't fail the order if email fails - customer can still access order
@@ -200,10 +207,11 @@ try {
         'deposit_required' => $deposit_required
     ]);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // Rollback transaction on error
     $conn->rollback();
 
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'message' => 'Failed to process order: ' . $e->getMessage()

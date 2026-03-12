@@ -26,17 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         order_status = ?, status_updated_at = NOW(), status_updated_by = ?
         WHERE id = ?");
 
-    $admin_id = 1; // TODO: Get from session
+    $admin_id = (int)($_SESSION['admin_id'] ?? 1);
     $stmt->bind_param("sii", $new_status, $admin_id, $order_id);
 
     if ($stmt->execute()) {
-        // Add timeline entry
+        // Add timeline entry (schema uses action/details/user_id/user_type)
         $timeline_stmt = $conn->prepare("INSERT INTO order_timeline
-            (order_id, status, status_description, tracking_number, carrier_name, created_by)
-            VALUES (?, ?, ?, ?, ?, ?)");
+            (order_id, action, details, user_id, user_type)
+            VALUES (?, ?, ?, ?, 'admin')");
 
         $description = $status_notes ?: "Order status changed to " . ucfirst($new_status);
-        $timeline_stmt->bind_param("issssi", $order_id, $new_status, $description, $tracking_number, $courier_name, $admin_id);
+        $details = json_encode([
+            'description' => $description,
+            'tracking_number' => $tracking_number ?: null,
+            'carrier_name' => $courier_name ?: null
+        ], JSON_UNESCAPED_UNICODE);
+        if ($details === false) {
+            $details = $description;
+        }
+
+        $timeline_stmt->bind_param("issi", $order_id, $new_status, $details, $admin_id);
         $timeline_stmt->execute();
 
         // Update shipping info if shipped
@@ -51,31 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         $_SESSION['success'] = 'Order status updated successfully';
     } else {
         $_SESSION['error'] = 'Failed to update order status';
-    }
-
-    header('Location: enhanced_order_management.php');
-    exit;
-}
-
-// Handle priority updates
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_priority'])) {
-    $order_id = (int)$_POST['order_id'];
-    $priority_level = $_POST['priority_level'];
-
-    $valid_priorities = ['low', 'normal', 'high', 'urgent'];
-    if (!in_array($priority_level, $valid_priorities)) {
-        $_SESSION['error'] = 'Invalid priority level';
-        header('Location: enhanced_order_management.php');
-        exit;
-    }
-
-    $stmt = $conn->prepare("UPDATE orders_enhanced SET priority_level = ? WHERE id = ?");
-    $stmt->bind_param("si", $priority_level, $order_id);
-
-    if ($stmt->execute()) {
-        $_SESSION['success'] = 'Order priority updated successfully';
-    } else {
-        $_SESSION['error'] = 'Failed to update order priority';
     }
 
     header('Location: enhanced_order_management.php');
@@ -110,43 +94,79 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-// Get orders with enhanced filtering
-$where_conditions = [];
-$search = $_GET['search'] ?? '';
-$status_filter = $_GET['status'] ?? 'all';
-$priority_filter = $_GET['priority'] ?? 'all';
-$type_filter = $_GET['type'] ?? 'all';
-$date_from = $_GET['date_from'] ?? '';
-$date_to = $_GET['date_to'] ?? '';
+// Get orders with enhanced filtering (safe prepared SQL)
+$search = trim((string)($_GET['search'] ?? ''));
+$status_filter = (string)($_GET['status'] ?? 'all');
+$priority_filter = (string)($_GET['priority'] ?? 'all');
+$type_filter = (string)($_GET['type'] ?? 'all');
+$date_from = trim((string)($_GET['date_from'] ?? ''));
+$date_to = trim((string)($_GET['date_to'] ?? ''));
 
-if (!empty($search)) {
-    $where_conditions[] = "(o.order_number LIKE '%" . $conn->real_escape_string($search) . "%' OR
-                          c.first_name LIKE '%" . $conn->real_escape_string($search) . "%' OR
-                          c.last_name LIKE '%" . $conn->real_escape_string($search) . "%' OR
-                          c.phone LIKE '%" . $conn->real_escape_string($search) . "%')";
+$valid_statuses = ['all', 'pending', 'confirmed', 'processing', 'ready', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'refunded', 'failed'];
+$valid_types = ['all', 'stock', 'on_demand', 'emergency', 'bulk', 'normal', 'urgent'];
+$valid_priorities = ['all', 'low', 'normal', 'high', 'urgent'];
+
+if (!in_array($status_filter, $valid_statuses, true)) $status_filter = 'all';
+if (!in_array($type_filter, $valid_types, true)) $type_filter = 'all';
+if (!in_array($priority_filter, $valid_priorities, true)) $priority_filter = 'all';
+
+$where = [];
+$params = [];
+$types = '';
+
+if ($search !== '') {
+    $like = '%' . $search . '%';
+    $searchClause = "("
+        . "o.order_number LIKE ? "
+        . "OR CONCAT_WS(' ', c.first_name, c.last_name) LIKE ? "
+        . "OR c.phone LIKE ? "
+        . "OR c.email LIKE ? ";
+
+    $types .= 'ssss';
+    array_push($params, $like, $like, $like, $like);
+
+    // If user types a numeric order DB id, match it too.
+    if (ctype_digit($search)) {
+        $searchClause .= "OR o.id = ? ";
+        $types .= 'i';
+        $params[] = (int)$search;
+    }
+
+    $searchClause .= ")";
+    $where[] = $searchClause;
 }
 
 if ($status_filter !== 'all') {
-    $where_conditions[] = "o.order_status = '" . $conn->real_escape_string($status_filter) . "'";
+    $where[] = "o.order_status = ?";
+    $types .= 's';
+    $params[] = $status_filter;
 }
 
 if ($priority_filter !== 'all') {
-    $where_conditions[] = "o.priority_level = '" . $conn->real_escape_string($priority_filter) . "'";
+    $where[] = "o.priority_level = ?";
+    $types .= 's';
+    $params[] = $priority_filter;
 }
 
 if ($type_filter !== 'all') {
-    $where_conditions[] = "o.order_type = '" . $conn->real_escape_string($type_filter) . "'";
+    $where[] = "o.order_type = ?";
+    $types .= 's';
+    $params[] = $type_filter;
 }
 
-if (!empty($date_from)) {
-    $where_conditions[] = "DATE(o.created_at) >= '" . $conn->real_escape_string($date_from) . "'";
+if ($date_from !== '') {
+    $where[] = "DATE(o.created_at) >= ?";
+    $types .= 's';
+    $params[] = $date_from;
 }
 
-if (!empty($date_to)) {
-    $where_conditions[] = "DATE(o.created_at) <= '" . $conn->real_escape_string($date_to) . "'";
+if ($date_to !== '') {
+    $where[] = "DATE(o.created_at) <= ?";
+    $types .= 's';
+    $params[] = $date_to;
 }
 
-$where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+$where_clause = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
 $query = "SELECT o.*,
                  CONCAT(c.first_name, ' ', c.last_name) as customer_name,
@@ -167,7 +187,18 @@ $query = "SELECT o.*,
               END,
               o.created_at DESC";
 
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
+if (!$stmt) {
+    $_SESSION['error'] = 'Failed to load orders: ' . ($conn->error ?: 'Unknown error');
+    // Empty result fallback so the page still renders.
+    $result = $conn->query("SELECT 1 AS _empty WHERE 1=0");
+} else {
+    if ($params) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
 
 // Get statistics
 $stats = [
@@ -341,7 +372,7 @@ function getPaymentBadge($status) {
                 <label class="form-label fw-semibold">Search Orders</label>
                 <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Order ID, Customer name, Phone...">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label fw-semibold">Status</label>
                 <select class="form-select" name="status">
                     <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>All Status</option>
@@ -353,17 +384,7 @@ function getPaymentBadge($status) {
                     <option value="cancelled" <?php echo $status_filter === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold">Priority</label>
-                <select class="form-select" name="priority">
-                    <option value="all" <?php echo $priority_filter === 'all' ? 'selected' : ''; ?>>All Priority</option>
-                    <option value="urgent" <?php echo $priority_filter === 'urgent' ? 'selected' : ''; ?>>Urgent</option>
-                    <option value="high" <?php echo $priority_filter === 'high' ? 'selected' : ''; ?>>High</option>
-                    <option value="normal" <?php echo $priority_filter === 'normal' ? 'selected' : ''; ?>>Normal</option>
-                    <option value="low" <?php echo $priority_filter === 'low' ? 'selected' : ''; ?>>Low</option>
-                </select>
-            </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label fw-semibold">Type</label>
                 <select class="form-select" name="type">
                     <option value="all" <?php echo $type_filter === 'all' ? 'selected' : ''; ?>>All Types</option>
@@ -414,10 +435,6 @@ function getPaymentBadge($status) {
                         <th class="sortable" data-column="order_status">
                             <i class="bi bi-truck"></i>
                             <span>Status</span>
-                        </th>
-                        <th class="sortable" data-column="priority_level">
-                            <i class="bi bi-star"></i>
-                            <span>Priority</span>
                         </th>
                         <th class="sortable" data-column="total_amount">
                             <i class="bi bi-cash"></i>
@@ -488,9 +505,6 @@ function getPaymentBadge($status) {
                                     <?php echo ucfirst(str_replace('_', ' ', $order['order_status'])); ?>
                                 </span>
                             </td>
-                            <td data-label="Priority">
-                                <?php echo getPriorityBadge($order['priority_level']); ?>
-                            </td>
                             <td data-label="Total">
                                 <div class="fw-bold text-primary fs-6">
                                     <i class="bi bi-cash me-1"></i>RWF <?php echo number_format($order['total_amount'], 0); ?>
@@ -514,12 +528,6 @@ function getPaymentBadge($status) {
                                     </button>
                                     <button class="btn btn-outline-info btn-sm action-btn" onclick="viewTimeline(<?php echo $order['id']; ?>)" title="View Timeline">
                                         <i class="bi bi-clock-history"></i>
-                                    </button>
-                                    <button class="btn btn-outline-warning btn-sm action-btn" onclick="changePriority(<?php echo $order['id']; ?>, '<?php echo $order['priority_level']; ?>')" title="Change Priority">
-                                        <i class="bi bi-star"></i>
-                                    </button>
-                                    <button class="btn btn-outline-success btn-sm action-btn" onclick="viewInvoice(<?php echo $order['id']; ?>)" title="View Invoice">
-                                        <i class="bi bi-eye"></i>
                                     </button>
                                     <?php if (in_array($order['order_status'], ['pending', 'cancelled'])): ?>
                                     <button class="btn btn-outline-danger btn-sm action-btn" onclick="deleteOrder(<?php echo $order['id']; ?>, '<?php echo $order['order_number']; ?>')" title="Delete Order">
@@ -597,34 +605,29 @@ function getPaymentBadge($status) {
     </div>
 </div>
 
-<!-- Priority Modal -->
-<div class="modal fade" id="priorityModal" tabindex="-1">
-    <div class="modal-dialog">
+<!-- Timeline Modal -->
+<div class="modal fade" id="timelineModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="bi bi-star me-2"></i>Change Order Priority
+                    <i class="bi bi-clock-history me-2"></i>Order Timeline
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="POST">
-                <div class="modal-body">
-                    <input type="hidden" name="order_id" id="priorityOrderId">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Priority Level</label>
-                        <select class="form-select" name="priority_level" id="priorityLevel" required>
-                            <option value="low">Low</option>
-                            <option value="normal">Normal</option>
-                            <option value="high">High</option>
-                            <option value="urgent">Urgent</option>
-                        </select>
+            <div class="modal-body">
+                <input type="hidden" id="timelineOrderId">
+                <div id="timelineContent" class="timeline-container">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="update_priority" class="btn btn-primary">Update Priority</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -741,6 +744,50 @@ function getPaymentBadge($status) {
 .form-card {
     margin-left: 0;
 }
+
+/* Timeline Modal Styles */
+.timeline-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border-left: 3px solid #dee2e6;
+}
 </style>
 
 <script>
@@ -764,12 +811,6 @@ function changeOrderStatus(orderId, currentStatus) {
     new bootstrap.Modal(document.getElementById('statusModal')).show();
 }
 
-function changePriority(orderId, currentPriority) {
-    document.getElementById('priorityOrderId').value = orderId;
-    document.getElementById('priorityLevel').value = currentPriority;
-    new bootstrap.Modal(document.getElementById('priorityModal')).show();
-}
-
 function deleteOrder(orderId, orderNumber) {
     if (confirm(`Are you sure you want to delete order ${orderNumber}? This action cannot be undone.`)) {
         window.location.href = `?delete=${orderId}`;
@@ -782,8 +823,59 @@ function viewOrder(orderId) {
 }
 
 function viewTimeline(orderId) {
-    // TODO: Implement order timeline view
-    alert('Order timeline view coming soon!');
+    // Fetch and display order timeline
+    fetch(`../api/get_order_timeline.php?order_id=${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+            const timelineModal = new bootstrap.Modal(document.getElementById('timelineModal'));
+            const timelineContainer = document.getElementById('timelineContent');
+            
+            if (data.timeline && data.timeline.length > 0) {
+                let timelineHtml = '<div class="timeline">';
+                data.timeline.forEach(item => {
+                    const statusClass = getStatusClass(item.status);
+                    timelineHtml += `
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-${statusClass}"></div>
+                            <div class="timeline-content">
+                                <div class="fw-semibold">${item.status.charAt(0).toUpperCase() + item.status.slice(1).replace('_', ' ')}</div>
+                                <div class="small text-muted">${new Date(item.created_at).toLocaleString()}</div>
+                                ${item.status_description ? `<div class="small">${item.status_description}</div>` : ''}
+                                ${item.tracking_number ? `<div class="small text-info"><i class="bi bi-truck me-1"></i>Tracking: ${item.tracking_number} (${item.carrier_name || 'N/A'})</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                timelineHtml += '</div>';
+                timelineContainer.innerHTML = timelineHtml;
+            } else {
+                timelineContainer.innerHTML = '<div class="text-center text-muted py-4"><i class="bi bi-clock-history fs-1 mb-2"></i><p>No timeline history available.</p></div>';
+            }
+            
+            document.getElementById('timelineOrderId').value = orderId;
+            timelineModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching timeline:', error);
+            alert('Failed to load order timeline. Please try again.');
+        });
+}
+
+function getStatusClass(status) {
+    const statusClasses = {
+        'pending': 'warning',
+        'confirmed': 'info',
+        'processing': 'primary',
+        'ready': 'info',
+        'packed': 'info',
+        'shipped': 'info',
+        'out_for_delivery': 'info',
+        'delivered': 'success',
+        'cancelled': 'danger',
+        'refunded': 'secondary',
+        'failed': 'danger'
+    };
+    return statusClasses[status] || 'secondary';
 }
 
 function viewInvoice(orderId) {

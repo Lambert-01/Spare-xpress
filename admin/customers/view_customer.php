@@ -101,8 +101,8 @@ $recent_conversations = $conversations_query->get_result();
                         </div>
                         <div class="col-6">
                             <strong>Status:</strong><br>
-                            <span class="badge bg-<?php echo $customer['status'] === 'active' ? 'success' : 'secondary'; ?>">
-                                <?php echo ucfirst($customer['status']); ?>
+                            <span class="badge bg-<?php echo ($customer['status'] ?? 'active') === 'active' ? 'success' : 'secondary'; ?>">
+                                <?php echo ucfirst($customer['status'] ?? 'active'); ?>
                             </span>
                         </div>
                         <div class="col-6">
@@ -227,7 +227,7 @@ $recent_conversations = $conversations_query->get_result();
                                         <small class="text-muted"><?php echo $conv['last_message'] ? date('M d, H:i', strtotime($conv['last_message'])) : 'No messages'; ?></small>
                                     </div>
                                     <div class="text-muted small">
-                                        Started: <?php echo date('M d, Y', strtotime($conv['created_at'])); ?>
+                                        Started: <?php echo isset($conv['created_at']) && $conv['created_at'] ? date('M d, Y', strtotime($conv['created_at'])) : 'N/A'; ?>
                                     </div>
                                 </div>
                             <?php endwhile; ?>

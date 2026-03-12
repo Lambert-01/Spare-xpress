@@ -20,19 +20,11 @@ if (!defined('SMTP_PASS')) define('SMTP_PASS', 'ytvjsswknjlrnfgf'); // Gmail app
 if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', 'nlambert833@gmail.com');
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', 'SPARE XPRESS LTD');
 
-// Session Configuration - Initialize only once
-if (session_status() === PHP_SESSION_NONE) {
-    // Set session cookie parameters for cross-page persistence
-    session_set_cookie_params([
-        'lifetime' => 0, // Session cookie
-        'path' => '/',
-        'domain' => '', // Leave empty for current domain
-        'secure' => false, // Set to true if using HTTPS
-        'httponly' => true, // Prevent JavaScript access
-        'samesite' => 'Lax' // CSRF protection
-    ]);
-    session_start();
-}
+// Session Configuration - Initialize only once (avoid emitting warnings into JSON responses)
+require_once __DIR__ . '/session_init.php';
+spx_session_start([
+    'secure' => false, // Set to true if using HTTPS
+]);
 
 // Database Connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);

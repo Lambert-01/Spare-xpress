@@ -2,7 +2,9 @@
 // API endpoint to clear all items from cart
 // SPARE XPRESS LTD - Clear Cart API
 
-session_start();
+ob_start();
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start(['secure' => false]);
 
 // Prevent any HTML output for API responses
 ob_clean();

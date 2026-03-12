@@ -1,0 +1,36 @@
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+sku	varchar(50)	YES	UNI	NULL	
+name	varchar(255)	NO	MUL	NULL	
+slug	varchar(255)	YES	UNI	NULL	
+description	longtext	YES		NULL	
+short_description	text	YES		NULL	
+brand_id	int(11)	YES	MUL	NULL	
+model_id	int(11)	YES	MUL	NULL	
+category_id	int(11)	YES	MUL	NULL	
+regular_price	decimal(10,2)	YES		NULL	
+sale_price	decimal(10,2)	YES		NULL	
+wholesale_price	decimal(10,2)	YES		NULL	
+cost_price	decimal(10,2)	YES		NULL	
+stock_quantity	int(11)	YES		0	
+stock_status	enum('in_stock','low_stock','out_of_stock')	YES	MUL	out_of_stock	
+low_stock_threshold	int(11)	YES		5	
+manage_stock	tinyint(1)	YES		1	
+weight	decimal(8,2)	YES		NULL	
+dimensions	longtext	YES		NULL	
+warranty_period	int(11)	YES		NULL	
+condition	enum('new','used','refurbished')	YES		new	
+documents	longtext	YES		NULL	
+seo_title	varchar(255)	YES		NULL	
+seo_description	text	YES		NULL	
+seo_keywords	text	YES		NULL	
+featured	tinyint(1)	YES	MUL	0	
+view_count	int(11)	YES		0	
+sales_count	int(11)	YES		0	
+rating	decimal(3,2)	YES		0.00	
+review_count	int(11)	YES		0	
+status	enum('draft','pending','published','archived')	YES	MUL	draft	
+visibility	enum('public','private','password_protected')	YES		public	
+published_at	timestamp	YES	MUL	NULL	
+created_at	timestamp	NO		current_timestamp()	
+updated_at	timestamp	NO		current_timestamp()	on update current_timestamp()

@@ -17,7 +17,7 @@ $deposit_required = 0;
 foreach ($cart as $item) {
     $cart_total += $item['subtotal'];
     $cart_count += $item['quantity'];
-
+ 
     // Calculate deposit for special order items (50% of total)
     if ($item['stock'] == 0) {
         $deposit_required += $item['subtotal'] * 0.5;

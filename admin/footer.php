@@ -51,12 +51,40 @@ $(window).resize(function() {
 // Enhanced loading states for forms and buttons
 $('form').on('submit', function(e) {
     const form = $(this);
-    const submitBtn = form.find('button[type="submit"], input[type="submit"]');
-    const originalText = submitBtn.html();
+
+    const originalEvent = e.originalEvent || {};
+    const submitterEl = originalEvent.submitter || document.activeElement;
+
+    // Preserve clicked submit button name/value even if we disable it (disabled controls are not submitted)
+    if (submitterEl && submitterEl.name) {
+        const existing = form.find('input[type="hidden"]').filter(function() {
+            return this.name === submitterEl.name;
+        });
+        if (existing.length === 0) {
+            $('<input>').attr({
+                type: 'hidden',
+                name: submitterEl.name,
+                value: submitterEl.value || '1'
+            }).appendTo(form);
+        }
+    }
+
+    let submitBtn = $();
+    if (submitterEl && (submitterEl.tagName === 'BUTTON' || (submitterEl.tagName === 'INPUT' && submitterEl.type === 'submit'))) {
+        submitBtn = $(submitterEl);
+    } else {
+        submitBtn = form.find('button[type="submit"], input[type="submit"]').first();
+    }
+
+    const originalText = submitBtn.is('input') ? submitBtn.val() : submitBtn.html();
 
     // Don't show loading for forms with ajax-form class (handled separately)
     if (!form.hasClass('ajax-form')) {
-        submitBtn.html('<span class="loading me-2"></span>Processing...').prop('disabled', true);
+        if (submitBtn.is('input')) {
+            submitBtn.val('Processing...').prop('disabled', true);
+        } else {
+            submitBtn.html('<span class="loading me-2"></span>Processing...').prop('disabled', true);
+        }
 
         // Add loading overlay to form
         form.addClass('loading-active');
@@ -64,7 +92,11 @@ $('form').on('submit', function(e) {
 
         // Re-enable after 15 seconds as fallback
         setTimeout(() => {
-            submitBtn.html(originalText).prop('disabled', false);
+            if (submitBtn.is('input')) {
+                submitBtn.val(originalText).prop('disabled', false);
+            } else {
+                submitBtn.html(originalText).prop('disabled', false);
+            }
             form.removeClass('loading-active').find('.form-loading-overlay').remove();
         }, 15000);
     }

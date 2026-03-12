@@ -1,6 +1,6 @@
 <?php
-include_once 'includes/auth.php';
-include_once 'includes/functions.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

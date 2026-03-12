@@ -8,11 +8,10 @@ function generateOrderInvoice($order_id) {
     global $conn;
 
     // Fetch order details
-    $order_query = "SELECT o.*, c.first_name, c.last_name, c.email as customer_email, c.phone as customer_phone,
-                           c.address as customer_address
-                    FROM orders_enhanced o
-                    LEFT JOIN customers_enhanced c ON o.customer_id = c.id
-                    WHERE o.id = ?";
+    $order_query = "SELECT o.*, c.first_name, c.last_name, c.email as customer_email, c.phone as customer_phone
+                     FROM orders_enhanced o
+                     LEFT JOIN customers_enhanced c ON o.customer_id = c.id
+                     WHERE o.id = ?";
     $stmt = $conn->prepare($order_query);
     $stmt->bind_param("i", $order_id);
     $stmt->execute();
@@ -527,8 +526,9 @@ class InvoicePDF extends TCPDF {
         if ($customer['customer_email']) {
             $this->Cell(0, 5, 'Email: ' . $customer['customer_email'], 0, 1, '', 0);
         }
-        if ($customer['customer_address']) {
-            $this->Cell(0, 5, $customer['customer_address'], 0, 1, '', 0);
+        if ($customer['customer_address'] || $customer['shipping_address']) {
+            $address = $customer['customer_address'] ?: $customer['shipping_address'];
+            $this->Cell(0, 5, $address, 0, 1, '', 0);
         }
 
         $this->Ln(5);

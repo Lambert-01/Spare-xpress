@@ -2,7 +2,9 @@
 // API endpoint to get cart data
 // SPARE XPRESS LTD - Cart Data API
 
-session_start();
+ob_start();
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start(['secure' => false]);
 include_once '../includes/config.php';
 
 // Prevent any HTML output for API responses
