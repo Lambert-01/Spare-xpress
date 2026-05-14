@@ -1,4 +1,6 @@
 <?php
+if (defined('ADMIN_FUNCTIONS_LOADED')) return;
+define('ADMIN_FUNCTIONS_LOADED', true);
 function countRows($table) {
     global $conn;
     $result = $conn->query("SELECT COUNT(*) as count FROM $table");
