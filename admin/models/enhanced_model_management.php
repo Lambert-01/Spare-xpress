@@ -206,6 +206,8 @@ $brand_filter = $_GET['brand'] ?? 'all';
 $status_filter = $_GET['status'] ?? 'all';
 $year_filter = $_GET['year'] ?? 'all';
 $search = $_GET['search'] ?? '';
+$per_page = 40;
+$current_page = max(1, (int)($_GET['page'] ?? 1));
 // Apply filters
 $where_conditions = [];
 if ($brand_filter !== 'all') {
@@ -222,6 +224,19 @@ if (!empty($search)) {
     $where_conditions[] = "(vm.model_name LIKE '%" . $conn->real_escape_string($search) . "%' OR vb.brand_name LIKE '%" . $conn->real_escape_string($search) . "%')";
 }
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+
+$count_query = "
+    SELECT COUNT(DISTINCT vm.id) as total
+    FROM vehicle_models_enhanced vm
+    LEFT JOIN vehicle_brands_enhanced vb ON vm.brand_id = vb.id
+    LEFT JOIN products_enhanced p ON vm.id = p.model_id
+    $where_clause
+";
+$total_models_filtered = (int)($conn->query($count_query)->fetch_assoc()['total'] ?? 0);
+$total_pages = max(1, (int)ceil($total_models_filtered / $per_page));
+$current_page = min($current_page, $total_pages);
+$offset = ($current_page - 1) * $per_page;
+
 $query = "
     SELECT vm.*,
            vb.brand_name,
@@ -234,6 +249,7 @@ $query = "
     $where_clause
     GROUP BY vm.id
     ORDER BY vb.brand_name, vm.model_name
+    LIMIT $per_page OFFSET $offset
 ";
 $result = $conn->query($query);
 // Get brands for filter dropdown
@@ -267,6 +283,18 @@ function formatArrayField($json_string) {
     $array = json_decode($json_string, true);
     if (!is_array($array) || empty($array)) return 'None specified';
     return implode(', ', array_map('ucfirst', $array));
+}
+
+function buildModelPageUrl($page) {
+    $params = $_GET;
+    $params['page'] = max(1, (int)$page);
+    foreach ($params as $key => $value) {
+        if ($value === '' || $value === 'all') {
+            unset($params[$key]);
+        }
+    }
+    $query = http_build_query($params);
+    return 'enhanced_model_management.php' . ($query ? '?' . $query : '');
 }
 ?>
 <div class="admin-page">
@@ -304,7 +332,7 @@ function formatArrayField($json_string) {
                     <div class="card-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
                         <i class="bi bi-car-front-fill fs-1"></i>
                     </div>
-                    <h3 class="card-value text-primary mb-2" id="totalModels"><?php echo $result->num_rows; ?></h3>
+                    <h3 class="card-value text-primary mb-2" id="totalModels"><?php echo number_format($total_models_filtered); ?></h3>
                     <p class="card-title mb-0">Total Models</p>
                 </div>
             </div>
@@ -535,6 +563,35 @@ function formatArrayField($json_string) {
                     </a>
                 </div>
             </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4" id="models-pagination">
+        <div class="text-muted small" id="models-pagination-summary">
+            Showing <?php echo $total_models_filtered ? number_format($offset + 1) : 0; ?>
+            - <?php echo number_format(min($offset + $per_page, $total_models_filtered)); ?>
+            of <?php echo number_format($total_models_filtered); ?> models
+        </div>
+        <?php if ($total_pages > 1): ?>
+            <nav aria-label="Models pagination">
+                <ul class="pagination mb-0">
+                    <li class="page-item <?php echo $current_page <= 1 ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="<?php echo htmlspecialchars(buildModelPageUrl($current_page - 1)); ?>">Previous</a>
+                    </li>
+                    <?php
+                    $start_page = max(1, $current_page - 2);
+                    $end_page = min($total_pages, $current_page + 2);
+                    for ($page = $start_page; $page <= $end_page; $page++):
+                    ?>
+                        <li class="page-item <?php echo $page === $current_page ? 'active' : ''; ?>">
+                            <a class="page-link" href="<?php echo htmlspecialchars(buildModelPageUrl($page)); ?>"><?php echo $page; ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?php echo $current_page >= $total_pages ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="<?php echo htmlspecialchars(buildModelPageUrl($current_page + 1)); ?>">Next</a>
+                    </li>
+                </ul>
+            </nav>
         <?php endif; ?>
     </div>
 </div>
@@ -780,7 +837,8 @@ let filterTimeout;
 const currentFilters = {
     brand: '<?php echo $brand_filter; ?>',
     status: '<?php echo $status_filter; ?>',
-    year: '<?php echo $year_filter; ?>'
+    year: '<?php echo $year_filter; ?>',
+    page: <?php echo $current_page; ?>
 };
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize filter selects
@@ -790,6 +848,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const filterValue = this.value;
             // Update current filters
             currentFilters[filterType] = filterValue;
+            currentFilters.page = 1;
             // Debounce the filter request
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(() => {
@@ -804,17 +863,28 @@ function applyFilters() {
     // Build query string
     const params = new URLSearchParams();
     Object.keys(currentFilters).forEach(key => {
+        if (key === 'page') {
+            if (Number(currentFilters[key]) > 1) {
+                params.append(key, currentFilters[key]);
+            }
+            return;
+        }
+
         if (currentFilters[key] !== 'all') {
             params.append(key, currentFilters[key]);
         }
     });
     // Make AJAX request
-    fetch(`../api/get_filtered_models.php?${params}`)
+    const queryString = params.toString();
+
+    fetch(`../api/get_filtered_models.php?${queryString}`)
         .then(response => response.json())
         .then(data => {
             hideLoadingState();
             updateModelsGrid(data.models);
             updateStatistics(data.stats);
+            updateModelPagination(data.pagination);
+            updateModelFilterUrl(queryString);
         })
         .catch(error => {
             console.error('Error filtering models:', error);
@@ -955,6 +1025,66 @@ function updateModelsGrid(models) {
         `;
     });
     container.innerHTML = html;
+}
+
+function updateModelPagination(pagination) {
+    const wrapper = document.getElementById('models-pagination');
+    if (!wrapper || !pagination) return;
+
+    const from = Number(pagination.from || 0).toLocaleString();
+    const to = Number(pagination.to || 0).toLocaleString();
+    const total = Number(pagination.total_items || 0).toLocaleString();
+    let html = `
+        <div class="text-muted small" id="models-pagination-summary">
+            Showing ${from} - ${to} of ${total} models
+        </div>
+    `;
+
+    if (Number(pagination.total_pages) > 1) {
+        html += '<nav aria-label="Models pagination"><ul class="pagination mb-0">';
+        html += buildModelPageItem('Previous', Number(pagination.page) - 1, Number(pagination.page) <= 1);
+
+        const start = Math.max(1, Number(pagination.page) - 2);
+        const end = Math.min(Number(pagination.total_pages), Number(pagination.page) + 2);
+        for (let page = start; page <= end; page++) {
+            html += buildModelPageItem(page, page, false, page === Number(pagination.page));
+        }
+
+        html += buildModelPageItem('Next', Number(pagination.page) + 1, Number(pagination.page) >= Number(pagination.total_pages));
+        html += '</ul></nav>';
+    }
+
+    wrapper.innerHTML = html;
+}
+
+function buildModelPageItem(label, page, disabled = false, active = false) {
+    const classes = ['page-item'];
+    if (disabled) classes.push('disabled');
+    if (active) classes.push('active');
+    return `
+        <li class="${classes.join(' ')}">
+            <a class="page-link" href="#" data-page="${page}">${label}</a>
+        </li>
+    `;
+}
+
+document.addEventListener('click', function(event) {
+    const pageLink = event.target.closest('#models-pagination a[data-page]');
+    if (!pageLink || pageLink.closest('.disabled') || pageLink.closest('.active')) {
+        return;
+    }
+
+    event.preventDefault();
+    currentFilters.page = Number(pageLink.dataset.page);
+    applyFilters();
+    document.getElementById('models-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+function updateModelFilterUrl(queryString) {
+    const newUrl = queryString
+        ? `${window.location.pathname}?${queryString}`
+        : window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
 }
 function updateStatistics(stats) {
     // Update statistics cards with filtered data

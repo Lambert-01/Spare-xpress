@@ -274,6 +274,8 @@ $category_filter = $_GET['category'] ?? 'all';
 $status_filter = $_GET['status'] ?? 'all';
 $stock_filter = $_GET['stock'] ?? 'all';
 $search = $_GET['search'] ?? '';
+$per_page = 40;
+$current_page = max(1, (int)($_GET['page'] ?? 1));
 
 // Apply filters
 $where_conditions = [];
@@ -303,10 +305,33 @@ if ($stock_filter !== 'all') {
     }
 }
 if (!empty($search)) {
-    $where_conditions[] = "(p.product_name LIKE '%" . $conn->real_escape_string($search) . "%' OR p.sku LIKE '%" . $conn->real_escape_string($search) . "%')";
+    $escaped_search = $conn->real_escape_string($search);
+    $where_conditions[] = "(
+        p.product_name LIKE '%$escaped_search%'
+        OR p.sku LIKE '%$escaped_search%'
+        OR p.description LIKE '%$escaped_search%'
+        OR p.short_description LIKE '%$escaped_search%'
+        OR p.specifications LIKE '%$escaped_search%'
+        OR b.brand_name LIKE '%$escaped_search%'
+        OR m.model_name LIKE '%$escaped_search%'
+        OR c.category_name LIKE '%$escaped_search%'
+    )";
 }
 
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+
+$count_query = "
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM products_enhanced p
+    LEFT JOIN vehicle_brands_enhanced b ON p.brand_id = b.id
+    LEFT JOIN vehicle_models_enhanced m ON p.model_id = m.id
+    LEFT JOIN categories_enhanced c ON p.category_id = c.id
+    $where_clause
+";
+$total_products_filtered = (int)($conn->query($count_query)->fetch_assoc()['total'] ?? 0);
+$total_pages = max(1, (int)ceil($total_products_filtered / $per_page));
+$current_page = min($current_page, $total_pages);
+$offset = ($current_page - 1) * $per_page;
 
 $query = "
     SELECT p.*,
@@ -326,6 +351,7 @@ $query = "
     LEFT JOIN categories_enhanced c ON p.category_id = c.id
     $where_clause
     ORDER BY p.created_at DESC
+    LIMIT $per_page OFFSET $offset
 ";
 
 $result = $conn->query($query);
@@ -363,6 +389,18 @@ function getStockStatusBadge($status) {
         'on_backorder' => '<span class="badge bg-info">Backorder</span>'
     ];
     return $badges[$status] ?? '<span class="badge bg-secondary">Unknown</span>';
+}
+
+function buildProductPageUrl($page) {
+    $params = $_GET;
+    $params['page'] = max(1, (int)$page);
+    foreach ($params as $key => $value) {
+        if ($value === '' || $value === 'all') {
+            unset($params[$key]);
+        }
+    }
+    $query = http_build_query($params);
+    return 'enhanced_product_management.php' . ($query ? '?' . $query : '');
 }
 ?>
 
@@ -409,7 +447,7 @@ function getStockStatusBadge($status) {
                     <div class="card-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
                         <i class="bi bi-box-seam fs-1"></i>
                     </div>
-                    <h3 class="card-value text-primary mb-2" id="totalProducts"><?php echo $result->num_rows; ?></h3>
+                    <h3 class="card-value text-primary mb-2" id="totalProducts"><?php echo number_format($total_products_filtered); ?></h3>
                     <p class="card-title mb-0">Total Products</p>
                 </div>
             </div>
@@ -466,10 +504,31 @@ function getStockStatusBadge($status) {
 
     <!-- Filters -->
     <div class="form-card mb-4">
-        <div class="row g-3 align-items-end">
+        <form method="GET" id="productFilterForm" class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-12">
+                <label class="form-label fw-semibold">Search Spare Part</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                        type="search"
+                        class="form-control"
+                        id="productSearch"
+                        name="search"
+                        placeholder="Name, SKU, brand, model, category..."
+                        value="<?php echo htmlspecialchars($search); ?>">
+                    <button type="button" class="btn btn-outline-secondary <?php echo empty($search) ? 'd-none' : ''; ?>" id="clearSearch" aria-label="Clear search">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </div>
+            </div>
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Brand</label>
-                <select class="form-select filter-select" id="brandFilter" data-filter="brand">
+                <select class="form-select filter-select" id="brandFilter" name="brand" data-filter="brand">
                     <option value="all">All Brands</option>
                     <?php foreach ($brands as $brand): ?>
                         <option value="<?php echo $brand['id']; ?>" <?php echo $brand_filter == $brand['id'] ? 'selected' : ''; ?>>
@@ -480,13 +539,13 @@ function getStockStatusBadge($status) {
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Model</label>
-                <select class="form-select filter-select" id="modelFilter" data-filter="model">
+                <select class="form-select filter-select" id="modelFilter" name="model" data-filter="model">
                     <option value="all">All Models</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Category</label>
-                <select class="form-select filter-select" id="categoryFilter" data-filter="category">
+                <select class="form-select filter-select" id="categoryFilter" name="category" data-filter="category">
                     <option value="all">All Categories</option>
                     <?php foreach ($categories as $category): ?>
                         <option value="<?php echo $category['id']; ?>" <?php echo $category_filter == $category['id'] ? 'selected' : ''; ?>>
@@ -497,7 +556,7 @@ function getStockStatusBadge($status) {
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Status</label>
-                <select class="form-select filter-select" id="statusFilter" data-filter="status">
+                <select class="form-select filter-select" id="statusFilter" name="status" data-filter="status">
                     <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>All Status</option>
                     <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Active</option>
                     <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
@@ -505,7 +564,7 @@ function getStockStatusBadge($status) {
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Stock</label>
-                <select class="form-select filter-select" id="stockFilter" data-filter="stock">
+                <select class="form-select filter-select" id="stockFilter" name="stock" data-filter="stock">
                     <option value="all" <?php echo $stock_filter === 'all' ? 'selected' : ''; ?>>All Stock</option>
                     <option value="in_stock" <?php echo $stock_filter === 'in_stock' ? 'selected' : ''; ?>>In Stock</option>
                     <option value="low_stock" <?php echo $stock_filter === 'low_stock' ? 'selected' : ''; ?>>Low Stock</option>
@@ -517,7 +576,7 @@ function getStockStatusBadge($status) {
                     <i class="bi bi-download me-1"></i>Export
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 
     <!-- Products Grid -->
@@ -659,6 +718,35 @@ function getStockStatusBadge($status) {
                 </div>
             </div>
         <?php endwhile; ?>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4" id="products-pagination">
+        <div class="text-muted small" id="products-pagination-summary">
+            Showing <?php echo $total_products_filtered ? number_format($offset + 1) : 0; ?>
+            - <?php echo number_format(min($offset + $per_page, $total_products_filtered)); ?>
+            of <?php echo number_format($total_products_filtered); ?> products
+        </div>
+        <?php if ($total_pages > 1): ?>
+            <nav aria-label="Products pagination">
+                <ul class="pagination mb-0">
+                    <li class="page-item <?php echo $current_page <= 1 ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="<?php echo htmlspecialchars(buildProductPageUrl($current_page - 1)); ?>">Previous</a>
+                    </li>
+                    <?php
+                    $start_page = max(1, $current_page - 2);
+                    $end_page = min($total_pages, $current_page + 2);
+                    for ($page = $start_page; $page <= $end_page; $page++):
+                    ?>
+                        <li class="page-item <?php echo $page === $current_page ? 'active' : ''; ?>">
+                            <a class="page-link" href="<?php echo htmlspecialchars(buildProductPageUrl($page)); ?>"><?php echo $page; ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?php echo $current_page >= $total_pages ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="<?php echo htmlspecialchars(buildProductPageUrl($current_page + 1)); ?>">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        <?php endif; ?>
     </div>
 
     <!-- Loading State -->
@@ -948,7 +1036,9 @@ const currentFilters = {
     model: '<?php echo $model_filter; ?>',
     category: '<?php echo $category_filter; ?>',
     status: '<?php echo $status_filter; ?>',
-    stock: '<?php echo $stock_filter; ?>'
+    stock: '<?php echo $stock_filter; ?>',
+    search: <?php echo json_encode($search); ?>,
+    page: <?php echo $current_page; ?>
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -962,6 +1052,49 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeFilters() {
+    const filterForm = document.getElementById('productFilterForm');
+    const productSearch = document.getElementById('productSearch');
+    const clearSearch = document.getElementById('clearSearch');
+
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (productSearch) {
+                currentFilters.search = productSearch.value.trim();
+            }
+            currentFilters.page = 1;
+            applyFilters();
+        });
+    }
+
+    if (productSearch) {
+        productSearch.addEventListener('input', function() {
+            currentFilters.search = this.value.trim();
+            currentFilters.page = 1;
+            if (clearSearch) {
+                clearSearch.classList.toggle('d-none', currentFilters.search === '');
+            }
+
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                applyFilters();
+            }, 300);
+        });
+    }
+
+    if (clearSearch) {
+        clearSearch.addEventListener('click', function() {
+            currentFilters.search = '';
+            currentFilters.page = 1;
+            if (productSearch) {
+                productSearch.value = '';
+                productSearch.focus();
+            }
+            this.classList.add('d-none');
+            applyFilters();
+        });
+    }
+
     // Add change event listeners to all filter selects
     document.querySelectorAll('.filter-select').forEach(select => {
         select.addEventListener('change', function() {
@@ -970,6 +1103,7 @@ function initializeFilters() {
 
             // Update current filters
             currentFilters[filterType] = filterValue;
+            currentFilters.page = 1;
 
             // Special handling for brand change - load models
             if (filterType === 'brand') {
@@ -1023,18 +1157,36 @@ function applyFilters() {
     // Build query string
     const params = new URLSearchParams();
     Object.keys(currentFilters).forEach(key => {
+        if (key === 'search') {
+            if (currentFilters[key]) {
+                params.append(key, currentFilters[key]);
+            }
+            return;
+        }
+
+        if (key === 'page') {
+            if (Number(currentFilters[key]) > 1) {
+                params.append(key, currentFilters[key]);
+            }
+            return;
+        }
+
         if (currentFilters[key] !== 'all') {
             params.append(key, currentFilters[key]);
         }
     });
 
     // Make AJAX request
-    fetch(`../api/get_filtered_products.php?${params}`)
+    const queryString = params.toString();
+
+    fetch(`../api/get_filtered_products.php?${queryString}`)
         .then(response => response.json())
         .then(data => {
             hideLoadingState();
             updateProductsGrid(data.products);
             updateStatistics(data.stats);
+            updateProductPagination(data.pagination);
+            updateFilterUrl(queryString);
         })
         .catch(error => {
             console.error('Error filtering products:', error);
@@ -1171,6 +1323,59 @@ function updateProductsGrid(products) {
     container.innerHTML = html;
 }
 
+function updateProductPagination(pagination) {
+    const wrapper = document.getElementById('products-pagination');
+    if (!wrapper || !pagination) return;
+
+    const from = Number(pagination.from || 0).toLocaleString();
+    const to = Number(pagination.to || 0).toLocaleString();
+    const total = Number(pagination.total_items || 0).toLocaleString();
+    let html = `
+        <div class="text-muted small" id="products-pagination-summary">
+            Showing ${from} - ${to} of ${total} products
+        </div>
+    `;
+
+    if (Number(pagination.total_pages) > 1) {
+        html += '<nav aria-label="Products pagination"><ul class="pagination mb-0">';
+        html += buildProductPageItem('Previous', Number(pagination.page) - 1, Number(pagination.page) <= 1);
+
+        const start = Math.max(1, Number(pagination.page) - 2);
+        const end = Math.min(Number(pagination.total_pages), Number(pagination.page) + 2);
+        for (let page = start; page <= end; page++) {
+            html += buildProductPageItem(page, page, false, page === Number(pagination.page));
+        }
+
+        html += buildProductPageItem('Next', Number(pagination.page) + 1, Number(pagination.page) >= Number(pagination.total_pages));
+        html += '</ul></nav>';
+    }
+
+    wrapper.innerHTML = html;
+}
+
+function buildProductPageItem(label, page, disabled = false, active = false) {
+    const classes = ['page-item'];
+    if (disabled) classes.push('disabled');
+    if (active) classes.push('active');
+    return `
+        <li class="${classes.join(' ')}">
+            <a class="page-link" href="#" data-page="${page}">${label}</a>
+        </li>
+    `;
+}
+
+document.addEventListener('click', function(event) {
+    const pageLink = event.target.closest('#products-pagination a[data-page]');
+    if (!pageLink || pageLink.closest('.disabled') || pageLink.closest('.active')) {
+        return;
+    }
+
+    event.preventDefault();
+    currentFilters.page = Number(pageLink.dataset.page);
+    applyFilters();
+    document.getElementById('products-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 function updateStatistics(stats) {
     // Update statistics cards with filtered data
     if (stats) {
@@ -1245,8 +1450,26 @@ function clearFilters() {
         currentFilters[filterType] = 'all';
     });
 
+    const productSearch = document.getElementById('productSearch');
+    const clearSearch = document.getElementById('clearSearch');
+    currentFilters.search = '';
+    currentFilters.page = 1;
+    if (productSearch) {
+        productSearch.value = '';
+    }
+    if (clearSearch) {
+        clearSearch.classList.add('d-none');
+    }
+
     // Reload all products
     applyFilters();
+}
+
+function updateFilterUrl(queryString) {
+    const newUrl = queryString
+        ? `${window.location.pathname}?${queryString}`
+        : window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
 }
 
 // Product management functions

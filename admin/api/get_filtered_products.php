@@ -1,6 +1,6 @@
 <?php
 // API endpoint for filtered products
-include '../../includes/config.php';
+include __DIR__ . '/../../includes/config.php';
 
 // Get filter parameters
 $brand_filter = $_GET['brand'] ?? 'all';
@@ -8,6 +8,9 @@ $model_filter = $_GET['model'] ?? 'all';
 $category_filter = $_GET['category'] ?? 'all';
 $status_filter = $_GET['status'] ?? 'all';
 $stock_filter = $_GET['stock'] ?? 'all';
+$search = trim($_GET['search'] ?? '');
+$per_page = 40;
+$current_page = max(1, (int)($_GET['page'] ?? 1));
 
 // Build WHERE conditions
 $where_conditions = [];
@@ -36,8 +39,34 @@ if ($stock_filter !== 'all') {
             break;
     }
 }
+if ($search !== '') {
+    $escaped_search = $conn->real_escape_string($search);
+    $where_conditions[] = "(
+        p.product_name LIKE '%$escaped_search%'
+        OR p.sku LIKE '%$escaped_search%'
+        OR p.description LIKE '%$escaped_search%'
+        OR p.short_description LIKE '%$escaped_search%'
+        OR p.specifications LIKE '%$escaped_search%'
+        OR b.brand_name LIKE '%$escaped_search%'
+        OR m.model_name LIKE '%$escaped_search%'
+        OR c.category_name LIKE '%$escaped_search%'
+    )";
+}
 
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+
+$count_query = "
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM products_enhanced p
+    LEFT JOIN vehicle_brands_enhanced b ON p.brand_id = b.id
+    LEFT JOIN vehicle_models_enhanced m ON p.model_id = m.id
+    LEFT JOIN categories_enhanced c ON p.category_id = c.id
+    $where_clause
+";
+$total_products = (int)($conn->query($count_query)->fetch_assoc()['total'] ?? 0);
+$total_pages = max(1, (int)ceil($total_products / $per_page));
+$current_page = min($current_page, $total_pages);
+$offset = ($current_page - 1) * $per_page;
 
 // Get filtered products
 $query = "
@@ -53,6 +82,7 @@ $query = "
     LEFT JOIN categories_enhanced c ON p.category_id = c.id
     $where_clause
     ORDER BY p.created_at DESC
+    LIMIT $per_page OFFSET $offset
 ";
 
 $result = $conn->query($query);
@@ -76,6 +106,9 @@ $stats_query = "
         COUNT(DISTINCT p.brand_id) as total_brands,
         COUNT(DISTINCT p.category_id) as total_categories
     FROM products_enhanced p
+    LEFT JOIN vehicle_brands_enhanced b ON p.brand_id = b.id
+    LEFT JOIN vehicle_models_enhanced m ON p.model_id = m.id
+    LEFT JOIN categories_enhanced c ON p.category_id = c.id
     $where_clause
 ";
 
@@ -88,12 +121,21 @@ echo json_encode([
     'success' => true,
     'products' => $products,
     'stats' => $stats,
+    'pagination' => [
+        'page' => $current_page,
+        'per_page' => $per_page,
+        'total_items' => $total_products,
+        'total_pages' => $total_pages,
+        'from' => $total_products ? $offset + 1 : 0,
+        'to' => min($offset + $per_page, $total_products)
+    ],
     'filters' => [
         'brand' => $brand_filter,
         'model' => $model_filter,
         'category' => $category_filter,
         'status' => $status_filter,
-        'stock' => $stock_filter
+        'stock' => $stock_filter,
+        'search' => $search
     ]
 ]);
 ?>
