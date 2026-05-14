@@ -582,7 +582,7 @@ function buildProductPageUrl($page) {
     <!-- Products Grid -->
     <div class="row g-4" id="products-container">
         <?php while ($product = $result->fetch_assoc()): ?>
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-3 col-md-6">
                 <div class="product-card enhanced-card h-100">
                     <!-- Product Image Header -->
                     <div class="card-image-header">
@@ -1213,7 +1213,7 @@ function updateProductsGrid(products) {
         const stockBadgeClass = getStockBadgeClass(stockStatus);
 
         html += `
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-3 col-md-6">
                 <div class="product-card enhanced-card h-100">
                     <div class="card-image-header">
                         ${product.main_image ?

@@ -426,7 +426,7 @@ function buildModelPageUrl($page) {
     <div class="row g-4" id="models-container">
         <?php if ($result->num_rows > 0): ?>
             <?php while ($model = $result->fetch_assoc()): ?>
-                <div class="col-xl-4 col-lg-6 col-md-6">
+                <div class="col-xl-3 col-lg-3 col-md-6">
                     <div class="model-card enhanced-card h-100">
                         <!-- Model Image Header -->
                         <div class="card-image-header">
@@ -907,7 +907,7 @@ function updateModelsGrid(models) {
     let html = '';
     models.forEach(model => {
         html += `
-            <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="col-xl-3 col-lg-3 col-md-6">
                 <div class="model-card enhanced-card h-100">
                     <div class="card-image-header">
                         ${model.model_image ?
