@@ -320,6 +320,7 @@ include '../includes/toast_notifications.php';
                     </div>
 
                     <form id="priceRequestForm" class="mt-4">
+                        <input type="hidden" name="product_id" id="price_product_id" value="">
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label fw-bold">Part Name <span class="text-danger">*</span></label>
@@ -1327,6 +1328,19 @@ function loadFilters() {
 // Check URL parameters and apply initial filters
 function checkUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
+    const priceProductId = parseInt(urlParams.get('price_product_id') || '0', 10);
+
+    if (priceProductId > 0) {
+        fetch(`/api/get_products.php?id=${encodeURIComponent(priceProductId)}&limit=1`)
+            .then(response => response.json())
+            .then(data => {
+                const product = data.success && data.products && data.products.length ? data.products[0] : null;
+                if (product) {
+                    openPriceRequest(product.id, product.name, product.model || '');
+                }
+            })
+            .catch(error => console.error('Error loading price request product:', error));
+    }
 
     // Check for brand parameter
     const brandParam = urlParams.get('brand');
@@ -1553,9 +1567,9 @@ function renderFeaturedProducts(products) {
                             <i class="fas fa-eye me-1"></i>Quick View
                         </button>
                         ${product.stock_status === 'Special Order' ?
-                            `<a class="btn btn-sm btn-add-cart" href="${getPriceRequestUrl(product.id)}" onclick="event.stopPropagation();">
+                            `<button type="button" class="btn btn-sm btn-add-cart" onclick="event.stopPropagation(); openPriceRequest(${product.id}, '${product.name.replace(/'/g, "\\'")}', '${(product.model || '').replace(/'/g, "\\'")}')">
                                 <i class="fas fa-comment-dollar me-1"></i>Request Price
-                            </a>` :
+                            </button>` :
                             `<button class="btn btn-sm btn-add-cart" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
                                 <i class="fas fa-cart-plus me-1"></i>Add to Cart
                             </button>`
@@ -1790,9 +1804,9 @@ function renderProducts(products) {
                             <i class="fas fa-eye me-1"></i>Quick View
                         </button>
                         ${product.stock_status === 'Special Order' ?
-                            `<a class="btn btn-add-cart" href="${getPriceRequestUrl(product.id)}" onclick="event.stopPropagation();">
+                            `<button type="button" class="btn btn-add-cart" onclick="event.stopPropagation(); openPriceRequest(${product.id}, '${product.name.replace(/'/g, "\\'")}', '${(product.model || '').replace(/'/g, "\\'")}')">
                                 <i class="fas fa-comment-dollar me-1"></i>Request Price
-                            </a>` :
+                            </button>` :
                             `<button class="btn btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
                                 <i class="fas fa-cart-plus me-1"></i>Add to Cart
                             </button>`
@@ -2268,8 +2282,23 @@ function addToCart(productId, productName, price) {
     });
 }
 
-function getPriceRequestUrl(productId) {
-    return `/pages/order_request.php?mode=price&product_id=${encodeURIComponent(productId)}`;
+function openPriceRequest(productId, productName = '', carModel = '') {
+    const form = document.getElementById('priceRequestForm');
+    if (!form) return;
+
+    const productIdInput = document.getElementById('price_product_id');
+    const partNameInput = document.getElementById('price_part_name');
+    const carModelInput = document.getElementById('price_car_model');
+
+    if (productIdInput) productIdInput.value = productId || '';
+    if (partNameInput && productName) partNameInput.value = productName;
+    if (carModelInput && carModel) carModelInput.value = carModel;
+
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+        const nameInput = document.getElementById('price_full_name');
+        if (nameInput) nameInput.focus();
+    }, 450);
 }
 
 // Quick view product
@@ -2416,7 +2445,7 @@ function renderQuickView(product) {
             btn.classList.remove('btn-primary');
             btn.classList.add('btn-info');
             btn.onclick = function() {
-                window.location.href = getPriceRequestUrl(product.id);
+                openPriceRequest(product.id, product.name, product.model || '');
             };
         } else {
             btn.innerHTML = '<i class="fas fa-cart-plus me-1"></i>Add to Cart';

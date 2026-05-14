@@ -1,4 +1,4 @@
-    <?php
+<?php
 // API endpoint to get products with filtering, sorting, and pagination
 // SPARE XPRESS LTD - Dynamic Shop API
 
@@ -127,9 +127,9 @@ try {
 
     // Availability filter
     if ($availability === 'in_stock') {
-        $where_conditions[] = "p.stock_quantity > 0";
+        $where_conditions[] = "p.stock_quantity > 0 AND COALESCE(p.price_request_only, 0) = 0";
     } elseif ($availability === 'special_order') {
-        $where_conditions[] = "p.stock_quantity = 0";
+        $where_conditions[] = "(p.stock_quantity = 0 OR COALESCE(p.price_request_only, 0) = 1)";
     }
 
     // Single product ID filter (for quick view)
@@ -199,6 +199,7 @@ try {
     // Get products
     $sql = "SELECT p.*, b.brand_name, m.model_name, c.category_name,
                     CASE
+                        WHEN COALESCE(p.price_request_only, 0) = 1 THEN 'Special Order'
                         WHEN p.stock_quantity > 5 THEN 'In Stock'
                         WHEN p.stock_quantity > 0 THEN 'Low Stock'
                         ELSE 'Special Order'
@@ -243,6 +244,7 @@ try {
             'description' => $row['description'],
             'price' => (float)$row['regular_price'],
             'sale_price' => $row['sale_price'] ? (float)$row['sale_price'] : null,
+            'price_request_only' => !empty($row['price_request_only']),
             'brand' => $row['brand_name'],
             'model' => $row['model_name'],
             'category' => $row['category_name'],

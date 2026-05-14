@@ -65,6 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $product = $result->fetch_assoc();
         $stmt->close();
 
+        if (!empty($product['price_request_only'])) {
+            $response['message'] = 'This product needs a current price quote. Please use Request Price.';
+            echo json_encode($response);
+            exit;
+        }
+
+        if ((int)$product['stock_quantity'] <= 0) {
+            $response['message'] = 'This product is not in local stock. Please use Request Price.';
+            echo json_encode($response);
+            exit;
+        }
+
         // Check stock availability
          if ($product['stock_quantity'] < $quantity && $product['stock_quantity'] > 0) {
              $response['message'] = 'Only ' . $product['stock_quantity'] . ' items available in stock';

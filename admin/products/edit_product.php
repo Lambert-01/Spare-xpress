@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $low_stock_threshold = (int)$_POST['low_stock_threshold'];
     $manage_stock = isset($_POST['manage_stock']) ? 1 : 0;
     $backorders_allowed = isset($_POST['backorders_allowed']) ? 1 : 0;
+    $price_request_only = isset($_POST['price_request_only']) ? 1 : 0;
 
     // Product details
     $product_condition = $_POST['product_condition'];
@@ -119,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update_query = "UPDATE products_enhanced SET
         product_name = ?, slug = ?, sku = ?, brand_id = ?, model_id = ?, category_id = ?,
         description = ?, short_description = ?, regular_price = ?, sale_price = ?, wholesale_price = ?,
-        stock_quantity = ?, stock_status = ?, low_stock_threshold = ?, manage_stock = ?, backorders_allowed = ?,
+        stock_quantity = ?, stock_status = ?, low_stock_threshold = ?, manage_stock = ?, backorders_allowed = ?, price_request_only = ?,
         product_condition = ?, is_featured = ?, is_active = ?, visibility = ?,
         warranty_period = ?, warranty_type = ?, warranty_details = ?, main_image = ?, gallery_images = ?,
         compatible_models = ?, tags = ?, specifications = ?,
@@ -129,27 +130,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Prepare the update statement
     $stmt = $conn->prepare($update_query);
     
-    // Build type string dynamically to handle NULL values
-    $types = [];
     $params = [
         &$product_name, &$slug, &$sku, &$brand_id, &$model_id, &$category_id,
         &$description, &$short_description, &$regular_price, &$sale_price, &$wholesale_price,
-        &$stock_quantity, &$stock_status, &$low_stock_threshold, &$manage_stock, &$backorders_allowed,
+        &$stock_quantity, &$stock_status, &$low_stock_threshold, &$manage_stock, &$backorders_allowed, &$price_request_only,
         &$product_condition, &$is_featured, &$is_active, &$visibility,
         &$warranty_period, &$warranty_type, &$warranty_details, &$main_image, &$gallery_json,
         &$compatible_models, &$tags, &$specifications,
         &$seo_title, &$seo_description, &$meta_keywords, &$product_id
     ];
-    
-    // Define types for each parameter
-    $type_definitions = [
-        's', 's', 's', 'i',
-        $model_id === null ? 's' : 'i', // model_id can be NULL
-        'i', 's', 'd', 'd', 'd', 'i', 's', 'i', 'i', 'i', 's', 'i', 'i', 's', 's',
-        's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 'i'
-    ];
-    
-    $type_string = implode('', $type_definitions);
+    $type_string = "sssiiissdddisiiiisiissssssssssssi";
      
     // Bind parameters with correct types
     $stmt->bind_param($type_string, ...$params);
@@ -316,6 +306,15 @@ function generateSKU() {
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Wholesale Price (RWF)</label>
                                 <input type="number" class="form-control" name="wholesale_price" step="0.01" min="0" value="<?php echo $product['wholesale_price'] ?? ''; ?>">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="price_request_only" id="priceRequestOnly" <?php echo !empty($product['price_request_only']) ? 'checked' : ''; ?>>
+                                    <label class="form-check-label fw-semibold" for="priceRequestOnly">
+                                        Request Price only
+                                    </label>
+                                    <div class="form-text">Hide price on the website and send customers to the price request form.</div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -47,8 +47,13 @@ try {
         }
     }
 
+    $requires_price_request = !empty($product['price_request_only']) || (int)$product['stock_quantity'] <= 0;
+
     // Determine stock status
-    if ($product['stock_quantity'] > 5) {
+    if (!empty($product['price_request_only'])) {
+        $stock_status = 'Request Price';
+        $stock_class = 'bg-info text-dark';
+    } elseif ($product['stock_quantity'] > 5) {
         $stock_status = 'In Stock';
         $stock_class = 'bg-success';
     } elseif ($product['stock_quantity'] > 0) {
@@ -166,7 +171,7 @@ include '../includes/wishlist.php';
 
                     <!-- Price -->
                     <div class="product-price mb-3">
-                        <?php if ($product['stock_quantity'] > 0): ?>
+                        <?php if (!$requires_price_request): ?>
                             <h3 class="text-primary fw-bold">RWF <?php echo number_format($product['regular_price'], 0, '.', ','); ?></h3>
                         <?php else: ?>
                             <h4 class="text-primary fw-bold mb-1">Check Today’s Price</h4>
@@ -179,7 +184,7 @@ include '../includes/wishlist.php';
                         <span class="badge <?php echo $stock_class; ?> fs-6 px-3 py-2">
                             <i class="fas fa-warehouse me-1"></i><?php echo $stock_status; ?>
                         </span>
-                        <?php if ($product['stock_quantity'] > 0): ?>
+                        <?php if (!$requires_price_request): ?>
                             <small class="text-muted ms-2">(<?php echo $product['stock_quantity']; ?> available)</small>
                         <?php endif; ?>
                     </div>
@@ -213,12 +218,12 @@ include '../includes/wishlist.php';
                     <div class="action-buttons mb-4">
                         <div class="row g-2">
                             <div class="col-md-8">
-                                <?php if ($product['stock_quantity'] > 0): ?>
+                                <?php if (!$requires_price_request): ?>
                                     <button class="btn btn-primary btn-lg w-100" onclick="addToCart(<?php echo $product['id']; ?>)">
                                         <i class="fas fa-cart-plus me-2"></i>Add to Cart
                                     </button>
                                 <?php else: ?>
-                                    <a class="btn btn-info text-dark btn-lg w-100" href="/pages/order_request.php?mode=price&product_id=<?php echo (int)$product['id']; ?>">
+                                    <a class="btn btn-info text-dark btn-lg w-100" href="/pages/shop.php?price_product_id=<?php echo (int)$product['id']; ?>">
                                         <i class="fas fa-comment-dollar me-2"></i>Request Price
                                     </a>
                                 <?php endif; ?>

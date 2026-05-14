@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $low_stock_threshold = (int)$_POST['low_stock_threshold'];
         $manage_stock = isset($_POST['manage_stock']) ? 1 : 0;
         $backorders_allowed = isset($_POST['backorders_allowed']) ? 1 : 0;
+        $price_request_only = isset($_POST['price_request_only']) ? 1 : 0;
 
         // Product details
         $product_condition = $_POST['product_condition'];
@@ -57,15 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO products_enhanced
             (product_name, slug, sku, brand_id, model_id, category_id, description, short_description,
              regular_price, sale_price, wholesale_price, stock_quantity, stock_status, low_stock_threshold,
-             manage_stock, backorders_allowed, product_condition, is_featured, is_active, visibility,
+             manage_stock, backorders_allowed, price_request_only, product_condition, is_featured, is_active, visibility,
              warranty_period, warranty_type, warranty_details, compatible_models, tags, specifications,
              seo_title, seo_description, meta_keywords)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        $stmt->bind_param("sssisssssssisiisssssssss",
+        $stmt->bind_param("sssiiissdddisiiiisiissssssssss",
             $product_name, $slug, $sku, $brand_id, $model_id, $category_id, $description, $short_description,
             $regular_price, $sale_price, $wholesale_price, $stock_quantity, $stock_status, $low_stock_threshold,
-            $manage_stock, $backorders_allowed, $product_condition, $is_featured, $is_active, $visibility,
+            $manage_stock, $backorders_allowed, $price_request_only, $product_condition, $is_featured, $is_active, $visibility,
             $warranty_period, $warranty_type, $warranty_details, $compatible_models, $tags, $specifications,
             $seo_title, $seo_description, $meta_keywords);
 
@@ -138,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $low_stock_threshold = (int)$_POST['low_stock_threshold'];
         $manage_stock = isset($_POST['manage_stock']) ? 1 : 0;
         $backorders_allowed = isset($_POST['backorders_allowed']) ? 1 : 0;
+        $price_request_only = isset($_POST['price_request_only']) ? 1 : 0;
 
         // Product details
         $product_condition = $_POST['product_condition'];
@@ -167,15 +169,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("UPDATE products_enhanced SET
             product_name = ?, slug = ?, sku = ?, brand_id = ?, model_id = ?, category_id = ?, description = ?, short_description = ?,
             regular_price = ?, sale_price = ?, wholesale_price = ?, stock_quantity = ?, stock_status = ?, low_stock_threshold = ?,
-            manage_stock = ?, backorders_allowed = ?, product_condition = ?, is_featured = ?, is_active = ?, visibility = ?,
+            manage_stock = ?, backorders_allowed = ?, price_request_only = ?, product_condition = ?, is_featured = ?, is_active = ?, visibility = ?,
             warranty_period = ?, warranty_type = ?, warranty_details = ?, compatible_models = ?, tags = ?, specifications = ?,
             seo_title = ?, seo_description = ?, meta_keywords = ?
             WHERE id = ?");
 
-        $stmt->bind_param("sssisssssssisiisssssssssssi",
+        $stmt->bind_param("sssiiissdddisiiiisiissssssssssi",
             $product_name, $slug, $sku, $brand_id, $model_id, $category_id, $description, $short_description,
             $regular_price, $sale_price, $wholesale_price, $stock_quantity, $stock_status, $low_stock_threshold,
-            $manage_stock, $backorders_allowed, $product_condition, $is_featured, $is_active, $visibility,
+            $manage_stock, $backorders_allowed, $price_request_only, $product_condition, $is_featured, $is_active, $visibility,
             $warranty_period, $warranty_type, $warranty_details, $compatible_models, $tags, $specifications,
             $seo_title, $seo_description, $meta_keywords, $product_id);
 
@@ -610,6 +612,11 @@ function buildProductPageUrl($page) {
                                     <i class="bi bi-tag-fill me-1"></i>Sale
                                 </span>
                             <?php endif; ?>
+                            <?php if (!empty($product['price_request_only'])): ?>
+                                <span class="badge bg-info text-dark">
+                                    <i class="bi bi-chat-quote-fill me-1"></i>Request Price
+                                </span>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Card Controls -->
@@ -659,7 +666,11 @@ function buildProductPageUrl($page) {
 
                         <!-- Pricing -->
                         <div class="product-pricing mb-3">
-                            <?php if ($product['sale_price'] && $product['sale_price'] < $product['regular_price']): ?>
+                            <?php if (!empty($product['price_request_only'])): ?>
+                                <div class="regular-price text-info fw-bold">
+                                    Request Price
+                                </div>
+                            <?php elseif ($product['sale_price'] && $product['sale_price'] < $product['regular_price']): ?>
                                 <div class="price-sale">
                                     <span class="original-price text-decoration-line-through text-muted small">
                                         RWF <?php echo number_format($product['regular_price'], 0); ?>
@@ -839,6 +850,15 @@ function buildProductPageUrl($page) {
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Wholesale Price (RWF)</label>
                             <input type="number" class="form-control" name="wholesale_price" step="0.01" min="0">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="price_request_only" id="priceRequestOnly">
+                                <label class="form-check-label fw-semibold" for="priceRequestOnly">
+                                    Request Price only
+                                </label>
+                                <div class="form-text">Hide price on the website and send customers to the price request form.</div>
+                            </div>
                         </div>
 
                         <!-- Stock Management -->
@@ -1228,6 +1248,7 @@ function updateProductsGrid(products) {
                         <div class="product-badges">
                             ${product.is_featured ? '<span class="badge bg-warning text-dark"><i class="bi bi-star-fill me-1"></i>Featured</span>' : ''}
                             ${product.sale_price && product.sale_price < product.regular_price ? '<span class="badge bg-danger"><i class="bi bi-tag-fill me-1"></i>Sale</span>' : ''}
+                            ${Number(product.price_request_only || 0) === 1 ? '<span class="badge bg-info text-dark"><i class="bi bi-chat-quote-fill me-1"></i>Request Price</span>' : ''}
                         </div>
 
                         <div class="card-controls">
@@ -1271,7 +1292,9 @@ function updateProductsGrid(products) {
                         </div>
 
                         <div class="product-pricing mb-3">
-                            ${product.sale_price && product.sale_price < product.regular_price ?
+                            ${Number(product.price_request_only || 0) === 1 ?
+                                `<div class="regular-price text-info fw-bold">Request Price</div>` :
+                            (product.sale_price && product.sale_price < product.regular_price ?
                                 `<div class="price-sale">
                                     <span class="original-price text-decoration-line-through text-muted small">
                                         RWF ${Number(product.regular_price).toLocaleString()}
@@ -1283,7 +1306,7 @@ function updateProductsGrid(products) {
                                 `<div class="regular-price text-primary fw-bold">
                                     RWF ${Number(product.regular_price).toLocaleString()}
                                 </div>`
-                            }
+                            )}
                         </div>
 
                         <div class="analytics-grid mb-3">
