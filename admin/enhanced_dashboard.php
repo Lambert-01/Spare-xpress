@@ -23,6 +23,11 @@ $stats = [
     'recent_orders_count' => countRowsWhere('orders_enhanced', "created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)")
 ];
 
+// Compute progress bar percentages from real data
+$orders_progress = $stats['total_orders'] > 0 ? min(100, round(($stats['delivered_orders'] / $stats['total_orders']) * 100)) : 0;
+$products_in_stock = $stats['total_products'] - $stats['out_of_stock_products'];
+$inventory_progress = $stats['total_products'] > 0 ? min(100, round(($products_in_stock / $stats['total_products']) * 100)) : 0;
+
 // Get recent orders for timeline
 $recent_orders = $conn->query("
     SELECT o.*, c.first_name, c.last_name, c.phone,
@@ -120,7 +125,7 @@ for ($i = 6; $i >= 0; $i--) {
                     <h2 class="card-value text-primary mb-2" data-stat="total_orders"><?php echo number_format($stats['total_orders']); ?></h2>
                     <p class="card-title mb-3">Total Orders</p>
                     <div class="progress mb-3" style="height: 6px;">
-                        <div class="progress-bar bg-primary" style="width: 100%"></div>
+                        <div class="progress-bar bg-primary" style="width: <?php echo $orders_progress; ?>%" title="<?php echo $orders_progress; ?>% delivered"></div>
                     </div>
                     <div class="d-flex justify-content-between text-sm">
                         <span class="text-success">
@@ -130,6 +135,7 @@ for ($i = 6; $i >= 0; $i--) {
                             <i class="bi bi-clock me-1"></i><?php echo $stats['pending_orders']; ?> Pending
                         </span>
                     </div>
+                    <div class="mt-2" id="orders-trend"></div>
                 </div>
             </div>
         </div>
@@ -144,7 +150,8 @@ for ($i = 6; $i >= 0; $i--) {
                     <h2 class="card-value text-success mb-2" data-stat="monthly_revenue">RWF <?php echo number_format($monthly_revenue, 0); ?></h2>
                     <p class="card-title mb-3">Monthly Revenue</p>
                     <div class="progress mb-3" style="height: 6px;">
-                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                        <?php $rev_progress = $monthly_revenue > 0 ? min(100, round(($monthly_orders / max(1, $stats['total_orders'])) * 100)) : 0; ?>
+                        <div class="progress-bar bg-success" style="width: <?php echo $rev_progress; ?>%" title="<?php echo $rev_progress; ?>% of orders paid"></div>
                     </div>
                     <div class="d-flex justify-content-between text-sm">
                         <span class="text-info">
@@ -154,6 +161,7 @@ for ($i = 6; $i >= 0; $i--) {
                             <i class="bi bi-calendar me-1"></i>Last 30 Days
                         </span>
                     </div>
+                    <div class="mt-2" id="revenue-trend"></div>
                 </div>
             </div>
         </div>
@@ -168,7 +176,7 @@ for ($i = 6; $i >= 0; $i--) {
                     <h2 class="card-value text-warning mb-2" data-stat="total_products"><?php echo number_format($stats['total_products']); ?></h2>
                     <p class="card-title mb-3">Total Products</p>
                     <div class="progress mb-3" style="height: 6px;">
-                        <div class="progress-bar bg-warning" style="width: 75%"></div>
+                        <div class="progress-bar bg-warning" style="width: <?php echo $inventory_progress; ?>%" title="<?php echo $inventory_progress; ?>% in stock"></div>
                     </div>
                     <div class="d-flex justify-content-between text-sm">
                         <span class="text-danger">
@@ -192,7 +200,12 @@ for ($i = 6; $i >= 0; $i--) {
                     <h2 class="card-value text-info mb-2" data-stat="total_customers"><?php echo number_format($stats['total_customers']); ?></h2>
                     <p class="card-title mb-3">Total Customers</p>
                     <div class="progress mb-3" style="height: 6px;">
-                        <div class="progress-bar bg-info" style="width: 60%"></div>
+                        <?php
+                        $max_customers = max(1, $stats['total_customers']);
+                        $recent_customers = countRowsWhere('customers_enhanced', "created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
+                        $cust_progress = min(100, round(($recent_customers / $max_customers) * 100));
+                        ?>
+                        <div class="progress-bar bg-info" style="width: <?php echo max(5, $cust_progress); ?>%" title="<?php echo $recent_customers; ?> new this month"></div>
                     </div>
                     <div class="d-flex justify-content-between text-sm">
                         <span class="text-primary">
@@ -202,6 +215,7 @@ for ($i = 6; $i >= 0; $i--) {
                             <i class="bi bi-car-front me-1"></i><?php echo $stats['total_models']; ?> Models
                         </span>
                     </div>
+                    <div class="mt-2" id="customers-trend"></div>
                 </div>
             </div>
         </div>
@@ -222,13 +236,13 @@ for ($i = 6; $i >= 0; $i--) {
                             <p class="text-muted small mb-0">Daily order volume and patterns</p>
                         </div>
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-calendar me-1"></i>Last 7 Days
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" id="chartPeriodBtn">
+                                <i class="bi bi-calendar me-1"></i><span id="chartPeriodLabel">Last 7 Days</span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('7d')">Last 7 Days</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('30d')">Last 30 Days</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('90d')">Last 90 Days</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('7d','Last 7 Days')">Last 7 Days</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('30d','Last 30 Days')">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeChartPeriod('90d','Last 90 Days')">Last 90 Days</a></li>
                             </ul>
                         </div>
                     </div>
@@ -269,12 +283,12 @@ for ($i = 6; $i >= 0; $i--) {
                             <span class="badge bg-success">Running</span>
                         </div>
                         <div class="d-flex align-items-center mb-3">
-                            <div class="health-dot bg-warning me-3"></div>
+                            <div class="health-dot bg-warning me-3" id="storage-dot"></div>
                             <div class="flex-grow-1">
                                 <div class="fw-semibold small">Storage</div>
-                                <div class="text-muted small">75% Used</div>
+                                <div class="text-muted small" id="storage-label">Checking...</div>
                             </div>
-                            <span class="badge bg-warning">Monitor</span>
+                            <span class="badge bg-warning" id="storage-badge">Monitor</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="health-dot bg-info me-3"></div>
@@ -346,7 +360,11 @@ for ($i = 6; $i >= 0; $i--) {
                 </div>
                 <div class="card-body">
                     <div class="order-timeline" id="recent-orders-timeline">
-                        <?php while ($order = $recent_orders->fetch_assoc()): ?>
+                        <?php
+                        $order_count = 0;
+                        while ($order = $recent_orders->fetch_assoc()):
+                            $order_count++;
+                        ?>
                             <div class="timeline-item mb-3 pb-3 border-bottom">
                                 <div class="d-flex align-items-start">
                                     <div class="timeline-dot <?php
@@ -377,7 +395,7 @@ for ($i = 6; $i >= 0; $i--) {
                                             <small class="text-muted"><?php echo date('M d, H:i', strtotime($order['created_at'])); ?></small>
                                         </div>
                                         <div class="text-muted small mb-1">
-                                            <i class="bi bi-person me-1"></i><?php echo htmlspecialchars(($order['first_name'] . ' ' . $order['last_name']) ?: 'Walk-in Customer'); ?>
+                                            <i class="bi bi-person me-1"></i><?php echo htmlspecialchars(trim($order['first_name'] . ' ' . $order['last_name']) ?: 'Walk-in Customer'); ?>
                                             <span class="mx-2">•</span>
                                             <i class="bi bi-box-seam me-1"></i><?php echo $order['item_count']; ?> items
                                             <span class="mx-2">•</span>
@@ -393,6 +411,13 @@ for ($i = 6; $i >= 0; $i--) {
                                 </div>
                             </div>
                         <?php endwhile; ?>
+                        <?php if ($order_count === 0): ?>
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox display-6 d-block mb-2 opacity-50"></i>
+                                <div class="fw-semibold">No orders yet</div>
+                                <small>Orders will appear here once customers start placing them.</small>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -619,37 +644,60 @@ document.addEventListener('DOMContentLoaded', function() {
     // Real-time dashboard updates
     let lastUpdateTimestamp = <?php echo time(); ?>;
 
-    function updateDashboard() {
-        fetch('api/dashboard_stats.php')
+    function updateDashboard(period) {
+        const p = period || currentChartPeriod || '7d';
+        fetch(`api/dashboard_stats.php?period=${p}`)
             .then(response => response.json())
             .then(data => {
-                if (data.success && data.timestamp > lastUpdateTimestamp) {
+                if (data.success) {
                     updateStats(data.stats);
                     updateRecentOrders(data.recent_orders);
                     updateLowStockAlerts(data.low_stock_alerts);
                     updateOrderTrends(data.order_trends);
                     updatePendingTasks(data.pending_tasks);
-
-                    lastUpdateTimestamp = data.timestamp;
-
-                    // Show update notification
-                    showToast('Dashboard updated', 'info');
+                    updateStorageHealth(data.disk_used_pct);
+                    if (data.timestamp > lastUpdateTimestamp) {
+                        lastUpdateTimestamp = data.timestamp;
+                    }
                 }
             })
-            .catch(error => {
-                console.error('Error updating dashboard:', error);
-            });
+            .catch(error => console.error('Dashboard update error:', error));
     }
 
     function updateStats(stats) {
-        // Update KPI cards
         document.querySelector('[data-stat="total_orders"]').textContent = number_format(stats.total_orders);
         document.querySelector('[data-stat="monthly_revenue"]').textContent = 'RWF ' + number_format(stats.monthly_revenue);
         document.querySelector('[data-stat="total_products"]').textContent = number_format(stats.total_products);
         document.querySelector('[data-stat="total_customers"]').textContent = number_format(stats.total_customers);
-
-        // Update progress bars and additional info
         updateProgressBars(stats);
+        updateTrendIndicators(stats);
+    }
+
+    function updateTrendIndicators(stats) {
+        // Orders trend
+        const ordersTrend = document.getElementById('orders-trend');
+        if (ordersTrend && stats.prev_total_orders !== undefined) {
+            const diff = stats.total_orders - stats.prev_total_orders;
+            ordersTrend.innerHTML = diff >= 0
+                ? `<i class="bi bi-arrow-up-short text-success"></i><small class="text-success">${diff > 0 ? '+' + diff : 'same'} vs last period</small>`
+                : `<i class="bi bi-arrow-down-short text-danger"></i><small class="text-danger">${diff} vs last period</small>`;
+        }
+        // Revenue trend
+        const revTrend = document.getElementById('revenue-trend');
+        if (revTrend && stats.prev_monthly_revenue !== undefined) {
+            const diff = stats.monthly_revenue - stats.prev_monthly_revenue;
+            revTrend.innerHTML = diff >= 0
+                ? `<i class="bi bi-arrow-up-short text-success"></i><small class="text-success">${diff > 0 ? '+RWF ' + number_format(diff) : 'same'} vs last period</small>`
+                : `<i class="bi bi-arrow-down-short text-danger"></i><small class="text-danger">-RWF ${number_format(Math.abs(diff))} vs last period</small>`;
+        }
+        // Customers trend
+        const custTrend = document.getElementById('customers-trend');
+        if (custTrend && stats.prev_total_customers !== undefined) {
+            const newCust = stats.total_customers - stats.prev_total_customers;
+            custTrend.innerHTML = newCust > 0
+                ? `<i class="bi bi-arrow-up-short text-success"></i><small class="text-success">+${newCust} new this month</small>`
+                : `<small class="text-muted">No new customers</small>`;
+        }
     }
 
     function updateProgressBars(stats) {
@@ -752,10 +800,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateOrderTrends(trends) {
-        if (window.orderTrendsChart) {
+        if (window.orderTrendsChart && trends && trends.length) {
             window.orderTrendsChart.data.labels = trends.map(t => t.date);
             window.orderTrendsChart.data.datasets[0].data = trends.map(t => t.count);
-            window.orderTrendsChart.update();
+            window.orderTrendsChart.update('none');
         }
     }
 
@@ -834,12 +882,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }).format(number);
     }
 
+    // Expose chart to window for live updates
+    window.orderTrendsChart = orderTrendsChart;
+
     // Start real-time updates
     const updateInterval = localStorage.getItem('refresh-rate') || 30000;
-    setInterval(updateDashboard, parseInt(updateInterval));
+    if (parseInt(updateInterval) > 0) {
+        setInterval(updateDashboard, parseInt(updateInterval));
+    }
 
-    // Initial update after 5 seconds
-    setTimeout(updateDashboard, 5000);
+    // Initial update immediately to populate alerts + storage
+    updateDashboard();
 });
 
 function showAlert(message, type) {
@@ -863,9 +916,34 @@ function showAlert(message, type) {
     }, 10000);
 }
 
-function changeChartPeriod(period) {
-    // TODO: Implement chart period change
-    console.log('Changing chart period to:', period);
+let currentChartPeriod = '7d';
+
+function changeChartPeriod(period, label) {
+    currentChartPeriod = period;
+    document.getElementById('chartPeriodLabel').textContent = label;
+    updateDashboard(period);
+}
+
+function updateStorageHealth(pct) {
+    if (pct === undefined || pct === null) return;
+    const dot = document.getElementById('storage-dot');
+    const lbl = document.getElementById('storage-label');
+    const badge = document.getElementById('storage-badge');
+    if (!dot || !lbl || !badge) return;
+    lbl.textContent = pct + '% Used';
+    if (pct >= 90) {
+        dot.className = 'health-dot bg-danger me-3';
+        badge.className = 'badge bg-danger';
+        badge.textContent = 'Critical';
+    } else if (pct >= 70) {
+        dot.className = 'health-dot bg-warning me-3';
+        badge.className = 'badge bg-warning';
+        badge.textContent = 'Monitor';
+    } else {
+        dot.className = 'health-dot bg-success me-3';
+        badge.className = 'badge bg-success';
+        badge.textContent = 'Good';
+    }
 }
 </script>
 

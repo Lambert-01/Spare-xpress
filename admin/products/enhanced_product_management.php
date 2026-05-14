@@ -376,9 +376,14 @@ function getStockStatusBadge($status) {
             </h1>
             <p class="text-muted mb-0 fs-5">Professional product management with advanced features and analytics</p>
         </div>
-        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addProductModal">
-            <i class="bi bi-plus-circle-fill me-2"></i>Add New Product
-        </button>
+        <div class="d-flex gap-2">
+            <button class="btn btn-success btn-lg" onclick="window.location.href='/admin/export_inventory_excel.php'">
+                <i class="bi bi-file-earmark-excel-fill me-2"></i>Export Excel
+            </button>
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <i class="bi bi-plus-circle-fill me-2"></i>Add New Product
+            </button>
+        </div>
     </div>
 
     <!-- Success/Error Messages -->

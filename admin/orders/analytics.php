@@ -1,12 +1,10 @@
 <?php
-// Redirect to enhanced dashboard analytics
-header("Location: enhanced_dashboard.php?tab=analytics");
-exit;
-?>
+// Order Analytics
+include_once '../includes/auth.php';
+include_once '../includes/functions.php';
+include_once '../header.php';
 
-// Get analytics data
 $current_month = date('Y-m');
-$last_month = date('Y-m', strtotime('-1 month'));
 $current_year = date('Y');
 
 // Monthly revenue data for the last 12 months
