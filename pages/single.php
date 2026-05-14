@@ -166,7 +166,12 @@ include '../includes/wishlist.php';
 
                     <!-- Price -->
                     <div class="product-price mb-3">
-                        <h3 class="text-primary fw-bold">RWF <?php echo number_format($product['regular_price'], 0, '.', ','); ?></h3>
+                        <?php if ($product['stock_quantity'] > 0): ?>
+                            <h3 class="text-primary fw-bold">RWF <?php echo number_format($product['regular_price'], 0, '.', ','); ?></h3>
+                        <?php else: ?>
+                            <h4 class="text-primary fw-bold mb-1">Check Today’s Price</h4>
+                            <div class="text-muted small">Prices change often • 50% deposit after quote</div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Stock Status -->
@@ -208,9 +213,15 @@ include '../includes/wishlist.php';
                     <div class="action-buttons mb-4">
                         <div class="row g-2">
                             <div class="col-md-8">
-                                <button class="btn btn-primary btn-lg w-100" onclick="addToCart(<?php echo $product['id']; ?>)">
-                                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                                </button>
+                                <?php if ($product['stock_quantity'] > 0): ?>
+                                    <button class="btn btn-primary btn-lg w-100" onclick="addToCart(<?php echo $product['id']; ?>)">
+                                        <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                                    </button>
+                                <?php else: ?>
+                                    <a class="btn btn-info text-dark btn-lg w-100" href="/pages/order_request.php?mode=price&product_id=<?php echo (int)$product['id']; ?>">
+                                        <i class="fas fa-comment-dollar me-2"></i>Request Price
+                                    </a>
+                                <?php endif; ?>
                             </div>
                             <div class="col-md-4">
                                 <button class="btn btn-outline-danger btn-lg w-100 btn-wishlist"

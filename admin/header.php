@@ -495,6 +495,12 @@ require_once __DIR__ . '/includes/functions.php';
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link submenu-link" href="/admin/orders/price_requests.php" title="Price Requests (Special Order)">
+                                <i class="bi bi-currency-exchange"></i>
+                                <span>Price Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link submenu-link" href="/admin/orders/order_demand_list.php" title="On-Demand Requests">
                                 <i class="bi bi-star"></i>
                                 <span>On-Demand</span>

@@ -274,45 +274,97 @@ include '../includes/toast_notifications.php';
 </div>
 <!-- Shop Section End -->
 
-<!-- Featured Products Section Start -->
+<!-- Check Today's Price Section Start -->
 <div class="container-fluid py-5 bg-light">
     <div class="container py-5">
-        <div class="text-center mb-5 fade-in">
-            <div class="mb-3">
-                <span class="badge-modern badge-new">
-                    <i class="fas fa-fire me-2"></i>Featured Parts
-                </span>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="bg-white rounded shadow p-4 p-lg-5 wow fadeInUp" data-wow-delay="0.05s" style="border-left: 6px solid #0dcaf0;">
+                    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+                        <div>
+                            <h2 class="mb-2">
+                                <i class="fas fa-comment-dollar text-info me-2"></i>
+                                Check Today's Price
+                            </h2>
+                            <p class="text-muted mb-0">
+                                For parts we must order from Dubai (prices change often). Submit a request and our sales team will send a quote.
+                            </p>
+                        </div>
+                        <div class="text-start text-lg-end">
+                            <span class="badge bg-info text-dark px-3 py-2">
+                                50% deposit after quote
+                            </span>
+                            <div class="small text-muted mt-2">
+                                Remaining 50% on delivery
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="priceRequestSuccess" class="alert alert-success alert-dismissible fade show mt-4 mb-0" role="alert" style="display: none;">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span id="priceRequestSuccessMsg"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <div id="priceRequestError" class="alert alert-danger alert-dismissible fade show mt-4 mb-0" role="alert" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Please fix the following errors:</strong>
+                        <ul id="priceRequestErrorList" class="mb-0 mt-2"></ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <div class="alert alert-light border mt-4 mb-0">
+                        <i class="fas fa-shopping-cart me-2 text-primary"></i>
+                        Have this part <strong>in stock</strong>? You can buy directly in the shop with <strong>Add to Cart</strong>.
+                        <a href="#productsContainer" class="ms-2">Browse Products</a>
+                    </div>
+
+                    <form id="priceRequestForm" class="mt-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Part Name <span class="text-danger">*</span></label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="part_name"
+                                    id="price_part_name"
+                                    placeholder="e.g., Brake Pads Front Set"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Your Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="full_name" id="price_full_name" placeholder="Full name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" name="phone_number" id="price_phone_number" placeholder="+2507XXXXXXXX" required>
+                                <div class="form-text">Format: +250790123456</div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Car Model <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="car_model" id="price_car_model" placeholder="e.g., Toyota Corolla, RX 350, Vitz..." required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Quantity <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="quantity" id="price_quantity" min="1" value="1" required>
+                            </div>
+
+                            <div class="col-12 d-flex gap-2 flex-wrap mt-2">
+                                <button type="submit" class="btn btn-info text-dark px-4">
+                                    <i class="fas fa-paper-plane me-2"></i>Request Price
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <h2 class="mb-3 fw-bold">
-                <span class="text-gradient">Latest & Popular Parts</span>
-            </h2>
-            <p class="lead text-muted mb-0" style="max-width: 700px; margin: 0 auto;">
-                Discover our most popular and recently added automotive parts - handpicked for quality and reliability
-            </p>
-        </div>
-
-        <!-- Featured Products Container -->
-        <div id="featuredProductsContainer" class="row g-4 wow fadeInUp" data-wow-delay="0.5s">
-            <!-- Featured products will be loaded here dynamically -->
-        </div>
-
-        <!-- Loading State -->
-        <div id="featuredLoading" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading featured products...</span>
-            </div>
-            <p class="mt-3 text-muted">Loading featured products...</p>
-        </div>
-
-        <!-- View All Products Button -->
-        <div class="text-center mt-5">
-            <a href="#productsContainer" class="btn btn-primary btn-lg px-5 py-3">
-                <i class="fas fa-th-large me-2"></i>View All Products
-            </a>
         </div>
     </div>
 </div>
-<!-- Featured Products Section End -->
+<!-- Check Today's Price Section End -->
 
 <!-- Trust Signals Section - Premium -->
 <div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);">
@@ -1141,9 +1193,9 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSavedPageSize();
     loadFilters();
     loadProducts();
-    loadFeaturedProducts();
     loadRecentlyViewed();
     loadComparisonList();
+    initPriceRequestForm();
 
     // Check for URL parameters and apply filters
     checkUrlParameters();
@@ -1185,6 +1237,68 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Initialize price request form
+function initPriceRequestForm() {
+    const form = document.getElementById('priceRequestForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+        
+        fetch('/process_price_request.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('priceRequestSuccessMsg').textContent = data.message || 'Request submitted successfully!';
+                document.getElementById('priceRequestSuccess').style.display = 'block';
+                document.getElementById('priceRequestError').style.display = 'none';
+                form.reset();
+                
+                setTimeout(() => {
+                    document.getElementById('priceRequestSuccess').style.display = 'none';
+                }, 5000);
+            } else {
+                const errorList = document.getElementById('priceRequestErrorList');
+                errorList.innerHTML = '';
+                if (data.errors && Array.isArray(data.errors)) {
+                    data.errors.forEach(error => {
+                        const li = document.createElement('li');
+                        li.textContent = error;
+                        errorList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = data.message || 'An error occurred';
+                    errorList.appendChild(li);
+                }
+                document.getElementById('priceRequestError').style.display = 'block';
+                document.getElementById('priceRequestSuccess').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const errorList = document.getElementById('priceRequestErrorList');
+            errorList.innerHTML = '<li>Network error. Please try again.</li>';
+            document.getElementById('priceRequestError').style.display = 'block';
+            document.getElementById('priceRequestSuccess').style.display = 'none';
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    });
+}
 
 // Global filter data
 let allBrands = [];
@@ -1419,7 +1533,10 @@ function renderFeaturedProducts(products) {
                         ${product.category ? `<span><i class="fas fa-cogs me-1"></i>${product.category}</span>` : ''}
                     </div>
                     <div class="product-price">
-                        ${product.on_sale && product.sale_price ?
+                        ${product.stock_status === 'Special Order' ?
+                            `<div class="fw-bold text-primary">Check Today’s Price</div>
+                             <div class="small text-muted">Prices change often • 50% deposit</div>` :
+                        (product.on_sale && product.sale_price ?
                             `<div class="price-sale">
                                 <span class="original-price text-decoration-line-through text-muted small">
                                     RWF ${product.price.toLocaleString()}
@@ -1429,15 +1546,20 @@ function renderFeaturedProducts(products) {
                                 </div>
                             </div>` :
                             `RWF ${product.price.toLocaleString()}`
-                        }
+                        )}
                     </div>
                     <div class="product-actions">
                         <button class="btn btn-sm btn-quick-view" onclick="quickViewProduct(${product.id})">
                             <i class="fas fa-eye me-1"></i>Quick View
                         </button>
-                        <button class="btn btn-sm btn-add-cart" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
-                            <i class="fas fa-cart-plus me-1"></i>Add to Cart
-                        </button>
+                        ${product.stock_status === 'Special Order' ?
+                            `<a class="btn btn-sm btn-add-cart" href="${getPriceRequestUrl(product.id)}" onclick="event.stopPropagation();">
+                                <i class="fas fa-comment-dollar me-1"></i>Request Price
+                            </a>` :
+                            `<button class="btn btn-sm btn-add-cart" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
+                                <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                            </button>`
+                        }
                     </div>
                 </div>
             </div>
@@ -1641,7 +1763,10 @@ function renderProducts(products) {
                         ${product.category ? `<span class="product-meta-item"><i class="fas fa-cogs"></i>${product.category}</span>` : ''}
                     </div>
                     <div class="product-price">
-                        ${product.on_sale && product.sale_price ?
+                        ${product.stock_status === 'Special Order' ?
+                            `<div class="fw-bold text-primary">Check Today’s Price</div>
+                             <div class="small text-muted">Prices change often • 50% deposit</div>` :
+                        (product.on_sale && product.sale_price ?
                             `<div class="price-sale">
                                 <span class="original-price text-decoration-line-through text-muted small">
                                     RWF ${product.price.toLocaleString()}
@@ -1654,7 +1779,7 @@ function renderProducts(products) {
                                 <span class="price-currency">RWF</span>
                                 <span>${product.price.toLocaleString()}</span>
                             </div>`
-                        }
+                        )}
                     </div>
                     <div class="delivery-info">
                         <i class="fas fa-truck"></i>
@@ -1664,9 +1789,14 @@ function renderProducts(products) {
                         <button class="btn btn-quick-view" onclick="event.stopPropagation(); quickViewProduct(${product.id})">
                             <i class="fas fa-eye me-1"></i>Quick View
                         </button>
-                        <button class="btn btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
-                            <i class="fas fa-cart-plus me-1"></i>Add to Cart
-                        </button>
+                        ${product.stock_status === 'Special Order' ?
+                            `<a class="btn btn-add-cart" href="${getPriceRequestUrl(product.id)}" onclick="event.stopPropagation();">
+                                <i class="fas fa-comment-dollar me-1"></i>Request Price
+                            </a>` :
+                            `<button class="btn btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price})">
+                                <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                            </button>`
+                        }
                     </div>
                 </div>
             </div>
@@ -2138,6 +2268,10 @@ function addToCart(productId, productName, price) {
     });
 }
 
+function getPriceRequestUrl(productId) {
+    return `/pages/order_request.php?mode=price&product_id=${encodeURIComponent(productId)}`;
+}
+
 // Quick view product
 function quickViewProduct(productId) {
     // Show loading in modal
@@ -2232,7 +2366,10 @@ function renderQuickView(product) {
                     </div>
 
                     <div class="quick-view-price mb-3">
-                        ${product.on_sale && product.sale_price ?
+                        ${product.stock_status === 'Special Order' ?
+                            `<div class="fw-bold text-primary">Check Today’s Price</div>
+                             <div class="small text-muted">Prices change often • 50% deposit</div>` :
+                        (product.on_sale && product.sale_price ?
                             `<div class="price-sale">
                                 <span class="original-price text-decoration-line-through text-muted me-2">
                                     RWF ${product.price.toLocaleString()}
@@ -2242,7 +2379,7 @@ function renderQuickView(product) {
                                 </span>
                             </div>` :
                             `RWF ${product.price.toLocaleString()}`
-                        }
+                        )}
                     </div>
 
                     <div class="mb-3">
@@ -2272,9 +2409,24 @@ function renderQuickView(product) {
     `;
 
     // Update modal button
-    document.getElementById('quickViewAddToCart').onclick = function() {
-        addToCart(product.id, product.name, product.price);
-    };
+    const btn = document.getElementById('quickViewAddToCart');
+    if (btn) {
+        if (product.stock_status === 'Special Order') {
+            btn.innerHTML = '<i class="fas fa-comment-dollar me-1"></i>Request Price';
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-info');
+            btn.onclick = function() {
+                window.location.href = getPriceRequestUrl(product.id);
+            };
+        } else {
+            btn.innerHTML = '<i class="fas fa-cart-plus me-1"></i>Add to Cart';
+            btn.classList.remove('btn-info');
+            btn.classList.add('btn-primary');
+            btn.onclick = function() {
+                addToCart(product.id, product.name, product.price);
+            };
+        }
+    }
 }
 
 
@@ -2289,6 +2441,54 @@ function showToast(title, message, type = 'info') {
     };
 
     showToastMessage(message, title, typeMap[type] || 'info');
+}
+
+function showToastMessage(message, title = 'Notice', type = 'info') {
+    let container = document.getElementById('spxToastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'spxToastContainer';
+        container.className = 'toast-container position-fixed top-0 end-0 p-3';
+        container.style.zIndex = '1080';
+        document.body.appendChild(container);
+    }
+
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+    }[ch]));
+
+    const typeClass = {
+        success: 'text-bg-success',
+        error: 'text-bg-danger',
+        warning: 'text-bg-warning',
+        info: 'text-bg-primary',
+    }[type] || 'text-bg-primary';
+
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast ${typeClass} border-0`;
+    toastEl.setAttribute('role', 'alert');
+    toastEl.setAttribute('aria-live', 'assertive');
+    toastEl.setAttribute('aria-atomic', 'true');
+
+    toastEl.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">${esc(title || 'Notice')}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">${esc(message || '')}</div>
+    `;
+
+    container.appendChild(toastEl);
+    const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3500 });
+    toast.show();
+
+    toastEl.addEventListener('hidden.bs.toast', () => {
+        toastEl.remove();
+    });
 }
 
 // Comparison modal functions

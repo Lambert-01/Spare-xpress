@@ -128,4 +128,4 @@ function generateSlug($string) {
     $string = preg_replace('/-+/', '-', $string);
     return trim($string, '-');
 }
-?>
+?>      
