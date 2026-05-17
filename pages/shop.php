@@ -1850,9 +1850,9 @@ function getProductBadges(product) {
         badges += '<span class="badge product-badge badge-sale">Sale</span>';
     }
 
-    // Low stock warning
+    // Low stock warning. Keep this label different from the main stock badge.
     if (product.stock_status === 'Low Stock') {
-        badges += '<span class="badge product-badge badge-low-stock">Low Stock</span>';
+        badges += '<span class="badge product-badge badge-low-stock">Few Left</span>';
     }
 
     return badges;
