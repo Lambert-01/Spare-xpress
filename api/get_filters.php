@@ -93,8 +93,8 @@ try {
 
     // Availability options
     $availability_sql = "SELECT
-                            SUM(CASE WHEN stock_quantity > 0 THEN 1 ELSE 0 END) as in_stock_count,
-                            SUM(CASE WHEN stock_quantity = 0 THEN 1 ELSE 0 END) as special_order_count
+                            SUM(CASE WHEN stock_quantity > 0 AND COALESCE(price_request_only, 0) = 0 THEN 1 ELSE 0 END) as in_stock_count,
+                            SUM(CASE WHEN stock_quantity = 0 OR COALESCE(price_request_only, 0) = 1 THEN 1 ELSE 0 END) as special_order_count
                          FROM products_enhanced";
     $availability_result = $conn->query($availability_sql);
     $availability = $availability_result->fetch_assoc();

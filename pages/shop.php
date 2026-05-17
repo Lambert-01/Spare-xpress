@@ -275,8 +275,8 @@ include '../includes/toast_notifications.php';
 <!-- Shop Section End -->
 
 <!-- Check Today's Price Section Start -->
-<div class="container-fluid py-5 bg-light">
-    <div class="container py-5">
+<div class="container-fluid py-4 bg-light price-request-section">
+    <div class="container py-3">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="bg-white rounded shadow p-4 p-lg-5 wow fadeInUp" data-wow-delay="0.05s" style="border-left: 6px solid #0dcaf0;">
@@ -564,7 +564,6 @@ include '../includes/toast_notifications.php';
 .badge-new { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; }
 .badge-bestseller { background: linear-gradient(135deg, #ffd93d, #ff8c42); color: #333; }
 .badge-sale { background: linear-gradient(135deg, #ff4757, #ff3838); color: white; }
-.badge-low-stock { background: linear-gradient(135deg, #ffa726, #fb8c00); color: white; }
 
 .stock-badge {
     font-size: 0.7rem;
@@ -720,6 +719,14 @@ include '../includes/toast_notifications.php';
 .btn-add-cart:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.price-request-section .bg-white {
+    border-radius: 0.75rem;
+}
+
+.price-request-section h2 {
+    font-size: 1.5rem;
 }
 
 .btn-wishlist {
@@ -1115,6 +1122,29 @@ include '../includes/toast_notifications.php';
         flex-direction: column;
     }
 
+    .bg-white.p-4.rounded-3.shadow-sm {
+        padding: 1rem !important;
+    }
+
+    #advancedFiltersPanel .row > [class*="col-"] {
+        margin-bottom: 0.25rem;
+    }
+
+    #sortSelect,
+    #pageSizeSelect,
+    #quickBrandFilter,
+    #quickCategoryFilter,
+    #quickModelFilter,
+    #quickMaxPrice,
+    #advancedSearchInput {
+        min-height: 44px;
+    }
+
+    .price-request-section {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
     .btn-quick-view,
     .btn-add-cart {
         width: 100%;
@@ -1328,7 +1358,17 @@ function loadFilters() {
 // Check URL parameters and apply initial filters
 function checkUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
     const priceProductId = parseInt(urlParams.get('price_product_id') || '0', 10);
+
+    if (searchParam) {
+        const searchInput = document.getElementById('advancedSearchInput');
+        if (searchInput) {
+            searchInput.value = searchParam;
+        }
+        currentFilters.search = searchParam;
+        setTimeout(() => applyFilters(), 300);
+    }
 
     if (priceProductId > 0) {
         fetch(`/api/get_products.php?id=${encodeURIComponent(priceProductId)}&limit=1`)
@@ -1825,7 +1865,6 @@ function renderProducts(products) {
 function getStockBadgeClass(status) {
     switch (status) {
         case 'In Stock': return 'bg-success';
-        case 'Low Stock': return 'bg-warning text-dark';
         case 'Special Order': return 'bg-info';
         default: return 'bg-secondary';
     }
@@ -1850,11 +1889,6 @@ function getProductBadges(product) {
         badges += '<span class="badge product-badge badge-sale">Sale</span>';
     }
 
-    // Low stock warning. Keep this label different from the main stock badge.
-    if (product.stock_status === 'Low Stock') {
-        badges += '<span class="badge product-badge badge-low-stock">Few Left</span>';
-    }
-
     return badges;
 }
 
@@ -1863,8 +1897,6 @@ function getDeliveryInfo(stockStatus) {
     switch (stockStatus) {
         case 'In Stock':
             return 'Ships in 24-48 hours';
-        case 'Low Stock':
-            return 'Ships in 2-3 days';
         case 'Special Order':
             return '7-14 days delivery';
         default:

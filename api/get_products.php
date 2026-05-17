@@ -200,8 +200,7 @@ try {
     $sql = "SELECT p.*, b.brand_name, m.model_name, c.category_name,
                     CASE
                         WHEN COALESCE(p.price_request_only, 0) = 1 THEN 'Special Order'
-                        WHEN p.stock_quantity > 5 THEN 'In Stock'
-                        WHEN p.stock_quantity > 0 THEN 'Low Stock'
+                        WHEN p.stock_quantity > 0 THEN 'In Stock'
                         ELSE 'Special Order'
                     END as stock_status
              FROM products_enhanced p

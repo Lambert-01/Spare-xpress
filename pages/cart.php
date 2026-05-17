@@ -12,16 +12,10 @@ include '../includes/wishlist.php';
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $cart_total = 0;
 $cart_count = 0;
-$deposit_required = 0;
 
 foreach ($cart as $item) {
     $cart_total += $item['subtotal'];
     $cart_count += $item['quantity'];
- 
-    // Calculate deposit for special order items (50% of total)
-    if ($item['stock'] == 0) {
-        $deposit_required += $item['subtotal'] * 0.5;
-    }
 }
 ?>
 
@@ -108,24 +102,15 @@ foreach ($cart as $item) {
                                             <?php endif; ?>
                                         </div>
                                         <div class="stock-status">
-                                            <span class="badge <?php echo $item['stock'] > 0 ? 'bg-success' : 'bg-warning text-dark'; ?> badge-sm">
-                                                <i class="fas fa-<?php echo $item['stock'] > 0 ? 'check-circle' : 'exclamation-triangle'; ?> me-1"></i>
-                                                <?php echo $item['stock'] > 0 ? 'In Stock' : 'Special Order'; ?>
+                                            <span class="badge bg-success badge-sm">
+                                                <i class="fas fa-check-circle me-1"></i>In Stock
                                             </span>
-                                            <?php if ($item['stock'] > 0 && $item['stock'] <= 5): ?>
-                                                <small class="text-muted ms-1">(<?php echo $item['stock']; ?> left)</small>
-                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="price-info">
                                         <span class="fw-bold text-primary unit-price">RWF <?php echo number_format($item['price'], 0, '.', ','); ?></span>
-                                        <?php if ($item['stock'] == 0): ?>
-                                            <div class="small text-warning mt-1">
-                                                <i class="fas fa-info-circle me-1"></i>50% deposit required
-                                            </div>
-                                        <?php endif; ?>
                                     </div>
                                 </td>
                                 <td style="width: 180px;">
@@ -137,7 +122,7 @@ foreach ($cart as $item) {
                                             </button>
                                             <input type="number" class="form-control text-center quantity-input"
                                                    value="<?php echo $item['quantity']; ?>" min="1"
-                                                   max="<?php echo $item['stock'] > 0 ? $item['stock'] : 99; ?>"
+                                                   max="<?php echo max(1, (int)$item['stock']); ?>"
                                                    onchange="updateQuantity(<?php echo $item['id']; ?>, this.value, this)"
                                                    data-original-value="<?php echo $item['quantity']; ?>">
                                             <button class="btn btn-outline-secondary btn-sm quantity-btn" type="button"
@@ -153,11 +138,6 @@ foreach ($cart as $item) {
                                 <td>
                                     <div class="subtotal-info">
                                         <span class="fw-bold subtotal text-primary">RWF <?php echo number_format($item['subtotal'], 0, '.', ','); ?></span>
-                                        <?php if ($item['stock'] == 0): ?>
-                                            <div class="small text-warning">
-                                                Deposit: RWF <?php echo number_format($item['subtotal'] * 0.5, 0, '.', ','); ?>
-                                            </div>
-                                        <?php endif; ?>
                                     </div>
                                 </td>
                                 <td>
@@ -207,16 +187,6 @@ foreach ($cart as $item) {
                             <span>Subtotal (<?php echo $cart_count; ?> items)</span>
                             <span class="fw-bold" id="cartSubtotal">RWF <?php echo number_format($cart_total, 0, '.', ','); ?></span>
                         </div>
-
-                        <?php if ($deposit_required > 0): ?>
-                            <div class="d-flex justify-content-between mb-3 text-warning">
-                                <span>Deposit Required (50%)</span>
-                                <span class="fw-bold" id="depositAmount">RWF <?php echo number_format($deposit_required, 0, '.', ','); ?></span>
-                            </div>
-                            <div class="alert alert-warning py-2">
-                                <small><i class="fas fa-info-circle me-1"></i>Special order items require 50% upfront deposit</small>
-                            </div>
-                        <?php endif; ?>
 
                         <div class="d-flex justify-content-between mb-3">
                             <span>Shipping</span>
@@ -691,12 +661,6 @@ function updateCartSummary(summary) {
     const subtotalElement = document.getElementById('cartSubtotal');
     if (subtotalElement) {
         subtotalElement.textContent = `RWF ${summary.subtotal.toLocaleString()}`;
-    }
-
-    // Update deposit amount if applicable
-    const depositElement = document.getElementById('depositAmount');
-    if (depositElement && summary.deposit_required > 0) {
-        depositElement.textContent = `RWF ${summary.deposit_required.toLocaleString()}`;
     }
 
     // Update final total

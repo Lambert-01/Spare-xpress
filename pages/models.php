@@ -174,55 +174,11 @@ while ($model = $models_result->fetch_assoc()) {
                         <img src="<?php echo $logoPath; ?>"
                              alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
                              class="me-3 rounded" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px;">
-                    <?php else:
-                        // Brands with Simple Icons
-                        $simpleIconBrands = [
-                            'toyota', 'nissan', 'hyundai', 'kia', 'mitsubishi', 'suzuki',
-                            'volkswagen', 'bmw', 'audi', 'honda', 'ford', 'mazda', 'subaru',
-                            'infiniti', 'acura', 'cadillac', 'jeep', 'chrysler', 'dodge', 'ram',
-                            'tesla', 'porsche', 'ferrari', 'lamborghini', 'bentley', 'jaguar',
-                            'volvo', 'saab', 'scania', 'iveco', 'daf', 'man', 'renault', 'peugeot',
-                            'fiat', 'alfaromeo', 'maserati', 'lancia', 'abarth', 'skoda', 'seat',
-                            'opel', 'vauxhall', 'mini', 'smart', 'maybach', 'lotus', 'mclaren',
-                            'yamaha', 'kawasaki', 'ducati', 'triumph', 'aprilia', 'ktm', 'husqvarna',
-                            'mvagusta', 'indian', 'royalenfield', 'vespa', 'piaggio', 'trek',
-                            'specialized', 'cannondale', 'giant', 'johndeere', 'caseih', 'newholland',
-                            'claas', 'fendt', 'kubota', 'yanmar', 'komatsu', 'caterpillar', 'liebherr',
-                            'jcb', 'bobcat'
-                        ];
-                        
-                        // Brands with custom logo URLs
-                        $customLogoBrands = [
-                            'byd' => 'https://www.carlogos.org/car-logos/bYD-logo.png',
-                            'mercedes' => 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
-                            'landrover' => 'https://www.carlogos.org/car-logos/land-rover-logo.png',
-                            'lexus' => 'https://www.carlogos.org/car-logos/lexus-logo.png',
-                            'mg' => 'https://www.carlogos.org/car-logos/mg-logo.png',
-                            'wuling' => 'https://www.carlogos.org/car-logos/wuling-logo.png',
-                            'isuzu' => 'https://www.carlogos.org/car-logos/isuzu-logo.png',
-                            'chevrolet' => 'https://www.carlogos.org/car-logos/chevrolet-logo.png',
-                            'citroen' => 'https://www.carlogos.org/car-logos/citroen-logo.png'
-                        ];
-                        
-                        if (in_array($brandSlug, $simpleIconBrands)):
-                        ?>
-                            <img src="https://cdn.simpleicons.org/<?php echo $brandSlug; ?>/007bff"
-                                 alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
-                                 class="me-3 rounded" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px;">
-                        <?php elseif (isset($customLogoBrands[$brandSlug])):
-                        ?>
-                            <img src="<?php echo $customLogoBrands[$brandSlug]; ?>"
-                                 alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
-                                 class="me-3 rounded" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px;">
-                        <?php else:
-                            // Text-based logo for brands without images
-                            ?>
+                    <?php else: ?>
                             <div class="text-logo me-3" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
                                 <span class="brand-initial" style="font-size: 18px; font-weight: bold; color: #007bff;"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
                             </div>
-                        <?php endif;
-                    endif;
-                    ?>
+                    <?php endif; ?>
                     <div>
                         <h2 class="mb-1"><?php echo htmlspecialchars($brand['brand_name']); ?></h2>
                         <?php if ($brand['country']): ?>
@@ -854,7 +810,6 @@ function quickViewModelParts(modelId, modelName) {
 function getStockBadgeClass(status) {
     switch (status) {
         case 'In Stock': return 'bg-success';
-        case 'Low Stock': return 'bg-warning text-dark';
         case 'Special Order': return 'bg-info';
         default: return 'bg-secondary';
     }

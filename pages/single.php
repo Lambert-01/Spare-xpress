@@ -57,11 +57,11 @@ try {
         $stock_status = 'In Stock';
         $stock_class = 'bg-success';
     } elseif ($product['stock_quantity'] > 0) {
-        $stock_status = 'Low Stock';
-        $stock_class = 'bg-warning text-dark';
+        $stock_status = 'In Stock';
+        $stock_class = 'bg-success';
     } else {
-        $stock_status = 'Special Order (50% Deposit Required)';
-        $stock_class = 'bg-info';
+        $stock_status = 'Request Price';
+        $stock_class = 'bg-info text-dark';
     }
 
 } catch (Exception $e) {
@@ -199,20 +199,22 @@ include '../includes/wishlist.php';
                         </div>
                     <?php endif; ?>
 
-                    <!-- Quantity Selector -->
-                    <div class="quantity-selector mb-4">
-                        <label class="form-label fw-bold">Quantity:</label>
-                        <div class="input-group" style="width: 150px;">
-                            <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" class="form-control text-center" id="quantity" value="1" min="1"
-                                    max="<?php echo $product['stock_quantity'] > 0 ? $product['stock_quantity'] : 99; ?>" readonly>
-                            <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                    <?php if (!$requires_price_request): ?>
+                        <!-- Quantity Selector -->
+                        <div class="quantity-selector mb-4">
+                            <label class="form-label fw-bold">Quantity:</label>
+                            <div class="input-group" style="width: 150px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="form-control text-center" id="quantity" value="1" min="1"
+                                        max="<?php echo $product['stock_quantity']; ?>" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
 
                     <!-- Action Buttons -->
                     <div class="action-buttons mb-4">
@@ -1184,7 +1186,6 @@ function addToCartFromRelated(productId, productName, price) {
 function getStockBadgeClass(status) {
     switch (status) {
         case 'In Stock': return 'bg-success';
-        case 'Low Stock': return 'bg-warning text-dark';
         case 'Special Order': return 'bg-info';
         default: return 'bg-secondary';
     }

@@ -200,24 +200,6 @@ $critical_css = "
                     $fullPath = 'uploads/brands/' . basename($cleanPath);
                     if (file_exists($fullPath)) {
                         $logoSrc = $fullPath;
-                    } else {
-                        // Fallback to simpleicons
-                        $logoSrc = 'https://cdn.simpleicons.org/' . $brand['slug'] . '/007bff';
-                    }
-                } else {
-                    // Special cases for brands not available in SimpleIcons
-                    $specialLogos = [
-                        'isuzu' => 'https://www.carlogos.org/car-logos/isuzu-logo.png',
-                        'lexus' => 'https://www.carlogos.org/car-logos/lexus-logo.png',
-                        'land-rover' => 'https://www.carlogos.org/car-logos/land-rover-logo.png',
-                        'wuling' => 'https://www.carlogos.org/car-logos/wuling-logo.png'
-                    ];
-
-                    if (isset($specialLogos[$brand['slug']])) {
-                        $logoSrc = $specialLogos[$brand['slug']];
-                    } else {
-                        // Try simpleicons for other brands
-                        $logoSrc = 'https://cdn.simpleicons.org/' . $brand['slug'] . '/007bff';
                     }
                 }
 

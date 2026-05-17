@@ -52,12 +52,8 @@ if (!empty($errors)) {
 
 // Calculate totals
 $subtotal = 0;
-$special_order_items = 0;
 foreach ($cart_data as $item) {
     $subtotal += $item['subtotal'];
-    if ($item['stock'] == 0) {
-        $special_order_items++;
-    }
 }
 
 // Calculate shipping based on region
@@ -75,7 +71,6 @@ switch ($region) {
 }
 
 $total_amount = $subtotal + $shipping_cost;
-$deposit_required = $special_order_items > 0 ? ceil($total_amount * 0.5) : 0;
 
 // Generate order ID
 $order_id = 'SPX-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
@@ -84,6 +79,19 @@ $order_id = 'SPX-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_P
 $conn->begin_transaction();
 
 try {
+    foreach ($cart_data as $item) {
+        $product_check = $conn->prepare("SELECT stock_quantity, COALESCE(price_request_only, 0) AS price_request_only FROM products_enhanced WHERE id = ?");
+        $product_id = (int)($item['id'] ?? 0);
+        $product_check->bind_param('i', $product_id);
+        $product_check->execute();
+        $product_row = $product_check->get_result()->fetch_assoc();
+        $product_check->close();
+
+        if (!$product_row || !empty($product_row['price_request_only']) || (int)$product_row['stock_quantity'] <= 0) {
+            throw new Exception('One or more cart items require a price request and cannot be checked out directly.');
+        }
+    }
+
     // Insert order
     $customer_name = $first_name . ' ' . $last_name;
     $full_address = $address . ', ' . $city . ', ' . ucfirst($region) . ' Province';
@@ -203,8 +211,7 @@ try {
         'success' => true,
         'order_id' => $order_id,
         'message' => 'Order placed successfully! Invoice sent to your email.',
-        'total_amount' => $total_amount,
-        'deposit_required' => $deposit_required
+        'total_amount' => $total_amount
     ]);
 
 } catch (Throwable $e) {

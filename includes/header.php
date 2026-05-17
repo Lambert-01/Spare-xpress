@@ -13,11 +13,11 @@
     <meta name="keywords" content="auto parts Rwanda, vehicle spare parts, car accessories, motorcycle parts, genuine parts, automotive store Kigali, car spares, vehicle maintenance parts, auto shop Rwanda, engine parts, brake pads, filters, vehicle tools, auto repair supplies">
 
     <!-- SEO Description -->
-    <meta name="description" content="Honest Auto Parts is your trusted source for genuine and affordable vehicle spare parts in Rwanda. We offer in-stock components ready for quick delivery, and we can also ship special-order parts upon request. Shipping requires a 50% upfront payment. Quality, honesty, and reliability for every driver.">
+    <meta name="description" content="SPARE XPRESS LTD is your trusted source for genuine vehicle spare parts in Rwanda. Buy local-stock parts directly, or request today's price for special-order parts sourced through our sales team.">
 
     <!-- Open Graph for Social Media -->
-    <meta property="og:title" content="Honest Auto Parts – Genuine Vehicle Spares in Rwanda">
-    <meta property="og:description" content="Offering reliable car and motorcycle spare parts, with fast access to in-stock items and special-order shipping with a 50% pre-shipping payment. Trusted service for every driver.">
+    <meta property="og:title" content="SPARE XPRESS LTD - Genuine Vehicle Spare Parts in Rwanda">
+    <meta property="og:description" content="Buy in-stock vehicle parts directly or request today's price for special-order spare parts. Reliable service, clear quotes, and delivery support across Rwanda.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/img/logo/logox.jpg">
     <meta property="og:url" content="<?php echo SITE_URL; ?>">

@@ -48,12 +48,12 @@ include_once 'config.php';
 
                 <!-- Search Bar -->
                 <div class="col-lg-6 col-md-8 d-none d-md-block">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for spare parts, tools, accessories..." aria-label="Search">
-                        <button class="btn btn-primary" type="button">
+                    <form class="input-group spx-header-search" action="/pages/shop.php" method="GET">
+                        <input type="text" class="form-control" name="search" placeholder="Search for spare parts, tools, accessories..." aria-label="Search">
+                        <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
 
                 <!-- Cart & Mobile Menu -->
@@ -81,12 +81,12 @@ include_once 'config.php';
 
             <!-- Mobile Search -->
             <div class="d-md-none mt-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search parts..." aria-label="Search">
-                    <button class="btn btn-primary" type="button">
+                <form class="input-group spx-header-search" action="/pages/shop.php" method="GET">
+                    <input type="text" class="form-control" name="search" placeholder="Search parts..." aria-label="Search">
+                    <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
-                </div>
+                </form>
             </div>
         </div>
 

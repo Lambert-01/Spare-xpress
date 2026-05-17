@@ -47,28 +47,27 @@
             <div class="col-md-6 col-lg-3">
                 <h6 class="text-primary mb-3">Customer Service</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Contact Us</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order Tracking</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Returns & Refunds</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>My Account</a></li>
+                    <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Contact Us</a></li>
+                    <li class="mb-1"><a href="/pages/order_history.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order Tracking</a></li>
+                    <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Returns & Refunds</a></li>
+                    <li class="mb-1"><a href="/pages/my_account.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>My Account</a></li>
                 </ul>
             </div>
             <div class="col-md-6 col-lg-3">
                 <h6 class="text-primary mb-3">Information</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>About Us</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Delivery & Shipping</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Privacy Policy</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Terms & Conditions</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>FAQ</a></li>
+                    <li class="mb-1"><a href="/pages/shop.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Shop Parts</a></li>
+                    <li class="mb-1"><a href="/pages/order_request.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Special Orders</a></li>
+                    <li class="mb-1"><a href="/pages/shop.php#priceRequestForm" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Request Price</a></li>
+                    <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Support</a></li>
                 </ul>
             </div>
             <div class="col-md-6 col-lg-3">
                 <h6 class="text-primary mb-3">Extras</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Brands</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Wishlist</a></li>
-                    <li class="mb-1"><a href="#" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order History</a></li>
+                    <li class="mb-1"><a href="/pages/brands.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Brands</a></li>
+                    <li class="mb-1"><a href="/pages/cart.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Cart</a></li>
+                    <li class="mb-1"><a href="/pages/order_history.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order History</a></li>
                 </ul>
             </div>
         </div>

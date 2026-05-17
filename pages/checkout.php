@@ -22,14 +22,10 @@ if (isset($_SESSION['customer_id'])) {
 $cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $cart_total = 0;
 $cart_count = 0;
-$special_order_items = 0;
 
 foreach ($cart_items as $item) {
     $cart_total += $item['subtotal'];
     $cart_count += $item['quantity'];
-    if ($item['stock'] == 0) {
-        $special_order_items++;
-    }
 }
 
 // Split full name for form
@@ -41,9 +37,8 @@ if ($customer_data && isset($customer_data['full_name'])) {
     $last_name = $name_parts[1] ?? '';
 }
 
-// Calculate shipping and deposit
+// Calculate shipping
 $shipping_cost = 0; // Will be calculated based on location
-$deposit_required = $special_order_items > 0 ? ceil($cart_total * 0.5) : 0; // 50% deposit for special orders
 $final_total = $cart_total + $shipping_cost;
 ?>
 
@@ -340,16 +335,6 @@ $final_total = $cart_total + $shipping_cost;
                                 <span>Shipping</span>
                                 <span id="shippingCost">Calculated at next step</span>
                             </div>
-
-                            <?php if ($deposit_required > 0): ?>
-                                <div class="d-flex justify-content-between mb-2 text-warning">
-                                    <span>Deposit Required (50%)</span>
-                                    <span>RWF <?php echo number_format($deposit_required, 0, '.', ','); ?></span>
-                                </div>
-                                <div class="alert alert-warning py-2 mb-3">
-                                    <small><i class="fas fa-info-circle me-1"></i>Special order items require a 50% deposit. Remaining balance due before delivery.</small>
-                                </div>
-                            <?php endif; ?>
 
                             <hr class="my-3">
                             <div class="d-flex justify-content-between fw-bold fs-5">

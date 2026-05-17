@@ -574,55 +574,11 @@ while ($brand = $brands_query->fetch_assoc()) {
                                              class="brand-logo"
                                              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                                         <i class="fas fa-car fa-3x text-primary" style="display: none;"></i>
-                                    <?php else:
-                                        // Brands with Simple Icons
-                                        $simpleIconBrands = [
-                                            'toyota', 'nissan', 'hyundai', 'kia', 'mitsubishi', 'suzuki',
-                                            'volkswagen', 'bmw', 'audi', 'honda', 'ford', 'mazda', 'subaru',
-                                            'infiniti', 'acura', 'cadillac', 'jeep', 'chrysler', 'dodge', 'ram',
-                                            'tesla', 'porsche', 'ferrari', 'lamborghini', 'bentley', 'jaguar',
-                                            'volvo', 'saab', 'scania', 'iveco', 'daf', 'man', 'renault', 'peugeot',
-                                            'fiat', 'alfaromeo', 'maserati', 'lancia', 'abarth', 'skoda', 'seat',
-                                            'opel', 'vauxhall', 'mini', 'smart', 'maybach', 'lotus', 'mclaren',
-                                            'yamaha', 'kawasaki', 'ducati', 'triumph', 'aprilia', 'ktm', 'husqvarna',
-                                            'mvagusta', 'indian', 'royalenfield', 'vespa', 'piaggio', 'trek',
-                                            'specialized', 'cannondale', 'giant', 'johndeere', 'caseih', 'newholland',
-                                            'claas', 'fendt', 'kubota', 'yanmar', 'komatsu', 'caterpillar', 'liebherr',
-                                            'jcb', 'bobcat'
-                                        ];
-
-                                        // Brands with custom logo URLs (free car logo service)
-                                        $customLogoBrands = [
-                                            'byd' => 'https://www.carlogos.org/car-logos/bYD-logo.png',
-                                            'mercedes' => 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png',
-                                            'landrover' => 'https://www.carlogos.org/car-logos/land-rover-logo.png',
-                                            'lexus' => 'https://www.carlogos.org/car-logos/lexus-logo.png',
-                                            'mg' => 'https://www.carlogos.org/car-logos/mg-logo.png',
-                                            'wuling' => 'https://www.carlogos.org/car-logos/wuling-logo.png',
-                                            'isuzu' => 'https://www.carlogos.org/car-logos/isuzu-logo.png',
-                                            'chevrolet' => 'https://www.carlogos.org/car-logos/chevrolet-logo.png',
-                                            'citroen' => 'https://www.carlogos.org/car-logos/citroen-logo.png'
-                                        ];
-
-                                        if (in_array($brandSlug, $simpleIconBrands)): ?>
-                                            <img src="https://cdn.simpleicons.org/<?php echo $brandSlug; ?>/007bff"
-                                                 alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
-                                                 class="brand-logo"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <i class="fas fa-car fa-3x text-primary" style="display: none;"></i>
-                                        <?php elseif (isset($customLogoBrands[$brandSlug])): ?>
-                                            <img src="<?php echo $customLogoBrands[$brandSlug]; ?>"
-                                                 alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
-                                                 class="brand-logo"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <i class="fas fa-car fa-3x text-primary" style="display: none;"></i>
-                                        <?php else: ?>
-                                            <!-- Text-based logo for brands without images -->
-                                            <div class="text-logo">
-                                                <span class="brand-initial"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
-                                                <span class="brand-text"><?php echo htmlspecialchars($brand['brand_name']); ?></span>
-                                            </div>
-                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <div class="text-logo">
+                                            <span class="brand-initial"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
+                                            <span class="brand-text"><?php echo htmlspecialchars($brand['brand_name']); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                                 <h5 class="card-title mb-2 fw-bold"><?php echo htmlspecialchars($brand['brand_name']); ?></h5>
