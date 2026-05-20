@@ -4,7 +4,7 @@ require_once __DIR__ . '/env.php';
 // Site Configuration
 if (!defined('SITE_NAME')) define('SITE_NAME', spx_env('SITE_NAME', 'SPARE XPRESS LTD'));
 if (!defined('SITE_URL')) define('SITE_URL', spx_env('SITE_URL', 'https://sparexpress.rw'));
-if (!defined('SITE_EMAIL')) define('SITE_EMAIL', spx_env('SITE_EMAIL', 'support@sparexpress.rw'));
+if (!defined('SITE_EMAIL')) define('SITE_EMAIL', spx_env('SITE_EMAIL', 'sparexpressltd@gmail.com'));
 if (!defined('SITE_PHONE')) define('SITE_PHONE', spx_env('SITE_PHONE', '+250 792 865 114'));
 if (!defined('SITE_ADDRESS')) define('SITE_ADDRESS', spx_env('SITE_ADDRESS', 'Kagarama, Kicukiro, Kigali, Rwanda'));
 
@@ -19,7 +19,7 @@ if (!defined('DB_PASS')) define('DB_PASS', $db_config['pass']);
 // Email Configuration
 if (!defined('SMTP_HOST')) define('SMTP_HOST', spx_env('SMTP_HOST', 'smtp.gmail.com'));
 if (!defined('SMTP_PORT')) define('SMTP_PORT', (int) spx_env('SMTP_PORT', 587));
-if (!defined('SMTP_USER')) define('SMTP_USER', spx_env('SMTP_USER', ''));
+if (!defined('SMTP_USER')) define('SMTP_USER', spx_env('SMTP_USER', 'sparexpressltd@gmail.com'));
 if (!defined('SMTP_PASS')) define('SMTP_PASS', spx_env('SMTP_PASS', ''));
 if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', spx_env('SMTP_FROM_EMAIL', SMTP_USER));
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', spx_env('SMTP_FROM_NAME', SITE_NAME));
