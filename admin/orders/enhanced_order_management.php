@@ -21,45 +21,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         exit;
     }
 
-    // Update order status
-    $stmt = $conn->prepare("UPDATE orders_enhanced SET
-        order_status = ?, status_updated_at = NOW(), status_updated_by = ?
-        WHERE id = ?");
-
     $admin_id = (int)($_SESSION['admin_id'] ?? 1);
-    $stmt->bind_param("sii", $new_status, $admin_id, $order_id);
 
-    if ($stmt->execute()) {
-        // Add timeline entry (schema uses action/details/user_id/user_type)
-        $timeline_stmt = $conn->prepare("INSERT INTO order_timeline
-            (order_id, action, details, user_id, user_type)
-            VALUES (?, ?, ?, ?, 'admin')");
+    try {
+        $conn->query("ALTER TABLE orders_enhanced ADD COLUMN IF NOT EXISTS status_updated_at TIMESTAMP NULL DEFAULT NULL");
+        $conn->query("ALTER TABLE orders_enhanced ADD COLUMN IF NOT EXISTS status_updated_by INT NULL");
+        $conn->begin_transaction();
 
-        $description = $status_notes ?: "Order status changed to " . ucfirst($new_status);
+        $stmt = $conn->prepare("UPDATE orders_enhanced SET order_status = ?, status_updated_at = NOW(), status_updated_by = ? WHERE id = ?");
+        if (!$stmt) {
+            throw new RuntimeException('Could not prepare status update: ' . $conn->error);
+        }
+        $stmt->bind_param("sii", $new_status, $admin_id, $order_id);
+        if (!$stmt->execute()) {
+            throw new RuntimeException('Could not update status: ' . ($stmt->error ?: 'Unknown error'));
+        }
+        if ($stmt->affected_rows < 1) {
+            $exists_stmt = $conn->prepare("SELECT id FROM orders_enhanced WHERE id = ?");
+            $exists_stmt->bind_param("i", $order_id);
+            $exists_stmt->execute();
+            if (!$exists_stmt->get_result()->fetch_assoc()) {
+                throw new RuntimeException('Order not found');
+            }
+        }
+
+        $description = $status_notes ?: "Order status changed to " . ucwords(str_replace('_', ' ', $new_status));
         $details = json_encode([
             'description' => $description,
             'tracking_number' => $tracking_number ?: null,
-            'carrier_name' => $courier_name ?: null
+            'carrier_name' => $courier_name ?: null,
+            'visible_to_customer' => true,
         ], JSON_UNESCAPED_UNICODE);
         if ($details === false) {
             $details = $description;
         }
 
+        $timeline_stmt = $conn->prepare("INSERT INTO order_timeline (order_id, action, details, user_id, user_type) VALUES (?, ?, ?, ?, 'admin')");
+        if (!$timeline_stmt) {
+            throw new RuntimeException('Could not prepare timeline entry: ' . $conn->error);
+        }
         $timeline_stmt->bind_param("issi", $order_id, $new_status, $details, $admin_id);
-        $timeline_stmt->execute();
-
-        // Update shipping info if shipped
-        if ($new_status === 'shipped' && (!empty($tracking_number) || !empty($courier_name))) {
-            $shipping_stmt = $conn->prepare("UPDATE orders_enhanced SET
-                shipping_carrier = ?, tracking_number = ?, shipping_method = 'standard'
-                WHERE id = ?");
-            $shipping_stmt->bind_param("ssi", $courier_name, $tracking_number, $order_id);
-            $shipping_stmt->execute();
+        if (!$timeline_stmt->execute()) {
+            throw new RuntimeException('Could not save timeline entry: ' . ($timeline_stmt->error ?: 'Unknown error'));
         }
 
+        if (in_array($new_status, ['shipped', 'out_for_delivery'], true) && ($tracking_number !== '' || $courier_name !== '')) {
+            $shipping_stmt = $conn->prepare("UPDATE orders_enhanced SET shipping_carrier = ?, tracking_number = ?, shipping_method = 'standard' WHERE id = ?");
+            if (!$shipping_stmt) {
+                throw new RuntimeException('Could not prepare shipping update: ' . $conn->error);
+            }
+            $shipping_stmt->bind_param("ssi", $courier_name, $tracking_number, $order_id);
+            if (!$shipping_stmt->execute()) {
+                throw new RuntimeException('Could not update shipping info: ' . ($shipping_stmt->error ?: 'Unknown error'));
+            }
+        }
+
+        $conn->commit();
         $_SESSION['success'] = 'Order status updated successfully';
-    } else {
-        $_SESSION['error'] = 'Failed to update order status';
+    } catch (Throwable $e) {
+        try { $conn->rollback(); } catch (Throwable $ignored) {}
+        $_SESSION['error'] = 'Failed to update order status: ' . $e->getMessage();
     }
 
     header('Location: enhanced_order_management.php');
@@ -562,7 +583,7 @@ function getPaymentBadge($status) {
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="POST">
+            <form method="POST" action="enhanced_order_management.php">
                 <div class="modal-body">
                     <input type="hidden" name="order_id" id="statusOrderId">
                     <div class="row g-3">

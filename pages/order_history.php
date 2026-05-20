@@ -176,6 +176,12 @@ function getPaymentBadgeClass($status) {
                                                         <p class="mb-1"><strong>Tracking Number:</strong> <?php echo htmlspecialchars($order['tracking_number']); ?></p>
                                                     <?php endif; ?>
                                                 </div>
+                                                <div class="mt-4">
+                                                    <h6>Tracking Updates</h6>
+                                                    <div id="order-timeline-<?php echo $order['id']; ?>">
+                                                        <!-- Timeline will be loaded here -->
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -237,6 +243,32 @@ function getPaymentBadgeClass($status) {
 
 <style>
 .spx-order-card { cursor: pointer; }
+.customer-timeline {
+    border-left: 2px solid #e9ecef;
+    margin-left: 8px;
+    padding-left: 14px;
+}
+.customer-timeline-item {
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+}
+.customer-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 14px;
+    width: 10px;
+    height: 10px;
+    background: #0d6efd;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+.customer-timeline-item.note::before {
+    background: #198754;
+}
 @media (max-width: 768px) { .spx-sidebar { position: static !important; } }
 </style>
 
@@ -254,6 +286,7 @@ function viewOrderDetails(orderId) {
     if (!isVisible) {
         // Load order items if not already loaded
         loadOrderItems(orderId);
+        loadOrderTimeline(orderId);
         detailsDiv.style.display = 'block';
     }
 }
@@ -312,6 +345,73 @@ function renderOrderItems(container, items) {
     container.innerHTML = html;
 }
 
+function loadOrderTimeline(orderId) {
+    const timelineContainer = document.getElementById(`order-timeline-${orderId}`);
+    if (!timelineContainer || timelineContainer.innerHTML.trim() !== '') {
+        return;
+    }
+
+    timelineContainer.innerHTML = '<div class="text-center py-2"><div class="spinner-border spinner-border-sm" role="status"></div></div>';
+
+    fetch(`/api/get_order_timeline.php?order_id=${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                timelineContainer.innerHTML = '<p class="text-muted small">Unable to load tracking updates.</p>';
+                return;
+            }
+
+            const timeline = data.timeline || [];
+            const notes = data.notes || [];
+
+            if (timeline.length === 0 && notes.length === 0) {
+                timelineContainer.innerHTML = '<p class="text-muted small">No tracking updates yet.</p>';
+                return;
+            }
+
+            let html = '<div class="customer-timeline">';
+            timeline.forEach(item => {
+                const label = String(item.status || 'update').replace(/_/g, ' ');
+                const date = item.created_at ? new Date(item.created_at).toLocaleString() : '';
+                html += `
+                    <div class="customer-timeline-item">
+                        <div class="fw-semibold text-capitalize">${escapeHtml(label)}</div>
+                        <div class="small text-muted">${escapeHtml(date)}</div>
+                        ${item.description ? `<div class="small">${escapeHtml(item.description)}</div>` : ''}
+                        ${item.tracking_number ? `<div class="small text-info"><i class="fas fa-truck me-1"></i>${escapeHtml(item.tracking_number)} ${item.carrier_name ? `(${escapeHtml(item.carrier_name)})` : ''}</div>` : ''}
+                    </div>
+                `;
+            });
+
+            notes.forEach(note => {
+                const date = note.created_at ? new Date(note.created_at).toLocaleString() : '';
+                html += `
+                    <div class="customer-timeline-item note">
+                        <div class="fw-semibold">Message from support</div>
+                        <div class="small text-muted">${escapeHtml(date)}</div>
+                        <div class="small">${escapeHtml(note.content || '')}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            timelineContainer.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading order timeline:', error);
+            timelineContainer.innerHTML = '<p class="text-danger small">Error loading tracking updates.</p>';
+        });
+}
+
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch]));
+}
+
 // Download invoice
 function downloadInvoice(orderId) {
     window.open(`/api/download_invoice.php?order_id=${orderId}`, '_blank');
@@ -338,7 +438,7 @@ function sortOrders() {
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     // Add click handlers to order cards
-    document.querySelectorAll('.order-card').forEach(card => {
+    document.querySelectorAll('.spx-order-card').forEach(card => {
         const orderId = card.dataset.orderId;
         card.addEventListener('click', function(e) {
             // Don't trigger if clicking on buttons
