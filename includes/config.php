@@ -19,9 +19,11 @@ if (!defined('DB_PASS')) define('DB_PASS', $db_config['pass']);
 // Email Configuration
 if (!defined('SMTP_HOST')) define('SMTP_HOST', spx_env('SMTP_HOST', 'smtp.gmail.com'));
 if (!defined('SMTP_PORT')) define('SMTP_PORT', (int) spx_env('SMTP_PORT', 587));
-if (!defined('SMTP_USER')) define('SMTP_USER', spx_env('SMTP_USER', 'sparexpressltd@gmail.com'));
+$smtp_user = spx_env('SMTP_USER', 'sparexpressltd@gmail.com') ?: 'sparexpressltd@gmail.com';
+$smtp_from_email = spx_env('SMTP_FROM_EMAIL', $smtp_user) ?: $smtp_user;
+if (!defined('SMTP_USER')) define('SMTP_USER', $smtp_user);
 if (!defined('SMTP_PASS')) define('SMTP_PASS', spx_env('SMTP_PASS', ''));
-if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', spx_env('SMTP_FROM_EMAIL', SMTP_USER));
+if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', $smtp_from_email);
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', spx_env('SMTP_FROM_NAME', SITE_NAME));
 
 // Google OAuth Configuration

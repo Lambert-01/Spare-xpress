@@ -3,15 +3,21 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Load PHPMailer
-require_once __DIR__ . '/../lib/phpmailer/src/PHPMailer.php';
-require_once __DIR__ . '/../lib/phpmailer/src/SMTP.php';
-require_once __DIR__ . '/../lib/phpmailer/src/Exception.php';
+$vendorAutoload = __DIR__ . '/../vendor/autoload.php';
+if (is_readable($vendorAutoload)) {
+    require_once $vendorAutoload;
+} else {
+    require_once __DIR__ . '/../lib/phpmailer/src/PHPMailer.php';
+    require_once __DIR__ . '/../lib/phpmailer/src/SMTP.php';
+    require_once __DIR__ . '/../lib/phpmailer/src/Exception.php';
+}
 
 class EmailService {
     private $mailer;
 
     public function __construct() {
         $this->mailer = new PHPMailer(true);
+        $this->mailer->CharSet = 'UTF-8';
 
         // Server settings
         $this->mailer->isSMTP();
@@ -26,8 +32,16 @@ class EmailService {
         $this->mailer->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
     }
 
+    private function prepareMessage() {
+        $this->mailer->clearAddresses();
+        $this->mailer->clearAttachments();
+        $this->mailer->clearReplyTos();
+        $this->mailer->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+    }
+
     public function sendMessageNotification($customerEmail, $customerName, $messagePreview, $portalLink) {
         try {
+            $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
 
@@ -84,6 +98,7 @@ class EmailService {
 
     public function sendOrderInvoice($customerEmail, $customerName, $orderId, $pdfPath) {
         try {
+            $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
 
@@ -108,6 +123,7 @@ class EmailService {
 
     public function sendTestEmail($toEmail, $toName, $subject, $body) {
         try {
+            $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($toEmail, $toName);
 
@@ -127,6 +143,7 @@ class EmailService {
 
     public function sendOrderRequestConfirmation($customerEmail, $customerName, $orderRequestId, $pdfPath) {
         try {
+            $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
 
@@ -294,5 +311,4 @@ function sendEmail($to, $subject, $body, $isHtml = true) {
     }
 }
 ?>
-
 
