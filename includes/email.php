@@ -32,6 +32,68 @@ class EmailService {
         $this->mailer->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
     }
 
+    private function shouldUseResend() {
+        return MAIL_PROVIDER === 'resend' && RESEND_API_KEY !== '';
+    }
+
+    private function formatFromAddress() {
+        return SMTP_FROM_NAME . ' <' . SMTP_FROM_EMAIL . '>';
+    }
+
+    private function sendViaResend($toEmail, $toName, $subject, $htmlBody, $attachments = []) {
+        if (!function_exists('curl_init')) {
+            error_log('Resend email failed: PHP cURL extension is not enabled.');
+            return false;
+        }
+
+        $payload = [
+            'from' => $this->formatFromAddress(),
+            'to' => [$toName ? $toName . ' <' . $toEmail . '>' : $toEmail],
+            'subject' => $subject,
+            'html' => $htmlBody,
+            'text' => trim(strip_tags($htmlBody)),
+        ];
+
+        $encodedAttachments = [];
+        foreach ($attachments as $attachment) {
+            $path = $attachment['path'] ?? '';
+            if ($path && is_readable($path)) {
+                $encodedAttachments[] = [
+                    'filename' => $attachment['filename'] ?? basename($path),
+                    'content' => base64_encode(file_get_contents($path)),
+                ];
+            }
+        }
+
+        if (!empty($encodedAttachments)) {
+            $payload['attachments'] = $encodedAttachments;
+        }
+
+        $ch = curl_init('https://api.resend.com/emails');
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . RESEND_API_KEY,
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT => 30,
+        ]);
+
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false || $status < 200 || $status >= 300) {
+            error_log('Resend email failed: ' . ($error ?: $response));
+            return false;
+        }
+
+        return true;
+    }
+
     private function prepareMessage() {
         $this->mailer->clearAddresses();
         $this->mailer->clearAttachments();
@@ -41,15 +103,21 @@ class EmailService {
 
     public function sendMessageNotification($customerEmail, $customerName, $messagePreview, $portalLink) {
         try {
+            $subject = 'New Message from SPARE XPRESS Support';
+            $body = $this->getMessageNotificationTemplate($customerName, $messagePreview, $portalLink);
+            if ($this->shouldUseResend()) {
+                return $this->sendViaResend($customerEmail, $customerName, $subject, $body);
+            }
+
             $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
 
             // Content
             $this->mailer->isHTML(true);
-            $this->mailer->Subject = 'New Message from SPARE XPRESS Support';
-            $this->mailer->Body = $this->getMessageNotificationTemplate($customerName, $messagePreview, $portalLink);
-            $this->mailer->AltBody = strip_tags($this->getMessageNotificationTemplate($customerName, $messagePreview, $portalLink));
+            $this->mailer->Subject = $subject;
+            $this->mailer->Body = $body;
+            $this->mailer->AltBody = strip_tags($body);
 
             $this->mailer->send();
             return true;
@@ -98,6 +166,17 @@ class EmailService {
 
     public function sendOrderInvoice($customerEmail, $customerName, $orderId, $pdfPath) {
         try {
+            $subject = 'Your Order Invoice - ' . SITE_NAME;
+            $body = $this->getOrderEmailTemplate($customerName, $orderId);
+            $attachments = file_exists($pdfPath) ? [[
+                'path' => $pdfPath,
+                'filename' => 'Invoice_' . $orderId . '.pdf',
+            ]] : [];
+
+            if ($this->shouldUseResend()) {
+                return $this->sendViaResend($customerEmail, $customerName, $subject, $body, $attachments);
+            }
+
             $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
@@ -109,9 +188,9 @@ class EmailService {
 
             // Content
             $this->mailer->isHTML(true);
-            $this->mailer->Subject = 'Your Order Invoice - ' . SITE_NAME;
-            $this->mailer->Body = $this->getOrderEmailTemplate($customerName, $orderId);
-            $this->mailer->AltBody = strip_tags($this->getOrderEmailTemplate($customerName, $orderId));
+            $this->mailer->Subject = $subject;
+            $this->mailer->Body = $body;
+            $this->mailer->AltBody = strip_tags($body);
 
             $this->mailer->send();
             return true;
@@ -123,6 +202,10 @@ class EmailService {
 
     public function sendTestEmail($toEmail, $toName, $subject, $body) {
         try {
+            if ($this->shouldUseResend()) {
+                return $this->sendViaResend($toEmail, $toName, $subject, $body);
+            }
+
             $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($toEmail, $toName);
@@ -143,6 +226,17 @@ class EmailService {
 
     public function sendOrderRequestConfirmation($customerEmail, $customerName, $orderRequestId, $pdfPath) {
         try {
+            $subject = 'Your Special Order Request - ' . SITE_NAME;
+            $body = $this->getOrderRequestEmailTemplate($customerName, $orderRequestId);
+            $attachments = file_exists($pdfPath) ? [[
+                'path' => $pdfPath,
+                'filename' => 'Order_Request_' . $orderRequestId . '.pdf',
+            ]] : [];
+
+            if ($this->shouldUseResend()) {
+                return $this->sendViaResend($customerEmail, $customerName, $subject, $body, $attachments);
+            }
+
             $this->prepareMessage();
             // Recipients
             $this->mailer->addAddress($customerEmail, $customerName);
@@ -154,9 +248,9 @@ class EmailService {
 
             // Content
             $this->mailer->isHTML(true);
-            $this->mailer->Subject = 'Your Special Order Request - ' . SITE_NAME;
-            $this->mailer->Body = $this->getOrderRequestEmailTemplate($customerName, $orderRequestId);
-            $this->mailer->AltBody = strip_tags($this->getOrderRequestEmailTemplate($customerName, $orderRequestId));
+            $this->mailer->Subject = $subject;
+            $this->mailer->Body = $body;
+            $this->mailer->AltBody = strip_tags($body);
 
             $this->mailer->send();
             return true;
@@ -311,4 +405,3 @@ function sendEmail($to, $subject, $body, $isHtml = true) {
     }
 }
 ?>
-
