@@ -24,6 +24,11 @@ if (!defined('SMTP_PASS')) define('SMTP_PASS', spx_env('SMTP_PASS', ''));
 if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', spx_env('SMTP_FROM_EMAIL', SMTP_USER));
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', spx_env('SMTP_FROM_NAME', SITE_NAME));
 
+// Google OAuth Configuration
+if (!defined('GOOGLE_CLIENT_ID')) define('GOOGLE_CLIENT_ID', spx_env('GOOGLE_CLIENT_ID', ''));
+if (!defined('GOOGLE_CLIENT_SECRET')) define('GOOGLE_CLIENT_SECRET', spx_env('GOOGLE_CLIENT_SECRET', ''));
+if (!defined('GOOGLE_REDIRECT_URI')) define('GOOGLE_REDIRECT_URI', spx_env('GOOGLE_REDIRECT_URI', ''));
+
 // Session Configuration - Initialize only once (avoid emitting warnings into JSON responses)
 require_once __DIR__ . '/session_init.php';
 spx_session_start([

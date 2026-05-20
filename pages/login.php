@@ -1,6 +1,7 @@
 <?php
 // Handle all session and redirect logic BEFORE any HTML output
 include_once '../includes/config.php';
+require_once __DIR__ . '/../includes/google_auth.php';
 
 // Handle logout
 if (isset($_GET['logout'])) {
@@ -18,6 +19,11 @@ if (isset($_SESSION['customer_id'])) {
 // Initialize variables
 $errors = [];
 $email = '';
+
+if (!empty($_SESSION['google_auth_error'])) {
+    $errors[] = $_SESSION['google_auth_error'];
+    unset($_SESSION['google_auth_error']);
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -144,6 +150,18 @@ include '../includes/toast_notifications.php';
                                 Login to Account
                             </button>
                         </form>
+
+                        <?php if (spx_google_enabled()): ?>
+                            <div class="d-flex align-items-center my-3">
+                                <hr class="flex-grow-1">
+                                <span class="px-3 text-muted small">or</span>
+                                <hr class="flex-grow-1">
+                            </div>
+                            <a href="<?php echo htmlspecialchars(spx_google_auth_url('login', $_GET['redirect'] ?? '../index.php')); ?>" class="btn btn-outline-danger w-100 py-3">
+                                <i class="fab fa-google me-2"></i>
+                                Continue with Google
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="card-footer text-center py-3">
                         <p class="mb-0">Don't have an account?

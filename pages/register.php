@@ -2,6 +2,7 @@
 // Start session check at the very beginning
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start(['secure' => false]);
+require_once __DIR__ . '/../includes/google_auth.php';
 
 // Check if already logged in (before HTML output)
 if (isset($_SESSION['customer_id'])) {
@@ -205,6 +206,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
                         </form>
+
+                        <?php if (spx_google_enabled()): ?>
+                            <div class="d-flex align-items-center my-3">
+                                <hr class="flex-grow-1">
+                                <span class="px-3 text-muted small">or</span>
+                                <hr class="flex-grow-1">
+                            </div>
+                            <a href="<?php echo htmlspecialchars(spx_google_auth_url('register', '../index.php')); ?>" class="btn btn-outline-danger w-100 py-3">
+                                <i class="fab fa-google me-2"></i>
+                                Sign up with Google
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="card-footer text-center py-3">
                         <p class="mb-0">Already have an account?
