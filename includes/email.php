@@ -54,6 +54,10 @@ class EmailService {
             'text' => trim(strip_tags($htmlBody)),
         ];
 
+        if (MAIL_ADMIN_COPY !== '' && strcasecmp(MAIL_ADMIN_COPY, $toEmail) !== 0) {
+            $payload['bcc'] = [MAIL_ADMIN_COPY];
+        }
+
         $encodedAttachments = [];
         foreach ($attachments as $attachment) {
             $path = $attachment['path'] ?? '';
@@ -99,6 +103,9 @@ class EmailService {
         $this->mailer->clearAttachments();
         $this->mailer->clearReplyTos();
         $this->mailer->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+        if (MAIL_ADMIN_COPY !== '') {
+            $this->mailer->addBCC(MAIL_ADMIN_COPY);
+        }
     }
 
     public function sendMessageNotification($customerEmail, $customerName, $messagePreview, $portalLink) {

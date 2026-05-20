@@ -27,6 +27,7 @@ if (!defined('SMTP_PASS')) define('SMTP_PASS', spx_env('SMTP_PASS', ''));
 if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', $smtp_from_email);
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', spx_env('SMTP_FROM_NAME', SITE_NAME));
 if (!defined('RESEND_API_KEY')) define('RESEND_API_KEY', spx_env('RESEND_API_KEY', ''));
+if (!defined('MAIL_ADMIN_COPY')) define('MAIL_ADMIN_COPY', spx_env('MAIL_ADMIN_COPY', ''));
 
 // Google OAuth Configuration
 if (!defined('GOOGLE_CLIENT_ID')) define('GOOGLE_CLIENT_ID', spx_env('GOOGLE_CLIENT_ID', ''));
