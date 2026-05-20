@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $product_id = (int)($_POST['product_id'] ?? 0);
 $part_name = trim((string)($_POST['part_name'] ?? ''));
 $full_name = trim((string)($_POST['full_name'] ?? ''));
+$email = trim((string)($_POST['email'] ?? ''));
 $phone_number = trim((string)($_POST['phone_number'] ?? ''));
 $car_model = trim((string)($_POST['car_model'] ?? ''));
 $quantity = (int)($_POST['quantity'] ?? 0);
@@ -34,6 +35,7 @@ if ($part_name === '' && $product_id > 0) {
 
 if ($part_name === '') $errors[] = 'Part name is required';
 if ($full_name === '') $errors[] = 'Name is required';
+if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'A valid email address is required';
 if ($phone_number === '') $errors[] = 'Phone number is required';
 if ($car_model === '') $errors[] = 'Car model is required';
 if ($quantity < 1) $errors[] = 'Quantity must be at least 1';
@@ -56,6 +58,7 @@ try {
             product_name VARCHAR(255) NOT NULL,
             quantity INT NOT NULL DEFAULT 1,
             customer_name VARCHAR(255) NOT NULL,
+            customer_email VARCHAR(255) NULL,
             phone_number VARCHAR(32) NOT NULL,
             car_model VARCHAR(255) NOT NULL,
             status ENUM('pending','quoted','approved','deposit_paid','delivered','cancelled') NOT NULL DEFAULT 'pending',
@@ -70,14 +73,15 @@ try {
             INDEX idx_customer_id (customer_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
+    $conn->query("ALTER TABLE price_requests ADD COLUMN IF NOT EXISTS customer_email VARCHAR(255) NULL AFTER customer_name");
 
     $customer_id = isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : null;
 
     $stmt = $conn->prepare("
         INSERT INTO price_requests
-            (customer_id, product_id, product_name, quantity, customer_name, phone_number, car_model, status, created_at)
+            (customer_id, product_id, product_name, quantity, customer_name, customer_email, phone_number, car_model, status, created_at)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
     ");
 
     if (!$stmt) {
@@ -85,12 +89,13 @@ try {
     }
 
     $stmt->bind_param(
-        "iisisss",
+        "iisissss",
         $customer_id,
         $product_id,
         $part_name,
         $quantity,
         $full_name,
+        $email,
         $phone_number,
         $car_model
     );
@@ -100,6 +105,21 @@ try {
     }
 
     $request_id = (int)$conn->insert_id;
+
+    try {
+        require_once __DIR__ . '/includes/email.php';
+        $emailService = new EmailService();
+        $emailService->sendPriceRequestConfirmation($email, [
+            'request_id' => $request_id,
+            'customer_name' => $full_name,
+            'part_name' => $part_name,
+            'quantity' => $quantity,
+            'phone_number' => $phone_number,
+            'car_model' => $car_model,
+        ]);
+    } catch (Throwable $mailError) {
+        error_log('price request email failed: ' . $mailError->getMessage());
+    }
 
     echo json_encode([
         'success' => true,

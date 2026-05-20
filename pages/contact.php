@@ -112,7 +112,7 @@ include '../includes/navigation.php';
                                     </div>
                                     <div>
                                         <h4>Mail Us</h4>
-                                        <p class="mb-2">argandherve@gmail.com</p>
+                                        <p class="mb-2">info@sparexpressltd.com</p>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,7 @@
 <?php
 // Contact Form Submission API
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/email.php';
 
 header('Content-Type: application/json');
 
@@ -51,17 +52,18 @@ if ($customer_result->num_rows > 0) {
     $customer_id = $customer['id'];
 } else {
     // Create new customer
+    $temporary_password = password_hash(bin2hex(random_bytes(24)), PASSWORD_DEFAULT);
     $insert_customer = "INSERT INTO customers_enhanced (
         customer_number, first_name, last_name, email, phone, phone_secondary,
-        customer_status, email_verified, created_at, updated_at
+        password, customer_status, email_verified, created_at, updated_at
     ) VALUES (
         CONCAT('CUST', LPAD((SELECT COALESCE(MAX(id), 0) + 1 FROM customers_enhanced), 6, '0')),
         ?, ?, ?, ?, ?,
-        'active', 0, NOW(), NOW()
+        ?, 'active', 0, NOW(), NOW()
     )";
 
     $cust_stmt = $conn->prepare($insert_customer);
-    $cust_stmt->bind_param("sssss", $first_name, $last_name, $email, $phone, $phone);
+    $cust_stmt->bind_param("ssssss", $first_name, $last_name, $email, $phone, $phone, $temporary_password);
     $cust_stmt->execute();
     $customer_id = $conn->insert_id;
 }
@@ -107,6 +109,21 @@ $update_stmt = $conn->prepare($update_conv);
 $preview = substr($message, 0, 100) . (strlen($message) > 100 ? '...' : '');
 $update_stmt->bind_param("si", $preview, $conversation_id);
 $update_stmt->execute();
+
+try {
+    $emailService = new EmailService();
+    $emailService->sendContactNotification([
+        'name' => $name,
+        'email' => $email,
+        'phone' => $phone,
+        'project' => $project,
+        'subject' => $subject,
+        'message' => $message,
+        'conversation_id' => $conversation_id,
+    ]);
+} catch (Throwable $mailError) {
+    error_log('contact email failed: ' . $mailError->getMessage());
+}
 
 echo json_encode([
     'success' => true,

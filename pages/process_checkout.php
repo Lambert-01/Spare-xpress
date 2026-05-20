@@ -185,7 +185,14 @@ try {
         $emailService = new EmailService();
 
         $customerName = $first_name . ' ' . $last_name;
-        $emailSent = $emailService->sendOrderInvoice($email, $customerName, $order_id, $pdfPath);
+        $emailSent = $emailService->sendOrderInvoice($email, $customerName, $order_id, $pdfPath, [
+            'phone' => $phone,
+            'payment_method' => ucwords(str_replace('_', ' ', $payment_method)),
+            'subtotal' => $subtotal,
+            'shipping_fee' => $shipping_cost,
+            'total_amount' => $total_amount,
+            'items' => $cart_data,
+        ]);
 
         if ($emailSent) {
             // Log successful email in production

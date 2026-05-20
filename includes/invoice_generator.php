@@ -2,7 +2,12 @@
 // SPARE XPRESS LTD - Invoice Generator Function
 // Can be called programmatically to generate PDF invoices
 
-require_once __DIR__ . '/../lib/tcpdf/tcpdf.php';
+$composerTcpdf = __DIR__ . '/../vendor/tecnickcom/tcpdf/tcpdf.php';
+if (is_readable($composerTcpdf)) {
+    require_once $composerTcpdf;
+} else {
+    require_once __DIR__ . '/../lib/tcpdf/tcpdf.php';
+}
 
 function generateOrderInvoice($order_id) {
     global $conn;

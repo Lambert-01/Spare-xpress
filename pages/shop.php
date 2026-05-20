@@ -339,6 +339,10 @@ include '../includes/toast_notifications.php';
                                 <input type="text" class="form-control" name="full_name" id="price_full_name" placeholder="Full name" required>
                             </div>
                             <div class="col-md-6">
+                                <label class="form-label fw-bold">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="email" id="price_email" placeholder="you@example.com" required>
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label fw-bold">Phone Number <span class="text-danger">*</span></label>
                                 <input type="tel" class="form-control" name="phone_number" id="price_phone_number" placeholder="+2507XXXXXXXX" required>
                                 <div class="form-text">Format: +250790123456</div>
