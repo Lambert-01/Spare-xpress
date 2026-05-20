@@ -1,22 +1,10 @@
 <?php
-// Handle all session and redirect logic BEFORE any HTML output
 include_once '../includes/config.php';
 require_once __DIR__ . '/../includes/google_auth.php';
 
-// Handle logout
-if (isset($_GET['logout'])) {
-    session_destroy();
-    header('Location: login.php');
-    exit();
-}
+if (isset($_GET['logout'])) { session_destroy(); header('Location: login.php'); exit(); }
+if (isset($_SESSION['customer_id'])) { header('Location: ../index.php'); exit(); }
 
-// Check if already logged in
-if (isset($_SESSION['customer_id'])) {
-    header('Location: ../index.php');
-    exit();
-}
-
-// Initialize variables
 $errors = [];
 $email = '';
 
@@ -25,26 +13,15 @@ if (!empty($_SESSION['google_auth_error'])) {
     unset($_SESSION['google_auth_error']);
 }
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // Validation
-    if (empty($email)) {
-        $errors[] = 'Email is required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Please enter a valid email address';
-    }
+    if (empty($email)) $errors[] = 'Email is required';
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Please enter a valid email address';
+    if (empty($password)) $errors[] = 'Password is required';
 
-    if (empty($password)) {
-        $errors[] = 'Password is required';
-    }
-
-    // If no validation errors, attempt login
     if (empty($errors)) {
-        include '../includes/config.php';
-
         $stmt = $conn->prepare("SELECT id, CONCAT(first_name, ' ', last_name) as full_name, email, phone, password FROM customers_enhanced WHERE email = ? AND customer_status = 'active'");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -52,25 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows === 1) {
             $customer = $result->fetch_assoc();
-
             if (password_verify($password, $customer['password'])) {
-                // Secure session management
-                session_regenerate_id(true); // Prevent session fixation
-
+                session_regenerate_id(true);
                 $_SESSION['customer_id'] = $customer['id'];
                 $_SESSION['customer_name'] = $customer['full_name'];
                 $_SESSION['customer_email'] = $customer['email'];
                 $_SESSION['customer_phone'] = $customer['phone'];
                 $_SESSION['login_time'] = time();
                 $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-
-                // Update last login
                 $update_stmt = $conn->prepare("UPDATE customers_enhanced SET last_login = NOW() WHERE id = ?");
                 $update_stmt->bind_param("i", $customer['id']);
                 $update_stmt->execute();
                 $update_stmt->close();
-
-                // Redirect to homepage or intended page
                 $redirect = $_GET['redirect'] ?? '../index.php';
                 header("Location: $redirect");
                 exit();
@@ -81,130 +51,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'Invalid email or password';
         }
         $stmt->close();
-        $conn->close();
     }
 }
 
-// Now include HTML files after all session logic is complete
 $page_title = 'Login - SPARE XPRESS LTD';
 include '../includes/header.php';
-include '../includes/navigation.php';
 include '../includes/toast_notifications.php';
 ?>
 
-<!-- Login Section Start -->
-<div class="container-fluid py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-7">
-                <div class="card shadow-lg border-0 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="card-header bg-primary text-white text-center py-4">
-                        <h3 class="mb-0">
-                            <i class="fas fa-sign-in-alt me-2"></i>
-                            Customer Login
-                        </h3>
-                        <p class="mb-0 mt-2">Access your SPARE XPRESS LTD account</p>
-                    </div>
-                    <div class="card-body p-4">
-                        <?php if (!empty($errors)): ?>
-                            <div class="alert alert-danger d-none" id="loginErrors">
-                                <ul class="mb-0">
-                                    <?php foreach ($errors as $error): ?>
-                                        <li><?php echo htmlspecialchars($error); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                            <script>document.addEventListener('DOMContentLoaded', function() { showErrorToast('Please check your login credentials', 'Login Failed'); });</script>
-                        <?php endif; ?>
+<div class="spx-auth-wrap">
+    <!-- Brand Side -->
+    <div class="spx-auth-brand d-none d-lg-flex" style="width:42%;flex-shrink:0;">
+        <div class="position-relative text-center">
+            <img src="/img/logo/logox.jpg" alt="SPARE XPRESS" class="spx-auth-brand-logo">
+            <h2>SPARE XPRESS LTD</h2>
+            <p>Rwanda's trusted source for genuine vehicle spare parts</p>
+            <ul class="spx-auth-brand-features text-start">
+                <li><i class="fas fa-check"></i>In-stock parts — buy directly</li>
+                <li><i class="fas fa-globe"></i>Global sourcing: Japan, Dubai, Europe, China</li>
+                <li><i class="fas fa-truck"></i>Delivery across Rwanda</li>
+                <li><i class="fas fa-shield-alt"></i>Genuine parts with warranty</li>
+                <li><i class="fas fa-headset"></i>Expert support team</li>
+            </ul>
+        </div>
+    </div>
 
-                        <form method="POST" action="" novalidate>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address *</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                           value="<?php echo htmlspecialchars($email); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password *</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                                    <label class="form-check-label" for="remember">
-                                        Remember me
-                                    </label>
-                                </div>
-                                <a href="password_reset.php" class="text-decoration-none">Forgot password?</a>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
-                                <i class="fas fa-sign-in-alt me-2"></i>
-                                Login to Account
-                            </button>
-                        </form>
-
-                        <?php if (spx_google_enabled()): ?>
-                            <div class="d-flex align-items-center my-3">
-                                <hr class="flex-grow-1">
-                                <span class="px-3 text-muted small">or</span>
-                                <hr class="flex-grow-1">
-                            </div>
-                            <a href="<?php echo htmlspecialchars(spx_google_auth_url('login', $_GET['redirect'] ?? '../index.php')); ?>" class="btn btn-outline-danger w-100 py-3">
-                                <i class="fab fa-google me-2"></i>
-                                Continue with Google
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                    <div class="card-footer text-center py-3">
-                        <p class="mb-0">Don't have an account?
-                            <a href="register.php" class="text-primary fw-bold">Register here</a>
-                        </p>
-                    </div>
-                </div>
+    <!-- Form Side -->
+    <div class="spx-auth-form-side">
+        <div class="spx-auth-form-inner">
+            <div class="d-lg-none text-center mb-4">
+                <img src="/img/logo/logox.jpg" alt="Logo" style="height:56px;border-radius:.75rem;">
             </div>
+            <h3>Welcome back</h3>
+            <p class="subtitle">Sign in to your SPARE XPRESS account</p>
+
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-danger py-2">
+                    <?php foreach ($errors as $e): ?><div><i class="fas fa-exclamation-circle me-1"></i><?php echo htmlspecialchars($e); ?></div><?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" novalidate>
+                <div class="spx-input-group">
+                    <label for="email">Email Address</label>
+                    <i class="fas fa-envelope spx-input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" value="<?php echo htmlspecialchars($email); ?>" required>
+                </div>
+                <div class="spx-input-group">
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock spx-input-icon"></i>
+                    <input type="password" id="password" name="password" placeholder="Your password" required>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="d-flex align-items-center gap-2 mb-0" style="cursor:pointer;font-size:.85rem;">
+                        <input type="checkbox" name="remember"> Remember me
+                    </label>
+                    <a href="password_reset.php" class="text-primary text-decoration-none" style="font-size:.85rem;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </button>
+            </form>
+
+            <?php if (spx_google_enabled()): ?>
+                <div class="spx-divider">or</div>
+                <a href="<?php echo htmlspecialchars(spx_google_auth_url('login', $_GET['redirect'] ?? '../index.php')); ?>" class="btn btn-outline-danger w-100 py-3">
+                    <i class="fab fa-google me-2"></i>Continue with Google
+                </a>
+            <?php endif; ?>
+
+            <p class="text-center text-muted mt-4 mb-0" style="font-size:.875rem;">
+                Don't have an account? <a href="register.php" class="text-primary fw-600">Create one free</a>
+            </p>
         </div>
     </div>
 </div>
-<!-- Login Section End -->
-
-<style>
-.card {
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.card-header {
-    border-radius: 15px 15px 0 0 !important;
-}
-
-.input-group-text {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
-}
-
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-}
-</style>
 
 <?php include '../includes/footer.php'; ?>

@@ -4,210 +4,188 @@ include '../includes/header.php';
 include '../includes/navigation.php';
 ?>
 
-    <!-- Single Page Header start -->
-    <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6 wow fadeInUp" data-wow-delay="0.1s">Contact Us</h1>
-        <ol class="breadcrumb justify-content-center mb-0 wow fadeInUp" data-wow-delay="0.3s">
-            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="/pages/contact.php">Contact</a></li>
-            <li class="breadcrumb-item active text-white">Contact Us</li>
-        </ol>
+<!-- Page Hero -->
+<div class="spx-page-hero">
+    <div class="container position-relative">
+        <h1 class="fw-bold mb-2"><i class="fas fa-headset me-2"></i>Contact Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                <li class="breadcrumb-item active">Contact Us</li>
+            </ol>
+        </nav>
     </div>
-    <!-- Single Page Header End -->
+</div>
 
-    <!-- Contucts Start -->
-    <div class="container-fluid contact py-5">
-        <div class="container py-5">
-            <div class="p-5 bg-light rounded">
-                <div class="row g-4">
-                    <div class="col-12">
-                        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
-                            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block pb-2">Get in
-                                touch</h4>
-                            <p class="mb-5 fs-5 text-dark">Your trusted source for genuine automotive spare parts in Rwanda. We're committed to providing quality parts, expert advice, and exceptional service to keep your vehicle running smoothly.</p>
-                        </div>
+<div class="spx-portal-wrap py-5">
+    <div class="container">
+
+        <!-- Top CTA Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="spx-contact-info-card h-100">
+                    <div class="spx-contact-icon blue"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <div class="fw-700 text-dark mb-1" style="font-weight:700">Call Us</div>
+                        <a href="tel:+250792865114" class="text-decoration-none text-primary fw-600">+250 792 865 114</a>
+                        <div class="text-muted small mt-1">Mon–Sat, 8 AM – 6 PM</div>
                     </div>
-                    <div class="col-lg-7">
-                        <h5 class="text-primary wow fadeInUp" data-wow-delay="0.1s">Let’s Connect</h5>
-                        <h1 class="display-5 mb-4 wow fadeInUp" data-wow-delay="0.3s">Send Your Message</h1>
-                        <p class="mb-4 wow fadeInUp" data-wow-delay="0.5s">Have questions about our automotive spare parts? Need help finding the right part for your vehicle? Our expert team is here to assist you. Contact us for inquiries about our inventory, special orders, or technical support. We respond to all inquiries within 24 hours.</p>
-                        <div class="alert alert-info wow fadeInUp" data-wow-delay="0.7s">
-                            <strong>SPARE XPRESS Ltd</strong> <br>
-                            <small>Licensed to operate in Rwanda with expertise in automotive parts distribution.</small>
-                        </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="spx-contact-info-card h-100">
+                    <div class="spx-contact-icon green"><i class="fab fa-whatsapp"></i></div>
+                    <div>
+                        <div class="fw-700 text-dark mb-1" style="font-weight:700">WhatsApp</div>
+                        <a href="https://wa.me/250792865114" target="_blank" class="spx-whatsapp-btn mt-1">
+                            <i class="fab fa-whatsapp"></i>Chat Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="spx-contact-info-card h-100">
+                    <div class="spx-contact-icon blue"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <div class="fw-700 text-dark mb-1" style="font-weight:700">Email</div>
+                        <a href="mailto:info@sparexpressltd.com" class="text-decoration-none text-primary fw-600" style="font-size:.85rem">info@sparexpressltd.com</a>
+                        <div class="text-muted small mt-1">Reply within 24 hours</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="spx-contact-info-card h-100">
+                    <div class="spx-contact-icon orange"><i class="fas fa-map-marker-alt"></i></div>
+                    <div>
+                        <div class="fw-700 text-dark mb-1" style="font-weight:700">Visit Us</div>
+                        <div class="text-muted small">Kagarama, Kicukiro<br>Kigali, Rwanda</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Contact Form -->
+            <div class="col-lg-7">
+                <div class="spx-panel">
+                    <div class="spx-panel-header">
+                        <h5 class="spx-panel-title"><i class="fas fa-paper-plane me-2 text-primary"></i>Send Us a Message</h5>
+                    </div>
+                    <div class="spx-panel-body">
+                        <div id="formAlert"></div>
                         <form id="contact-form" action="/api/submit_contact.php" method="POST">
-                            <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="col-lg-12 col-xl-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-                                        <label for="name">Your Name</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="spx-input-group">
+                                        <label for="name">Your Name *</label>
+                                        <i class="fas fa-user spx-input-icon"></i>
+                                        <input type="text" id="name" name="name" placeholder="Full name" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 col-xl-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
-                                        <label for="email">Your Email</label>
+                                <div class="col-md-6">
+                                    <div class="spx-input-group">
+                                        <label for="email">Email Address *</label>
+                                        <i class="fas fa-envelope spx-input-icon"></i>
+                                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 col-xl-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" required>
-                                        <label for="phone">Your Phone</label>
+                                <div class="col-md-6">
+                                    <div class="spx-input-group">
+                                        <label for="phone">Phone Number *</label>
+                                        <i class="fas fa-phone spx-input-icon"></i>
+                                        <input type="tel" id="phone" name="phone" placeholder="+250 7XX XXX XXX" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 col-xl-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="project" name="project" placeholder="Project">
-                                        <label for="project">Your Project</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
-                                        <label for="subject">Subject</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Leave a message here" id="message" name="message"
-                                            style="height: 160px" required></textarea>
-                                        <label for="message">Message</label>
+                                <div class="col-md-6">
+                                    <div class="spx-input-group">
+                                        <label for="subject">Subject *</label>
+                                        <i class="fas fa-tag spx-input-icon"></i>
+                                        <input type="text" id="subject" name="subject" placeholder="How can we help?" required>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary w-100" id="submit-btn">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                        Send Message
+                                    <div class="spx-input-group no-icon">
+                                        <label for="message">Message *</label>
+                                        <textarea id="message" name="message" rows="5" placeholder="Describe your inquiry, the part you need, or your vehicle details..." required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary w-100 py-3" id="submit-btn">
+                                        <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
                                     </button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-5 wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="h-100 rounded">
-                            <iframe class="rounded w-100" style="height: 100%;"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.755!2d30.1127!3d-1.9441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4b7c1e74b9d%3A0x4f4e4e4e4e4e4e4e!2sKagarama%2C%20Kicukiro%2C%20Kigali%2C%20Rwanda!5e0!3m2!1sen!2srw!4v1694259649153!5m2!1sen!2srw"
-                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <!-- Right Column: Hours + Map -->
+            <div class="col-lg-5">
+                <!-- Business Hours -->
+                <div class="spx-panel mb-4">
+                    <div class="spx-panel-header">
+                        <h5 class="spx-panel-title"><i class="fas fa-clock me-2 text-primary"></i>Business Hours</h5>
+                        <span class="badge bg-success">Open Now</span>
+                    </div>
+                    <div class="spx-panel-body">
+                        <table class="spx-hours-table">
+                            <tr><td>Monday</td><td>8:00 AM – 6:00 PM</td></tr>
+                            <tr><td>Tuesday</td><td>8:00 AM – 6:00 PM</td></tr>
+                            <tr><td>Wednesday</td><td>8:00 AM – 6:00 PM</td></tr>
+                            <tr><td>Thursday</td><td>8:00 AM – 6:00 PM</td></tr>
+                            <tr><td>Friday</td><td>8:00 AM – 6:00 PM</td></tr>
+                            <tr><td>Saturday</td><td>8:00 AM – 4:00 PM</td></tr>
+                            <tr class="closed"><td>Sunday</td><td>Closed</td></tr>
+                        </table>
+                        <div class="mt-3 p-3 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+                            <small class="text-success fw-600"><i class="fas fa-info-circle me-1"></i>For urgent orders outside hours, WhatsApp us — we respond as soon as possible.</small>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="row g-4 align-items-center justify-content-center">
-                            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="rounded p-4">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                        style="width: 70px; height: 70px;">
-                                        <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h4>Address</h4>
-                                        <p class="mb-2">Kagarama, Kicukiro<br>Umujyi wa Kigali, RWANDA</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="rounded p-4">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                        style="width: 70px; height: 70px;">
-                                        <i class="fas fa-envelope fa-2x text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h4>Mail Us</h4>
-                                        <p class="mb-2">info@sparexpressltd.com</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="rounded p-4">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                        style="width: 70px; height: 70px;">
-                                        <i class="fas fa-phone fa-2x text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h4>Telephone</h4>
-                                        <p class="mb-2">+250 792 865 114</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="rounded p-4">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                        style="width: 70px; height: 70px;">
-                                        <i class="fas fa-building fa-2x text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h4>Company</h4>
-                                        <p class="mb-2">SPARE XPRESS Ltd<br></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+
+                <!-- Map -->
+                <div class="spx-panel">
+                    <div class="spx-panel-header">
+                        <h5 class="spx-panel-title"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Find Us</h5>
+                    </div>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.755!2d30.1127!3d-1.9441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4b7c1e74b9d%3A0x4f4e4e4e4e4e4e4e!2sKagarama%2C%20Kicukiro%2C%20Kigali%2C%20Rwanda!5e0!3m2!1sen!2srw!4v1694259649153!5m2!1sen!2srw"
+                        width="100%" height="220" style="border:0;display:block;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="spx-panel-body pt-3">
+                        <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt text-primary me-1"></i>Kagarama, Kicukiro District, Kigali, Rwanda</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Contuct End -->
+</div>
 
 <script>
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
-
-    const submitBtn = document.getElementById('submit-btn');
-    const spinner = submitBtn.querySelector('.spinner-border');
-    const originalText = submitBtn.innerHTML;
-
-    // Show loading state
+    const btn = document.getElementById('submit-btn');
+    const spinner = btn.querySelector('.spinner-border');
     spinner.classList.remove('d-none');
-    submitBtn.disabled = true;
+    btn.disabled = true;
 
-    const formData = new FormData(this);
-
-    fetch('/api/submit_contact.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success message
-            showAlert('Message sent successfully! We will get back to you within 24 hours.', 'success');
-            // Reset form
-            document.getElementById('contact-form').reset();
-        } else {
-            showAlert('Error sending message: ' + data.message, 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred. Please try again.', 'danger');
-    })
-    .finally(() => {
-        // Reset button state
-        spinner.classList.add('d-none');
-        submitBtn.disabled = false;
-    });
+    fetch('/api/submit_contact.php', { method: 'POST', body: new FormData(this) })
+        .then(r => r.json())
+        .then(data => {
+            const alert = document.getElementById('formAlert');
+            if (data.success) {
+                alert.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>Message sent! We\'ll reply within 24 hours.</div>';
+                this.reset();
+            } else {
+                alert.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i>' + (data.message || 'Error sending message.') + '</div>';
+            }
+        })
+        .catch(() => {
+            document.getElementById('formAlert').innerHTML = '<div class="alert alert-danger">An error occurred. Please try again.</div>';
+        })
+        .finally(() => { spinner.classList.add('d-none'); btn.disabled = false; });
 });
-
-function showAlert(message, type) {
-    const alertHtml = `
-        <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
-            <i class="bi bi-info-circle me-2"></i>
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `;
-
-    const form = document.getElementById('contact-form');
-    form.insertAdjacentHTML('afterend', alertHtml);
-
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        const alert = form.nextElementSibling;
-        if (alert && alert.classList.contains('alert')) {
-            alert.remove();
-        }
-    }, 5000);
-}
 </script>
 
 <?php include '../includes/footer.php'; ?>

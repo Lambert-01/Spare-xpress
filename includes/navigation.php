@@ -4,30 +4,33 @@ include_once 'config.php';
 
 <!-- Header Start -->
 <header class="bg-white shadow-sm">
-    <div class="container-fluid px-5">
-        <!-- Top Header -->
-        <div class="d-none d-lg-block py-2 border-bottom">
-            <div class="row align-items-center">
-                <div class="col-lg-4">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-phone text-primary me-2"></i>
-                        <span class="text-muted">Call Us: </span>
-                        <a href="tel:<?php echo SITE_PHONE; ?>" class="text-decoration-none ms-1 fw-bold"><?php echo SITE_PHONE; ?></a>
+    <div class="container-fluid px-4 px-lg-5">
+        <!-- Top Bar -->
+        <div class="spx-topbar d-none d-lg-block">
+            <div class="container-fluid px-0">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="tel:<?php echo SITE_PHONE; ?>"><i class="fas fa-phone me-1"></i><?php echo SITE_PHONE; ?></a>
+                        <span class="divider">|</span>
+                        <a href="mailto:info@sparexpressltd.com"><i class="fas fa-envelope me-1"></i>info@sparexpressltd.com</a>
+                        <span class="divider">|</span>
+                        <span style="color:rgba(255,255,255,.75)"><i class="fas fa-clock me-1"></i>Mon–Sat: 8:00 AM – 6:00 PM</span>
                     </div>
-                </div>
-                <div class="col-lg-4 text-center">
-                    <span class="text-muted small"></span>
-                </div>
-                <div class="col-lg-4 text-end">
-                    <?php if (isset($_SESSION['customer_id'])): ?>
-                        <span class="text-muted me-2">Welcome, <?php echo htmlspecialchars($_SESSION['customer_name']); ?></span>
-                        <span class="text-muted">|</span>
-                        <a href="/pages/logout.php" class="text-decoration-none ms-2">Logout</a>
-                    <?php else: ?>
-                        <a href="/pages/login.php" class="text-decoration-none me-3">Login</a>
-                        <span class="text-muted">|</span>
-                        <a href="/pages/register.php" class="text-decoration-none ms-3">Register</a>
-                    <?php endif; ?>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="https://wa.me/250792865114" target="_blank"><i class="fab fa-whatsapp me-1"></i>WhatsApp</a>
+                        <span class="divider">|</span>
+                        <?php if (isset($_SESSION['customer_id'])): ?>
+                            <span style="color:rgba(255,255,255,.75)">Hi, <?php echo htmlspecialchars(explode(' ', $_SESSION['customer_name'])[0]); ?></span>
+                            <span class="divider">|</span>
+                            <a href="/pages/my_account.php">My Account</a>
+                            <span class="divider">|</span>
+                            <a href="/pages/logout.php">Logout</a>
+                        <?php else: ?>
+                            <a href="/pages/login.php">Login</a>
+                            <span class="divider">|</span>
+                            <a href="/pages/register.php">Register</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,19 +94,30 @@ include_once 'config.php';
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-primary rounded mb-3">
-            <div class="container-fluid px-0">
+        <nav class="navbar navbar-expand-lg spx-nav-bar mb-3">
+            <div class="container-fluid px-2">
+                <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="collapse navbar-collapse" id="mobileNav">
                     <div class="navbar-nav mx-auto">
                         <?php foreach ($nav_menu as $item): ?>
-                            <a href="<?php echo $item['url']; ?>" class="nav-link text-white fw-bold me-4 <?php echo (basename($_SERVER['PHP_SELF']) == $item['url']) ? 'active' : ''; ?>">
+                            <a href="<?php echo $item['url']; ?>" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == basename($item['url'])) ? 'active' : ''; ?>">
                                 <?php echo $item['text']; ?>
                             </a>
                         <?php endforeach; ?>
-
                         <?php if (isset($_SESSION['customer_id'])): ?>
-                            <a href="/pages/my_account.php" class="nav-link text-white fw-bold me-4 <?php echo (basename($_SERVER['PHP_SELF']) == 'my_account.php') ? 'active' : ''; ?>">My Account</a>
-                            <a href="/pages/order_history.php" class="nav-link text-white fw-bold me-4 <?php echo (basename($_SERVER['PHP_SELF']) == 'order_history.php') ? 'active' : ''; ?>">Order History</a>
+                            <a href="/pages/my_account.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'my_account.php') ? 'active' : ''; ?>">My Account</a>
+                            <a href="/pages/order_history.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'order_history.php') ? 'active' : ''; ?>">Orders</a>
+                        <?php endif; ?>
+                    </div>
+                    <!-- Mobile: auth links -->
+                    <div class="d-lg-none mt-2 pb-2 border-top border-white border-opacity-25 pt-2">
+                        <?php if (isset($_SESSION['customer_id'])): ?>
+                            <a href="/pages/logout.php" class="nav-link text-white-50"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                        <?php else: ?>
+                            <a href="/pages/login.php" class="nav-link text-white-50"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                            <a href="/pages/register.php" class="nav-link text-white-50"><i class="fas fa-user-plus me-1"></i>Register</a>
                         <?php endif; ?>
                     </div>
                 </div>

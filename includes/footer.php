@@ -1,74 +1,66 @@
 <?php include_once 'config.php'; ?>
 
 <!-- Footer Start -->
-<div class="container-fluid footer py-3 wow fadeIn" data-wow-delay="0.2s" style="background-color: #1a1a1a;">
+<div class="container-fluid footer py-4 wow fadeIn" data-wow-delay="0.2s" style="background-color: #1a1a1a;">
     <div class="container py-3">
-        <!-- Contact Info Section -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-6 col-lg-6 text-center text-md-start">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-map-marker-alt fa-lg text-primary me-2"></i>
+        <div class="row g-4">
+            <!-- Brand & Contact -->
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/logo/logox.jpg" alt="Logo" style="height:44px;border-radius:.5rem;" class="me-3">
                     <div>
-                        <h6 class="text-white mb-0">Address: <?php echo SITE_ADDRESS; ?></h6>
+                        <h6 class="text-white mb-0 fw-bold">SPARE XPRESS LTD</h6>
+                        <small class="text-muted">Genuine Auto Parts &middot; Rwanda</small>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-envelope fa-lg text-primary me-2"></i>
-                    <div>
-                        <h6 class="text-white mb-0">Email: <?php echo SITE_EMAIL; ?></h6>
-                    </div>
+                <p class="text-muted small mb-3">Your trusted source for genuine vehicle spare parts in Rwanda. In-stock parts &amp; special-order sourcing from Japan, Dubai, Europe &amp; China.</p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="https://wa.me/250792865114" target="_blank" class="btn btn-sm" style="background:#25d366;color:#fff;"><i class="fab fa-whatsapp me-1"></i>WhatsApp</a>
+                    <a href="mailto:info@sparexpressltd.com" class="btn btn-sm btn-outline-secondary"><i class="fas fa-envelope me-1"></i>Email Us</a>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-6 text-center text-md-start">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-phone fa-lg text-primary me-2"></i>
-                    <div>
-                        <h6 class="text-white mb-0">Telephone: <?php echo SITE_PHONE; ?></h6>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-headset fa-lg text-primary me-2"></i>
-                    <div>
-                        <h6 class="text-white mb-0">Customer Support: <?php echo SITE_URL; ?> | <?php echo SITE_PHONE; ?></h6>
-                    </div>
-                </div>
+            <!-- Hours -->
+            <div class="col-md-6 col-lg-2">
+                <h6 class="text-primary mb-3">Business Hours</h6>
+                <ul class="list-unstyled small text-muted">
+                    <li class="mb-1"><span class="text-light">Mon &ndash; Fri</span><br>8:00 AM &ndash; 6:00 PM</li>
+                    <li class="mb-1 mt-2"><span class="text-light">Saturday</span><br>8:00 AM &ndash; 4:00 PM</li>
+                    <li class="mt-2"><span class="text-danger">Sunday</span><br>Closed</li>
+                </ul>
             </div>
-        </div>
-        <!-- Links and Newsletter Section -->
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-3">
-                <h6 class="text-primary mb-3">Newsletter</h6>
-                <p class="text-light small mb-2">Stay updated with new spare parts, promotions, and expert tips for keeping your vehicle in top condition.</p>
-                <div class="input-group input-group-sm">
-                    <input type="email" class="form-control" placeholder="Enter your email" aria-label="Email">
-                    <button class="btn btn-primary btn-sm" type="button">Subscribe</button>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
+            <!-- Customer Service -->
+            <div class="col-md-6 col-lg-2">
                 <h6 class="text-primary mb-3">Customer Service</h6>
                 <ul class="list-unstyled small">
                     <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Contact Us</a></li>
                     <li class="mb-1"><a href="/pages/order_history.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order Tracking</a></li>
-                    <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Returns & Refunds</a></li>
                     <li class="mb-1"><a href="/pages/my_account.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>My Account</a></li>
+                    <li class="mb-1"><a href="/pages/messages.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Messages</a></li>
                 </ul>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <h6 class="text-primary mb-3">Information</h6>
+            <!-- Shop -->
+            <div class="col-md-6 col-lg-2">
+                <h6 class="text-primary mb-3">Shop</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="/pages/shop.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Shop Parts</a></li>
+                    <li class="mb-1"><a href="/pages/shop.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Browse Parts</a></li>
                     <li class="mb-1"><a href="/pages/order_request.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Special Orders</a></li>
-                    <li class="mb-1"><a href="/pages/shop.php#priceRequestForm" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Request Price</a></li>
-                    <li class="mb-1"><a href="/pages/contact.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Support</a></li>
-                </ul>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <h6 class="text-primary mb-3">Extras</h6>
-                <ul class="list-unstyled small">
                     <li class="mb-1"><a href="/pages/brands.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Brands</a></li>
                     <li class="mb-1"><a href="/pages/cart.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Cart</a></li>
-                    <li class="mb-1"><a href="/pages/order_history.php" class="text-light text-decoration-none hover-link"><i class="fas fa-angle-right me-1"></i>Order History</a></li>
                 </ul>
+            </div>
+            <!-- Newsletter -->
+            <div class="col-md-6 col-lg-2">
+                <h6 class="text-primary mb-3">Newsletter</h6>
+                <p class="text-muted small mb-2">Get updates on new parts &amp; promotions.</p>
+                <div class="input-group input-group-sm">
+                    <input type="email" class="form-control" placeholder="Your email">
+                    <button class="btn btn-primary btn-sm" type="button">Go</button>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted d-block mb-1"><i class="fas fa-envelope me-1 text-primary"></i>info@sparexpressltd.com</small>
+                    <small class="text-muted d-block mb-1"><i class="fas fa-phone me-1 text-primary"></i><?php echo SITE_PHONE; ?></small>
+                    <small class="text-muted d-block"><i class="fas fa-map-marker-alt me-1 text-primary"></i>Kagarama, Kicukiro, Kigali</small>
+                </div>
             </div>
         </div>
     </div>
@@ -80,10 +72,10 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                <span class="text-light small">© <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</span>
+                <span class="text-light small">&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</span>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <!-- Optional: Add payment methods or social links if needed -->
+                <small class="text-muted">Kagarama, Kicukiro &middot; Kigali, Rwanda &middot; info@sparexpressltd.com</small>
             </div>
         </div>
     </div>

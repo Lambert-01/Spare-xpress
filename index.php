@@ -2,594 +2,425 @@
 $page_title = 'Home';
 include 'includes/header.php';
 include 'includes/navigation.php';
-
-// Critical CSS for above-the-fold content
-$critical_css = "
-<style>
-/* Critical CSS for hero section */
-.hero-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
-    padding: 5rem 0;
-}
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-}
-.hero-content p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-}
-.btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-    .hero-content h1 { font-size: 2rem; }
-    .btn { min-height: 44px; padding: 12px 24px; }
-    .brand-link, .category-link {
-        min-height: 120px;
-        touch-action: manipulation;
-    }
-}
-
-/* Loading skeleton */
-.skeleton-item {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1.5s infinite;
-    height: 120px;
-    border-radius: 8px;
-}
-@keyframes skeleton-loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-</style>
-";
 ?>
 
-<!-- Hero Section Start - Premium Design -->
-<div class="container-fluid bg-mesh-gradient bg-particles py-5 position-relative overflow-hidden" style="min-height: 600px;">
-    <!-- Animated background elements -->
-    <div class="position-absolute w-100 h-100 top-0 start-0" style="z-index: 0;">
-        <div class="position-absolute" style="top: 10%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; animation: float 6s ease-in-out infinite;"></div>
-        <div class="position-absolute" style="top: 60%; right: 15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; animation: float 8s ease-in-out infinite reverse;"></div>
-    </div>
-
-    <div class="container position-relative" style="z-index: 1;">
-        <div class="row align-items-center g-5 py-4">
-            <!-- Hero Content -->
-            <div class="col-lg-7 fade-in">
-                <div class="hero-content">
-                    <!-- Badge -->
-                    <div class="mb-4">
-                        <span class="badge-modern badge-new">
-                            <i class="fas fa-star me-2"></i>Rwanda's Trusted Auto Parts Store
-                        </span>
-                    </div>
-                    
-                    <!-- Main Heading -->
-                    <h1 class="display-3 fw-bold mb-4" style="line-height: 1.2;">
-                        <span class="text-white">Premium</span>
-                        <span class="text-gradient-accent d-block">Auto Parts</span>
-                        <span class="text-white">For Every Vehicle</span>
-                    </h1>
-                    
-                    <!-- Subheading -->
-                    <p class="lead mb-4 text-white fs-5" style="max-width: 600px; opacity: 0.95;">
-                        Genuine automotive parts for all vehicle brands. Fast delivery across Rwanda with expert technical support and competitive pricing.
-                    </p>
-                    
-                    <!-- Trust Indicators - Vibrant Design -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-6 col-md-4">
-                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
-                                    <i class="fas fa-shield-alt fa-2x text-white"></i>
-                                </div>
-                                <h6 class="text-white fw-bold mb-1">Genuine Parts</h6>
-                                <small class="text-white" style="opacity: 0.95;">100% Authentic</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
-                                    <i class="fas fa-truck fa-2x text-white"></i>
-                                </div>
-                                <h6 class="text-white fw-bold mb-1">Fast Delivery</h6>
-                                <small class="text-white" style="opacity: 0.95;">Same Day</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="p-4 rounded-xl text-center hover-lift transition h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 mb-3 d-inline-flex">
-                                    <i class="fas fa-headset fa-2x text-white"></i>
-                                </div>
-                                <h6 class="text-white fw-bold mb-1">Expert Support</h6>
-                                <small class="text-white" style="opacity: 0.95;">24/7 Available</small>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="pages/shop.php" class="btn btn-accent btn-lg px-5 py-3 hover-lift">
-                            <i class="fas fa-shopping-cart me-2"></i>Shop Now
-                        </a>
-                        <a href="pages/brands.php" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
-                            <i class="fas fa-tags me-2"></i>Browse Brands
-                        </a>
-                        <a href="pages/order_request.php" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
-                            <i class="fas fa-star me-2"></i>Special Orders
-                        </a>
-                    </div>
+<!-- ===================== HERO ===================== -->
+<section class="spx-hero">
+    <div class="spx-hero-bg"></div>
+    <div class="container spx-hero-inner">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="spx-hero-badge"><i class="fas fa-map-marker-alt me-1"></i>Kigali, Rwanda</span>
+                <h1 class="spx-hero-title">Genuine Auto Parts,<br><span class="spx-hero-accent">Delivered Fast</span></h1>
+                <p class="spx-hero-sub">In-stock parts you can buy today. Can't find it? We source from Japan, Dubai, Europe &amp; China.</p>
+                <div class="spx-hero-pills">
+                    <span><i class="fas fa-shield-alt"></i> Genuine Parts</span>
+                    <span><i class="fas fa-truck"></i> Rwanda Delivery</span>
+                    <span><i class="fas fa-headset"></i> Expert Support</span>
+                </div>
+                <div class="spx-hero-cta">
+                    <a href="pages/shop.php" class="btn btn-primary btn-lg"><i class="fas fa-store me-2"></i>Shop Parts</a>
+                    <a href="pages/order_request.php" class="spx-hero-link"><i class="fas fa-search me-1"></i>Request a Part</a>
                 </div>
             </div>
-            
-            <!-- Hero Image -->
-            <div class="col-lg-5 text-center fade-in">
-                <div class="position-relative" data-parallax="0.3">
-                    <div class="glass-card p-4 rounded-2xl">
-                        <img src="img/logo/logox.jpg" alt="Spare Xpress" class="img-fluid rounded-xl shadow-2xl" style="max-width: 100%;">
-                    </div>
-                    <!-- Floating Elements -->
-                    <div class="position-absolute glass-card px-4 py-2 rounded-full" style="top: -10px; right: -10px; animation: float 4s ease-in-out infinite;">
-                        <span class="fw-bold text-white"><i class="fas fa-check-circle text-success me-2"></i>Verified Quality</span>
-                    </div>
-                    <div class="position-absolute glass-card px-4 py-2 rounded-full" style="bottom: 20px; left: -20px; animation: float 5s ease-in-out infinite reverse;">
-                        <span class="fw-bold text-white"><i class="fas fa-shipping-fast text-info me-2"></i>Same Day Delivery</span>
-                    </div>
+            <div class="col-lg-6 d-none d-lg-block text-center">
+                <div class="spx-hero-card-wrap">
+                    <img src="img/logo/logox.jpg" alt="SPARE XPRESS" class="spx-hero-img">
+                    <div class="spx-hero-float spx-hero-float-1"><i class="fas fa-check-circle text-success me-1"></i>Verified Quality</div>
+                    <div class="spx-hero-float spx-hero-float-2"><i class="fas fa-globe text-primary me-1"></i>Global Sourcing</div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Floating Animation CSS -->
-<style>
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-}
-</style>
-<!-- Hero Section End -->
-
-<!-- Brands Section Start -->
-<div class="container-fluid py-5 bg-light">
+<!-- ===================== TRUST BAR ===================== -->
+<section class="spx-trust-bar">
     <div class="container">
-        <div class="text-center mb-5 fade-in">
-            <div class="mb-3">
-                <span class="badge-modern badge-bestseller">
-                    <i class="fas fa-car me-2"></i>Popular Brands
-                </span>
+        <div class="spx-trust-grid">
+            <div class="spx-trust-item">
+                <i class="fas fa-shield-alt"></i>
+                <div><strong>100% Genuine</strong><span>Authentic parts only</span></div>
             </div>
-            <h2 class="mb-3 fw-bold">
-                <span class="text-gradient">Shop by Vehicle Brand</span>
-            </h2>
-            <p class="lead text-muted mb-0" style="max-width: 600px; margin: 0 auto;">
-                Explore our extensive collection of genuine parts for leading automotive brands
-            </p>
+            <div class="spx-trust-item">
+                <i class="fas fa-truck"></i>
+                <div><strong>Fast Delivery</strong><span>Across Rwanda</span></div>
+            </div>
+            <div class="spx-trust-item">
+                <i class="fas fa-globe"></i>
+                <div><strong>Global Sourcing</strong><span>Japan · Dubai · Europe</span></div>
+            </div>
+            <div class="spx-trust-item">
+                <i class="fas fa-headset"></i>
+                <div><strong>Expert Support</strong><span>Mon–Sat 8AM–6PM</span></div>
+            </div>
         </div>
-        <div class="row g-4 justify-content-center">
-            <?php
-            $rowCount = 0;
-            foreach ($brands as $index => $brand) {
-                // Stagger animation delays
-                $animationClass = 'fade-in';
-                $brandClass = ($index < 3) ? 'upper-brand' : 'lower-brand';
+    </div>
+</section>
 
-                echo '<div class="col-lg-2 col-md-3 col-sm-4 col-6 ' . $animationClass . '">';
-                echo '<a href="pages/models.php?brand=' . strtolower($brand['slug']) . '" class="d-block text-decoration-none">';
-                echo '<div class="glass-card p-4 text-center hover-lift transition ' . $brandClass . '" style="min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">';
-
-                // Get brand logo
-                $logoSrc = 'img/no-image.png'; // Default fallback
+<!-- ===================== BRANDS ===================== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="spx-section-head">
+            <span class="spx-section-tag">Vehicle Brands</span>
+            <h2>Shop by Brand</h2>
+            <p>Genuine parts for all major automotive brands available in Rwanda</p>
+        </div>
+        <div class="row g-3 justify-content-center">
+            <?php foreach ($brands as $brand):
+                $logo = 'img/no-image.png';
                 if (!empty($brand['logo_image'])) {
-                    // Clean up the path - remove any leading ../../ or similar
-                    $cleanPath = str_replace(['../../', '../'], '', $brand['logo_image']);
-                    $fullPath = 'uploads/brands/' . basename($cleanPath);
-                    if (file_exists($fullPath)) {
-                        $logoSrc = $fullPath;
-                    }
+                    $clean = 'uploads/brands/' . basename(str_replace(['../../','../'], '', $brand['logo_image']));
+                    if (file_exists($clean)) $logo = $clean;
                 }
-
-                echo '<div class="mb-3">';
-                echo '<img src="' . $logoSrc . '" alt="' . htmlspecialchars($brand['name']) . ' logo" class="hover-scale transition" style="width: 56px; height: 56px; object-fit: contain;" onerror="this.src=\'img/no-image.png\';">';
-                echo '</div>';
-                echo '<span class="fw-bold text-primary d-block">' . htmlspecialchars($brand['name']) . '</span>';
-                echo '</div>';
-                echo '</a>';
-                echo '</div>';
-
-                // Increment row count every 3 items
-                if (($index + 1) % 3 == 0) {
-                    $rowCount++;
-                }
-            }
             ?>
+            <div class="col-4 col-sm-3 col-md-2">
+                <a href="pages/models.php?brand=<?php echo urlencode($brand['slug']); ?>" class="spx-brand-card">
+                    <img src="<?php echo $logo; ?>" alt="<?php echo htmlspecialchars($brand['name']); ?>" onerror="this.src='img/no-image.png'">
+                    <span><?php echo htmlspecialchars($brand['name']); ?></span>
+                </a>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
-</div>
-<!-- Brands Section End -->
+</section>
 
-<!-- Brands Section End -->
-
-<!-- Categories Section Start -->
-<div class="container-fluid py-5">
+<!-- ===================== CATEGORIES ===================== -->
+<section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
-            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">Shop by Category</h4>
-            <h1 class="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">Our Stock Categories</h1>
+        <div class="spx-section-head">
+            <span class="spx-section-tag">Parts Catalog</span>
+            <h2>Shop by Category</h2>
+            <p>Browse our full range of in-stock spare parts by category</p>
         </div>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-3 justify-content-center">
+            <?php foreach ($categories as $cat): ?>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a href="pages/shop.php?category=<?php echo urlencode($cat['slug']); ?>" class="spx-cat-card">
+                    <i class="<?php echo $cat['icon']; ?>"></i>
+                    <span><?php echo htmlspecialchars($cat['name']); ?></span>
+                </a>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== QUICK SEARCH ===================== -->
+<section class="spx-search-section">
+    <div class="container">
+        <div class="spx-section-head" style="color:#fff;">
+            <span class="spx-section-tag" style="background:rgba(255,255,255,.15);color:#fff;">Find Your Part</span>
+            <h2 style="color:#fff;">Search Our Catalog</h2>
+            <p style="color:rgba(255,255,255,.75);">Filter by brand, model, year and category</p>
+        </div>
+        <div class="spx-search-card">
+            <form id="quickSearchForm" class="row g-3 align-items-end" action="pages/shop.php" method="GET">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <label class="spx-search-label"><i class="fas fa-car me-1"></i>Brand</label>
+                    <select class="form-select" id="qs-brand" name="brand">
+                        <option value="">All Brands</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <label class="spx-search-label"><i class="fas fa-car-side me-1"></i>Model</label>
+                    <select class="form-select" id="qs-model" name="model" disabled>
+                        <option value="">Select Brand</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <label class="spx-search-label"><i class="fas fa-calendar me-1"></i>Year</label>
+                    <select class="form-select" id="qs-year" name="year_from">
+                        <option value="">Any Year</option>
+                        <?php for ($y = date('Y'); $y >= 1990; $y--): ?>
+                            <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <label class="spx-search-label"><i class="fas fa-cogs me-1"></i>Category</label>
+                    <select class="form-select" id="qs-category" name="category">
+                        <option value="">All Categories</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?php echo htmlspecialchars($cat['slug']); ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-12 col-md-8 col-lg-3">
+                    <label class="spx-search-label"><i class="fas fa-search me-1"></i>Part Name / SKU</label>
+                    <input type="text" class="form-control" name="search" placeholder="e.g. Brake Pads, Oil Filter...">
+                </div>
+                <div class="col-12 col-md-4 col-lg-1">
+                    <button type="submit" class="btn btn-primary w-100 py-2"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="spx-section-head">
+            <span class="spx-section-tag">Process</span>
+            <h2>How It Works</h2>
+            <p>Simple 4-step process to get the part you need</p>
+        </div>
+        <div class="row g-4">
             <?php
-            foreach ($categories as $index => $category) {
-                $animationClass = 'wow fadeInUp';
-                $delay = 0.1 + ($index * 0.1);
-
-                echo '<div class="col-lg-2 col-md-3 col-sm-4 col-6 ' . $animationClass . '" data-wow-delay="' . $delay . 's">';
-                echo '<a href="pages/shop.php?category=' . urlencode($category['slug']) . '" class="d-flex flex-column align-items-center justify-content-center p-4 bg-white rounded shadow-sm category-link hover-lift" style="height: 140px; transition: all 0.3s ease;">';
-                echo '<i class="' . $category['icon'] . ' fa-3x text-primary mb-3"></i>';
-                echo '<span class="fw-bold text-primary text-center small">' . $category['name'] . '</span>';
-                echo '</a>';
-                echo '</div>';
-            }
-            ?>
+            $steps = [
+                ['fas fa-search',       '1', 'Search or Request',    'Browse in-stock parts or submit a special order request for rare parts.'],
+                ['fas fa-money-bill-wave','2','Confirm & Pay 50%',   'Pay a 50% deposit via mobile money to confirm your special order.'],
+                ['fas fa-headset',      '3', 'We Source & Verify',   'Our team verifies fitment and sources your part from trusted suppliers.'],
+                ['fas fa-truck',        '4', 'Pickup or Delivery',   'Pay the balance and receive your genuine part with warranty.'],
+            ];
+            foreach ($steps as $s): ?>
+            <div class="col-6 col-md-3">
+                <div class="spx-how-card">
+                    <div class="spx-how-num"><?php echo $s[1]; ?></div>
+                    <div class="spx-how-icon"><i class="<?php echo $s[0]; ?>"></i></div>
+                    <h6><?php echo $s[2]; ?></h6>
+                    <p><?php echo $s[3]; ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
-</div>
-<!-- Categories Section End -->
+</section>
 
-<!-- Quick Search / Filter Bar Start -->
-<div class="container-fluid py-5 bg-gradient-primary">
+<!-- ===================== CTA BANNER ===================== -->
+<section class="spx-cta-banner">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-12 text-center mb-4">
-                <h2 class="mb-3 text-white">Find Your Perfect Auto Part</h2>
-                <p class="text-light mb-4 lead">Search through our extensive catalog of genuine and quality auto parts</p>
+        <div class="row align-items-center g-4">
+            <div class="col-md-8">
+                <h3 class="text-white fw-bold mb-2">Can't find the part you need?</h3>
+                <p class="text-white mb-0" style="opacity:.85;">We source from Japan, Dubai, Europe &amp; China. Submit a request and we'll get back to you within 24 hours.</p>
             </div>
-            <div class="col-12">
-                <div class="card shadow-lg border-0 rounded-4">
-                    <div class="card-body p-4">
-                        <form id="quickSearchForm" class="row g-3 align-items-end">
-                            <!-- Brand Selection -->
-                            <div class="col-lg-2 col-md-6">
-                                <label for="brand" class="form-label fw-semibold text-primary">
-                                    <i class="fas fa-car me-1"></i>Vehicle Brand
-                                </label>
-                                <select class="form-select form-select-lg border-primary" id="brand" name="brand">
-                                    <option value="">All Brands</option>
-                                    <!-- Brands will be loaded dynamically -->
-                                </select>
-                            </div>
-
-                            <!-- Model Selection -->
-                            <div class="col-lg-2 col-md-6">
-                                <label for="model" class="form-label fw-semibold text-primary">
-                                    <i class="fas fa-car-side me-1"></i>Model
-                                </label>
-                                <select class="form-select form-select-lg border-primary" id="model" name="model" disabled>
-                                    <option value="">Select Brand First</option>
-                                    <!-- Models will be loaded dynamically based on brand -->
-                                </select>
-                            </div>
-
-                            <!-- Year Range -->
-                            <div class="col-lg-2 col-md-6">
-                                <label for="year_from" class="form-label fw-semibold text-primary">
-                                    <i class="fas fa-calendar me-1"></i>Year From
-                                </label>
-                                <select class="form-select form-select-lg border-primary" id="year_from" name="year_from">
-                                    <option value="">Any Year</option>
-                                    <!-- Years will be loaded dynamically -->
-                                </select>
-                            </div>
-
-                            <!-- Category Selection -->
-                            <div class="col-lg-2 col-md-6">
-                                <label for="category" class="form-label fw-semibold text-primary">
-                                    <i class="fas fa-cogs me-1"></i>Part Category
-                                </label>
-                                <select class="form-select form-select-lg border-primary" id="category" name="category">
-                                    <option value="">All Categories</option>
-                                    <!-- Categories will be loaded dynamically -->
-                                </select>
-                            </div>
-
-                            <!-- Search Input -->
-                            <div class="col-lg-2 col-md-6">
-                                <label for="search" class="form-label fw-semibold text-primary">
-                                    <i class="fas fa-search me-1"></i>Part Name/SKU
-                                </label>
-                                <input type="text" class="form-control form-control-lg border-primary"
-                                       id="search" name="search" placeholder="Enter part name or SKU">
-                            </div>
-
-                            <!-- Search Button -->
-                            <div class="col-lg-2 col-md-6">
-                                <button type="submit" class="btn btn-primary btn-lg w-100 h-100 d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-search me-2"></i>
-                                    <span>Search Parts</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Advanced Filters Toggle -->
-                        <div class="row mt-3">
-                            <div class="col-12 text-center">
-                                <button class="btn btn-link text-primary p-0" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false">
-                                    <i class="fas fa-sliders-h me-1"></i>Advanced Filters
-                                    <i class="fas fa-chevron-down ms-1"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Advanced Filters (Collapsible) -->
-                        <div class="collapse mt-3" id="advancedFilters">
-                            <div class="row g-3">
-                                <div class="col-lg-3 col-md-6">
-                                    <label for="price_min" class="form-label fw-semibold text-primary">Min Price (RWF)</label>
-                                    <input type="number" class="form-control border-primary" id="price_min" name="price_min" placeholder="0">
-                                </div>
-                                <div class="col-lg-3 col-md-6">
-                                    <label for="price_max" class="form-label fw-semibold text-primary">Max Price (RWF)</label>
-                                    <input type="number" class="form-control border-primary" id="price_max" name="price_max" placeholder="1000000">
-                                </div>
-                                <div class="col-lg-3 col-md-6">
-                                    <label for="availability" class="form-label fw-semibold text-primary">Availability</label>
-                                    <select class="form-select border-primary" id="availability" name="availability">
-                                        <option value="">Any Availability</option>
-                                        <option value="in_stock">In Stock</option>
-                                        <option value="special_order">Special Order</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 col-md-6">
-                                    <label for="sort" class="form-label fw-semibold text-primary">Sort By</label>
-                                    <select class="form-select border-primary" id="sort" name="sort">
-                                        <option value="newest">Newest First</option>
-                                        <option value="price_low">Price: Low to High</option>
-                                        <option value="price_high">Price: High to Low</option>
-                                        <option value="name_az">Name: A to Z</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search Results Summary -->
-                <div id="searchResults" class="mt-4" style="display: none;">
-                    <div class="alert alert-info border-0 rounded-4">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <span id="resultsText">Found <strong>0</strong> parts matching your criteria</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-4 text-md-end d-flex gap-3 justify-content-md-end flex-wrap">
+                <a href="pages/order_request.php" class="btn btn-light fw-600"><i class="fas fa-clipboard-list me-2"></i>Request a Part</a>
+                <a href="https://wa.me/250792865114" target="_blank" class="spx-whatsapp-btn"><i class="fab fa-whatsapp"></i>WhatsApp</a>
             </div>
         </div>
     </div>
-</div>
-<!-- Quick Search / Filter Bar End -->
-
-
-
-<!-- How It Works Section Start -->
-<div class="container-fluid py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">How It Works</h4>
-            <h1 class="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">Simple Ordering Process</h1>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="text-center">
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 80px; height: 80px;">
-                        <i class="fas fa-search fa-2x text-white"></i>
-                    </div>
-                    <h5 class="mb-3">Step 1: Search or Request a Part</h5>
-                    <p class="mb-0">Use our filters or contact us for rare parts we don't stock</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="text-center">
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 80px; height: 80px;">
-                        <i class="fas fa-credit-card fa-2x text-white"></i>
-                    </div>
-                    <h5 class="mb-3">Step 2: Confirm & Pay 50%</h5>
-                    <p class="mb-0">Pay 50% deposit via mobile money for special orders</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="text-center">
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 80px; height: 80px;">
-                        <i class="fas fa-headset fa-2x text-white"></i>
-                    </div>
-                    <h5 class="mb-3">Step 3: Support Call & Sourcing</h5>
-                    <p class="mb-0">Our team verifies fitment and sources your part</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                <div class="text-center">
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 80px; height: 80px;">
-                        <i class="fas fa-truck fa-2x text-white"></i>
-                    </div>
-                    <h5 class="mb-3">Step 4: Pickup or Delivery</h5>
-                    <p class="mb-0">Pay remaining amount and receive your part</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- How It Works Section End -->
+</section>
 
 <style>
-/* Brand Animation Styles */
-@keyframes pan-move-right {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(15px); }
-}
-
-@keyframes pan-move-left {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-15px); }
-}
-
-.upper-brand {
-    animation: pan-move-right 4s ease-in-out infinite;
-}
-
-.lower-brand {
-    animation: pan-move-left 4s ease-in-out infinite;
-}
-
-/* Category and Brand Link Styles */
-.hover-lift {
-    transition: all 0.3s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
-
-.brand-link, .category-link {
-    text-decoration: none;
-    border: 1px solid #e9ecef;
-}
-
-.brand-link:hover, .category-link:hover {
-    border-color: #007bff;
-    background-color: #f8f9fa !important;
-}
-
-/* Quick Search Styles */
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    position: relative;
-}
-
-.bg-gradient-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="10" cy="50" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="90" cy="30" r="0.5" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    pointer-events: none;
-}
-
-.form-select-lg {
-    font-size: 0.95rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.form-select-lg:focus,
-.form-control-lg:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    transform: translateY(-1px);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-}
-
-.card {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.alert-info {
-    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-    border: 1px solid rgba(0, 123, 255, 0.2);
-    color: #0c5460;
-}
-
-.btn-link {
-    color: #007bff;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-link:hover {
-    color: #0056b3;
-    text-decoration: none;
-}
-
-.btn-link:focus {
-    box-shadow: none;
-}
-
-.collapse-icon {
-    transition: transform 0.3s ease;
-}
-
-[data-bs-toggle="collapse"].collapsed .collapse-icon {
-    transform: rotate(0deg);
-}
-
-[data-bs-toggle="collapse"]:not(.collapsed) .collapse-icon {
-    transform: rotate(180deg);
-}
-
-/* Loading animation */
-.loading {
+/* ---- HERO ---- */
+.spx-hero {
+    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
     position: relative;
     overflow: hidden;
+    padding: 4rem 0 3.5rem;
 }
-
-.loading::after {
-    content: '';
+.spx-hero-bg {
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+.spx-hero-inner { position: relative; z-index: 1; }
+.spx-hero-badge {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.15); color: #fff;
+    padding: .35rem .9rem; border-radius: 999px;
+    font-size: .8rem; font-weight: 600;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255,255,255,.2);
+}
+.spx-hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; color: #fff;
+    line-height: 1.15; margin-bottom: 1rem;
+}
+.spx-hero-accent {
+    background: linear-gradient(90deg, #fbbf24, #f97316);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.spx-hero-sub { color: rgba(255,255,255,.85); font-size: 1rem; margin-bottom: 1.5rem; max-width: 520px; }
+.spx-hero-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.75rem; }
+.spx-hero-pills span {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(255,255,255,.12); color: #fff;
+    padding: .3rem .8rem; border-radius: 999px;
+    font-size: .78rem; font-weight: 500;
+    border: 1px solid rgba(255,255,255,.15);
+}
+.spx-hero-pills span i { font-size: .75rem; }
+.spx-hero-cta { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.spx-hero-link {
+    color: rgba(255,255,255,.85); font-weight: 600; font-size: .9rem;
+    text-decoration: none; display: flex; align-items: center; gap: .4rem;
+    transition: color .2s;
+}
+.spx-hero-link:hover { color: #fff; }
+.spx-hero-card-wrap { position: relative; display: inline-block; }
+.spx-hero-img {
+    width: 320px; height: 320px; object-fit: cover;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    border: 4px solid rgba(255,255,255,.15);
+}
+.spx-hero-float {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
+    background: rgba(255,255,255,.95);
+    padding: .5rem 1rem; border-radius: 999px;
+    font-size: .8rem; font-weight: 600; color: #111827;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    white-space: nowrap;
+}
+.spx-hero-float-1 { top: 1.5rem; right: -1.5rem; }
+.spx-hero-float-2 { bottom: 2rem; left: -1.5rem; }
+
+/* ---- TRUST BAR ---- */
+.spx-trust-bar {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.25rem 0;
+}
+.spx-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+.spx-trust-item {
+    display: flex; align-items: center; gap: .875rem;
+    padding: .75rem 1rem;
+}
+.spx-trust-item i {
+    font-size: 1.5rem; color: #2563eb;
+    flex-shrink: 0;
+}
+.spx-trust-item strong { display: block; font-size: .875rem; color: #111827; }
+.spx-trust-item span { font-size: .75rem; color: #6b7280; }
+
+/* ---- SECTION HEADER ---- */
+.spx-section-head { text-align: center; margin-bottom: 2.5rem; }
+.spx-section-tag {
+    display: inline-block;
+    background: #eff6ff; color: #2563eb;
+    padding: .3rem .9rem; border-radius: 999px;
+    font-size: .78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: .75rem;
+}
+.spx-section-head h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: #111827; margin-bottom: .5rem; }
+.spx-section-head p { color: #6b7280; font-size: .9rem; max-width: 520px; margin: 0 auto; }
+
+/* ---- BRAND CARDS ---- */
+.spx-brand-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: .5rem;
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: .875rem; padding: 1rem .75rem;
+    text-decoration: none;
+    transition: all .2s;
+    min-height: 110px;
+}
+.spx-brand-card:hover { border-color: #2563eb; box-shadow: 0 4px 16px rgba(37,99,235,.12); transform: translateY(-3px); }
+.spx-brand-card img { width: 52px; height: 52px; object-fit: contain; }
+.spx-brand-card span { font-size: .75rem; font-weight: 600; color: #374151; text-align: center; }
+
+/* ---- CATEGORY CARDS ---- */
+.spx-cat-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: .5rem;
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: .875rem; padding: 1.25rem .75rem;
+    text-decoration: none;
+    transition: all .2s;
+    min-height: 110px;
+}
+.spx-cat-card:hover { border-color: #2563eb; background: #eff6ff; transform: translateY(-3px); box-shadow: 0 4px 16px rgba(37,99,235,.1); }
+.spx-cat-card i { font-size: 1.75rem; color: #2563eb; }
+.spx-cat-card span { font-size: .75rem; font-weight: 600; color: #374151; text-align: center; }
+
+/* ---- SEARCH SECTION ---- */
+.spx-search-section {
+    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+    padding: 3.5rem 0;
+    position: relative;
+}
+.spx-search-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,.15);
+}
+.spx-search-label { font-size: .8rem; font-weight: 600; color: #374151; margin-bottom: .35rem; display: block; }
+
+/* ---- HOW IT WORKS ---- */
+.spx-how-card {
+    background: #fff; border-radius: 1rem;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    border: 1px solid #e5e7eb;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: loading 1.5s infinite;
+    transition: all .2s;
+}
+.spx-how-card:hover { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,.1); transform: translateY(-3px); }
+.spx-how-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-size: .85rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto .75rem;
+}
+.spx-how-icon { font-size: 1.75rem; color: #2563eb; margin-bottom: .75rem; }
+.spx-how-card h6 { font-weight: 700; color: #111827; font-size: .9rem; margin-bottom: .5rem; }
+.spx-how-card p { font-size: .78rem; color: #6b7280; margin: 0; line-height: 1.5; }
+
+/* ---- CTA BANNER ---- */
+.spx-cta-banner {
+    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+    padding: 3rem 0;
 }
 
-@keyframes loading {
-    0% { left: -100%; }
-    100% { left: 100%; }
+/* ---- RESPONSIVE ---- */
+@media (max-width: 991px) {
+    .spx-trust-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .form-select-lg,
-    .form-control-lg {
-        font-size: 0.9rem;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .btn-lg {
-        padding: 0.75rem 1rem;
-        font-size: 0.95rem;
-    }
+@media (max-width: 575px) {
+    .spx-hero { padding: 2.5rem 0 2rem; }
+    .spx-hero-title { font-size: 1.75rem; }
+    .spx-hero-sub { font-size: .875rem; }
+    .spx-trust-grid { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+    .spx-trust-item { padding: .5rem; gap: .5rem; }
+    .spx-trust-item i { font-size: 1.2rem; }
+    .spx-trust-item strong { font-size: .78rem; }
+    .spx-trust-item span { font-size: .7rem; }
+    .spx-hero-cta { gap: .875rem; }
+    .spx-hero-float { display: none; }
 }
 </style>
+
+<script>
+// Quick search: load brands
+fetch('/api/get_filters.php')
+    .then(r => r.json())
+    .then(data => {
+        if (data.brands) {
+            const sel = document.getElementById('qs-brand');
+            data.brands.forEach(b => {
+                const o = document.createElement('option');
+                o.value = b.slug; o.textContent = b.name;
+                sel.appendChild(o);
+            });
+        }
+    }).catch(() => {});
+
+document.getElementById('qs-brand').addEventListener('change', function() {
+    const brand = this.value;
+    const modelSel = document.getElementById('qs-model');
+    if (!brand) { modelSel.innerHTML = '<option value="">Select Brand</option>'; modelSel.disabled = true; return; }
+    modelSel.innerHTML = '<option value="">Loading...</option>'; modelSel.disabled = true;
+    fetch('/get_models.php?brand=' + brand)
+        .then(r => r.json())
+        .then(data => {
+            modelSel.innerHTML = '<option value="">All Models</option>';
+            if (data.success) data.models.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; modelSel.appendChild(o); });
+            modelSel.disabled = false;
+        }).catch(() => { modelSel.innerHTML = '<option value="">Error</option>'; });
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>

@@ -46,6 +46,9 @@
 
     <!-- Template Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
+
+    <!-- Unified Client Portal Design -->
+    <link href="/css/client-portal.css" rel="stylesheet">
 </head>
 
 <body>
