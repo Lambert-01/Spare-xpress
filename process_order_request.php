@@ -3,6 +3,7 @@ require_once __DIR__ . '/includes/session_init.php';
 spx_session_start(['secure' => false]);
 
 include 'includes/config.php';
+require_once __DIR__ . '/includes/cloudinary.php';
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -80,8 +81,13 @@ for ($i = 1; $i <= 4; $i++) {
             $filename = 'order_' . time() . "_$i." . pathinfo($image['name'], PATHINFO_EXTENSION);
             $filepath = $upload_dir . $filename;
             
-            if (move_uploaded_file($image['tmp_name'], $filepath)) {
-                $uploaded_images[] = $filename;
+            $image_url = spx_upload_image_to_cloudinary($image, 'spare-xpress/order-requests', pathinfo($filename, PATHINFO_FILENAME));
+            if (!$image_url && move_uploaded_file($image['tmp_name'], $filepath)) {
+                $image_url = $filepath;
+            }
+
+            if ($image_url) {
+                $uploaded_images[] = $image_url;
             }
         }
     }

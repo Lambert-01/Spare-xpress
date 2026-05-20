@@ -3,6 +3,7 @@
 // SPARE XPRESS LTD - Dynamic Shop API
 
 include_once '../includes/config.php';
+require_once __DIR__ . '/../includes/cloudinary.php';
 
 // Prevent any HTML output for API responses
 ob_clean();
@@ -223,8 +224,7 @@ try {
         // Format image path - ensure correct path (uploads are in admin/uploads/)
         $image_path = $row['main_image'];
         if (!empty($image_path)) {
-            // Always prefix with /admin/ and ensure no double slashes
-            $image_path = '/admin/' . ltrim($image_path, '/');
+            $image_path = spx_public_asset_url($image_path, '/admin');
         }
 
         // Format gallery images - ensure correct path (uploads are in admin/uploads/)
@@ -232,8 +232,7 @@ try {
         $formatted_gallery = [];
         foreach ($gallery_images as $gallery_image) {
             if (!empty($gallery_image)) {
-                // Always prefix with /admin/ and ensure no double slashes
-                $formatted_gallery[] = '/admin/' . ltrim($gallery_image, '/');
+                $formatted_gallery[] = spx_public_asset_url($gallery_image, '/admin');
             }
         }
 

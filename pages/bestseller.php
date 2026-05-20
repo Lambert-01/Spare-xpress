@@ -128,7 +128,7 @@
                     <div class="collapse navbar-collapse" id="mobileNav">
                         <div class="navbar-nav mx-auto">
                             <a href="../index.php" class="nav-link text-white fw-bold me-4">Home</a>
-                            <a href="shop.php" class="nav-link text-white fw-bold me-4">Stock Catalog</a>
+                            <a href="shop.php" class="nav-link text-white fw-bold me-4">In stock</a>
                             <a href="#" class="nav-link text-white me-4">Order on Demand</a>
                             <a href="#" class="nav-link text-white me-4">About Us</a>
                             <a href="contact.php" class="nav-link text-white">Contact</a>

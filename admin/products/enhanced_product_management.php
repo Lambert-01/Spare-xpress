@@ -2,6 +2,7 @@
 // Enhanced Product Management System for SPARE XPRESS LTD
 include '../includes/auth.php';
 include '../includes/functions.php';
+require_once __DIR__ . '/../../includes/cloudinary.php';
 include '../header.php';
 
 // Handle form submissions
@@ -74,16 +75,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $product_id = $conn->insert_id;
 
             // Handle main image upload
+            $upload_dir = '../uploads/products/';
             if (isset($_FILES['main_image']) && $_FILES['main_image']['error'] === UPLOAD_ERR_OK) {
-                $upload_dir = '../uploads/products/';
-                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
                 $file_extension = pathinfo($_FILES['main_image']['name'], PATHINFO_EXTENSION);
                 $file_name = $slug . '_main.' . $file_extension;
-                $target_path = $upload_dir . $file_name;
+                $image_url = spx_upload_image_to_cloudinary($_FILES['main_image'], 'spare-xpress/products', $slug . '_main');
 
-                if (move_uploaded_file($_FILES['main_image']['tmp_name'], $target_path)) {
-                    $conn->query("UPDATE products_enhanced SET main_image = '/uploads/products/$file_name' WHERE id = $product_id");
+                if (!$image_url) {
+                    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                    $target_path = $upload_dir . $file_name;
+                    if (move_uploaded_file($_FILES['main_image']['tmp_name'], $target_path)) {
+                        $image_url = '/uploads/products/' . $file_name;
+                    }
+                }
+
+                if ($image_url) {
+                    $image_url = $conn->real_escape_string($image_url);
+                    $conn->query("UPDATE products_enhanced SET main_image = '$image_url' WHERE id = $product_id");
                 }
             }
 
@@ -94,10 +102,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($_FILES['gallery_images']['error'][$i] === UPLOAD_ERR_OK) {
                         $file_extension = pathinfo($_FILES['gallery_images']['name'][$i], PATHINFO_EXTENSION);
                         $file_name = $slug . '_gallery_' . ($i + 1) . '.' . $file_extension;
-                        $target_path = $upload_dir . $file_name;
+                        $gallery_file = [
+                            'name' => $_FILES['gallery_images']['name'][$i],
+                            'type' => $_FILES['gallery_images']['type'][$i],
+                            'tmp_name' => $_FILES['gallery_images']['tmp_name'][$i],
+                            'error' => $_FILES['gallery_images']['error'][$i],
+                            'size' => $_FILES['gallery_images']['size'][$i],
+                        ];
+                        $image_url = spx_upload_image_to_cloudinary($gallery_file, 'spare-xpress/products', $slug . '_gallery_' . ($i + 1));
 
-                        if (move_uploaded_file($_FILES['gallery_images']['tmp_name'][$i], $target_path)) {
-                            $gallery_images[] = '/uploads/products/' . $file_name;
+                        if (!$image_url) {
+                            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                            $target_path = $upload_dir . $file_name;
+                            if (move_uploaded_file($_FILES['gallery_images']['tmp_name'][$i], $target_path)) {
+                                $image_url = '/uploads/products/' . $file_name;
+                            }
+                        }
+
+                        if ($image_url) {
+                            $gallery_images[] = $image_url;
                         }
                     }
                 }
@@ -183,16 +206,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             // Handle main image upload
+            $upload_dir = '../uploads/products/';
             if (isset($_FILES['main_image']) && $_FILES['main_image']['error'] === UPLOAD_ERR_OK) {
-                $upload_dir = '../uploads/products/';
-                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
                 $file_extension = pathinfo($_FILES['main_image']['name'], PATHINFO_EXTENSION);
                 $file_name = $slug . '_main.' . $file_extension;
-                $target_path = $upload_dir . $file_name;
+                $image_url = spx_upload_image_to_cloudinary($_FILES['main_image'], 'spare-xpress/products', $slug . '_main');
 
-                if (move_uploaded_file($_FILES['main_image']['tmp_name'], $target_path)) {
-                    $conn->query("UPDATE products_enhanced SET main_image = '/uploads/products/$file_name' WHERE id = $product_id");
+                if (!$image_url) {
+                    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                    $target_path = $upload_dir . $file_name;
+                    if (move_uploaded_file($_FILES['main_image']['tmp_name'], $target_path)) {
+                        $image_url = '/uploads/products/' . $file_name;
+                    }
+                }
+
+                if ($image_url) {
+                    $image_url = $conn->real_escape_string($image_url);
+                    $conn->query("UPDATE products_enhanced SET main_image = '$image_url' WHERE id = $product_id");
                 }
             }
 
@@ -203,10 +233,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($_FILES['gallery_images']['error'][$i] === UPLOAD_ERR_OK) {
                         $file_extension = pathinfo($_FILES['gallery_images']['name'][$i], PATHINFO_EXTENSION);
                         $file_name = $slug . '_gallery_' . ($i + 1) . '.' . $file_extension;
-                        $target_path = $upload_dir . $file_name;
+                        $gallery_file = [
+                            'name' => $_FILES['gallery_images']['name'][$i],
+                            'type' => $_FILES['gallery_images']['type'][$i],
+                            'tmp_name' => $_FILES['gallery_images']['tmp_name'][$i],
+                            'error' => $_FILES['gallery_images']['error'][$i],
+                            'size' => $_FILES['gallery_images']['size'][$i],
+                        ];
+                        $image_url = spx_upload_image_to_cloudinary($gallery_file, 'spare-xpress/products', $slug . '_gallery_' . ($i + 1));
 
-                        if (move_uploaded_file($_FILES['gallery_images']['tmp_name'][$i], $target_path)) {
-                            $gallery_images[] = '/uploads/products/' . $file_name;
+                        if (!$image_url) {
+                            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                            $target_path = $upload_dir . $file_name;
+                            if (move_uploaded_file($_FILES['gallery_images']['tmp_name'][$i], $target_path)) {
+                                $image_url = '/uploads/products/' . $file_name;
+                            }
+                        }
+
+                        if ($image_url) {
+                            $gallery_images[] = $image_url;
                         }
                     }
                 }
@@ -589,7 +634,7 @@ function buildProductPageUrl($page) {
                     <!-- Product Image Header -->
                     <div class="card-image-header">
                         <?php if ($product['main_image']): ?>
-                            <img src="../<?php echo htmlspecialchars($product['main_image']); ?>"
+                            <img src="<?php echo htmlspecialchars(spx_public_asset_url($product['main_image'], '..')); ?>"
                                  alt="<?php echo htmlspecialchars($product['product_name']); ?>"
                                  class="product-hero-image">
                             <div class="image-overlay"></div>
@@ -1061,6 +1106,12 @@ const currentFilters = {
     page: <?php echo $current_page; ?>
 };
 
+function formatAssetUrl(path, prefix = '') {
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;
+    return `${prefix.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize filter selects
     initializeFilters();
@@ -1237,7 +1288,7 @@ function updateProductsGrid(products) {
                 <div class="product-card enhanced-card h-100">
                     <div class="card-image-header">
                         ${product.main_image ?
-                            `<img src="../${product.main_image}" alt="${product.product_name}" class="product-hero-image">
+                            `<img src="${formatAssetUrl(product.main_image, '..')}" alt="${product.product_name}" class="product-hero-image">
                              <div class="image-overlay"></div>` :
                             `<div class="product-hero-placeholder">
                                  <i class="bi bi-box-seam-fill display-4 text-white opacity-75"></i>

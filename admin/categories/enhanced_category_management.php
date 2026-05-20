@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include '../includes/auth.php';
 include '../includes/functions.php';
 include '../logs/error_log.php';
+require_once __DIR__ . '/../../includes/cloudinary.php';
 include '../header.php';
 
 // Custom logging for category management
@@ -36,14 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $category_image = '';
         if (isset($_FILES['category_image']) && $_FILES['category_image']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = '../uploads/categories/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['category_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_category.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['category_image'], 'spare-xpress/categories', $slug . '_category');
 
-            if (move_uploaded_file($_FILES['category_image']['tmp_name'], $target_path)) {
-                $category_image = 'uploads/categories/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['category_image']['tmp_name'], $target_path)) {
+                    $image_url = 'uploads/categories/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $category_image = $image_url;
             }
         }
 
@@ -99,17 +106,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ErrorLogger::logSuccess("New image upload detected", ['file' => $_FILES['category_image']['name']]);
 
             $upload_dir = '../uploads/categories/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['category_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_category.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['category_image'], 'spare-xpress/categories', $slug . '_category');
 
-            if (move_uploaded_file($_FILES['category_image']['tmp_name'], $target_path)) {
-                $category_image = 'uploads/categories/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['category_image']['tmp_name'], $target_path)) {
+                    $image_url = 'uploads/categories/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $category_image = $image_url;
                 ErrorLogger::logSuccess("Image uploaded successfully: $category_image");
             } else {
-                ErrorLogger::logError("Failed to upload image to $target_path");
+                ErrorLogger::logError("Failed to upload category image");
             }
         }
 

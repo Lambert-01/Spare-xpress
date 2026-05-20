@@ -2,6 +2,7 @@
 // Enhanced Model Management System for SPARE XPRESS LTD
 include '../includes/auth.php';
 include '../includes/functions.php';
+require_once __DIR__ . '/../../includes/cloudinary.php';
 include '../header.php';
 // Handle form submissions
 $is_ajax = isset($_POST['ajax']);
@@ -48,9 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $file_extension = pathinfo($_FILES['model_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_model.' . $file_extension;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['model_image'], 'spare-xpress/models', $slug . '_model');
             $target_path = $upload_dir . $file_name;
             error_log("Target path: " . $target_path);
-            if (move_uploaded_file($_FILES['model_image']['tmp_name'], $target_path)) {
+            if ($image_url) {
+                error_log("Cloudinary upload successful");
+                $model_image = $image_url;
+            } elseif (move_uploaded_file($_FILES['model_image']['tmp_name'], $target_path)) {
                 error_log("Upload successful");
                 $model_image = '/uploads/models/' . $file_name;
             } else {
@@ -128,9 +133,13 @@ if (isset($_FILES['model_image']) && $_FILES['model_image']['error'] === UPLOAD_
     }
     $file_extension = pathinfo($_FILES['model_image']['name'], PATHINFO_EXTENSION);
     $file_name = $slug . '_model.' . $file_extension;
+    $image_url = spx_upload_image_to_cloudinary($_FILES['model_image'], 'spare-xpress/models', $slug . '_model');
     $target_path = $upload_dir . $file_name;
     error_log("Target path: " . $target_path);
-    if (move_uploaded_file($_FILES['model_image']['tmp_name'], $target_path)) {
+    if ($image_url) {
+        error_log("Cloudinary upload successful");
+        $model_image = $image_url;
+    } elseif (move_uploaded_file($_FILES['model_image']['tmp_name'], $target_path)) {
         error_log("Upload successful");
         $model_image = '/uploads/models/' . $file_name;
     } else {

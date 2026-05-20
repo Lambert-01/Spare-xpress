@@ -13,6 +13,7 @@ if ($product_id <= 0) {
 
 // Include config for database connection
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/cloudinary.php';
 
 // Fetch product details
 try {
@@ -42,7 +43,9 @@ try {
     // Format image path
     $image_path = $product['main_image'] ?? null;
     if (!empty($image_path)) {
-        if (!str_starts_with($image_path, '/admin/')) {
+        if (spx_is_remote_url($image_path)) {
+            $image_path = $image_path;
+        } elseif (!str_starts_with($image_path, '/admin/')) {
             $image_path = '/admin/' . ltrim($image_path, '/');
         }
     }

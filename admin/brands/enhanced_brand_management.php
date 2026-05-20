@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include '../includes/auth.php';
 include '../includes/functions.php';
 include '../logs/error_log.php';
+require_once __DIR__ . '/../../includes/cloudinary.php';
 include '../header.php';
 
 // Custom logging for brand management
@@ -41,14 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $logo_image = '';
         if (isset($_FILES['logo_image']) && $_FILES['logo_image']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = '../uploads/brands/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['logo_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_logo.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['logo_image'], 'spare-xpress/brands', $slug . '_logo');
 
-            if (move_uploaded_file($_FILES['logo_image']['tmp_name'], $target_path)) {
-                $logo_image = '../uploads/brands/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['logo_image']['tmp_name'], $target_path)) {
+                    $image_url = '../uploads/brands/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $logo_image = $image_url;
             }
         }
 
@@ -56,14 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $brand_image = '';
         if (isset($_FILES['brand_image']) && $_FILES['brand_image']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = '../uploads/brands/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['brand_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_brand.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['brand_image'], 'spare-xpress/brands', $slug . '_brand');
 
-            if (move_uploaded_file($_FILES['brand_image']['tmp_name'], $target_path)) {
-                $brand_image = '../uploads/brands/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['brand_image']['tmp_name'], $target_path)) {
+                    $image_url = '../uploads/brands/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $brand_image = $image_url;
             }
         }
 
@@ -124,17 +137,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ErrorLogger::logSuccess("New logo upload detected", ['file' => $_FILES['logo_image']['name']]);
 
             $upload_dir = '../uploads/brands/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['logo_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_logo.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['logo_image'], 'spare-xpress/brands', $slug . '_logo');
 
-            if (move_uploaded_file($_FILES['logo_image']['tmp_name'], $target_path)) {
-                $logo_image = '../uploads/brands/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['logo_image']['tmp_name'], $target_path)) {
+                    $image_url = '../uploads/brands/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $logo_image = $image_url;
                 ErrorLogger::logSuccess("Logo uploaded successfully: $logo_image");
             } else {
-                ErrorLogger::logError("Failed to upload logo to $target_path");
+                ErrorLogger::logError("Failed to upload logo");
             }
         }
 
@@ -144,17 +163,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ErrorLogger::logSuccess("New brand image upload detected", ['file' => $_FILES['brand_image']['name']]);
 
             $upload_dir = '../uploads/brands/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-
             $file_extension = pathinfo($_FILES['brand_image']['name'], PATHINFO_EXTENSION);
             $file_name = $slug . '_brand.' . $file_extension;
-            $target_path = $upload_dir . $file_name;
+            $image_url = spx_upload_image_to_cloudinary($_FILES['brand_image'], 'spare-xpress/brands', $slug . '_brand');
 
-            if (move_uploaded_file($_FILES['brand_image']['tmp_name'], $target_path)) {
-                $brand_image = '../uploads/brands/' . $file_name;
+            if (!$image_url) {
+                if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+                $target_path = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['brand_image']['tmp_name'], $target_path)) {
+                    $image_url = '../uploads/brands/' . $file_name;
+                }
+            }
+
+            if ($image_url) {
+                $brand_image = $image_url;
                 ErrorLogger::logSuccess("Brand image uploaded successfully: $brand_image");
             } else {
-                ErrorLogger::logError("Failed to upload brand image to $target_path");
+                ErrorLogger::logError("Failed to upload brand image");
             }
         }
 
