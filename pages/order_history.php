@@ -97,10 +97,10 @@ function getPaymentBadgeClass($status) {
                     </div>
                     <nav class="spx-sidebar-nav">
                         <a href="/pages/my_account.php"><i class="fas fa-th-large"></i>Overview</a>
-                        <a href="#" class="active" onclick="filterOrders('all');return false;"><i class="fas fa-list"></i>All Orders</a>
-                        <a href="#" onclick="filterOrders('pending');return false;"><i class="fas fa-clock"></i>Pending</a>
-                        <a href="#" onclick="filterOrders('delivered');return false;"><i class="fas fa-check-circle"></i>Delivered</a>
-                        <a href="#" onclick="filterOrders('cancelled');return false;"><i class="fas fa-times-circle"></i>Cancelled</a>
+                        <a href="#" class="active" data-filter="all" onclick="filterOrders('all', this);return false;"><i class="fas fa-list"></i>All Orders</a>
+                        <a href="#" data-filter="pending" onclick="filterOrders('pending', this);return false;"><i class="fas fa-clock"></i>Pending</a>
+                        <a href="#" data-filter="delivered" onclick="filterOrders('delivered', this);return false;"><i class="fas fa-check-circle"></i>Delivered</a>
+                        <a href="#" data-filter="cancelled" onclick="filterOrders('cancelled', this);return false;"><i class="fas fa-times-circle"></i>Cancelled</a>
                         <div class="spx-sidebar-divider"></div>
                         <a href="messages.php"><i class="fas fa-comments"></i>Messages</a>
                     </nav>
@@ -115,7 +115,7 @@ function getPaymentBadgeClass($status) {
             <div class="col-lg-9">
                 <div class="spx-panel mb-4">
                     <div class="spx-panel-header">
-                        <h5 class="spx-panel-title">Your Orders</h5>
+                        <h5 class="spx-panel-title" id="ordersPanelTitle">Your Orders</h5>
                         <select class="form-select form-select-sm" style="width:auto;" id="sortOrders">
                             <option value="newest">Newest First</option>
                             <option value="oldest">Oldest First</option>
@@ -133,7 +133,10 @@ function getPaymentBadgeClass($status) {
                     <?php else: ?>
                         <div class="orders-list">
                             <?php foreach ($orders as $order): ?>
-                                <div class="spx-order-card mb-3" data-order-id="<?php echo $order['id']; ?>">
+                                <div class="spx-order-card mb-3"
+                                     data-order-id="<?php echo $order['id']; ?>"
+                                     data-status="<?php echo htmlspecialchars(strtolower($order['order_status'] ?? 'pending')); ?>"
+                                     data-created="<?php echo htmlspecialchars($order['created_at']); ?>">
                                     <div class="row align-items-center g-2">
                                         <div class="col-md-3">
                                             <div class="spx-order-number">#<?php echo htmlspecialchars($order['order_number'] ?? str_pad($order['id'],6,'0',STR_PAD_LEFT)); ?></div>
@@ -188,6 +191,11 @@ function getPaymentBadgeClass($status) {
                                 </div>
                             <?php endforeach; ?>
                         </div><!-- /orders-list -->
+                        <div id="ordersFilterEmpty" class="orders-filter-empty text-center py-5" style="display:none;">
+                            <i class="fas fa-filter fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted mb-2">No orders in this view</h5>
+                            <p class="text-muted mb-0">Try another status filter.</p>
+                        </div>
 
                         <!-- Pagination -->
                         <?php if ($total_pages > 1): ?>
@@ -243,6 +251,11 @@ function getPaymentBadgeClass($status) {
 
 <style>
 .spx-order-card { cursor: pointer; }
+.orders-filter-empty {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
 .customer-timeline {
     border-left: 2px solid #e9ecef;
     margin-left: 8px;
@@ -417,26 +430,104 @@ function downloadInvoice(orderId) {
     window.open(`/api/download_invoice.php?order_id=${orderId}`, '_blank');
 }
 
-// Filter orders
-function filterOrders(status) {
-    // Update active nav link
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    event.target.classList.add('active');
+const orderStatusGroups = {
+    all: [],
+    pending: ['pending', 'confirmed', 'processing', 'packed', 'ready', 'shipped', 'out_for_delivery'],
+    delivered: ['delivered', 'completed'],
+    cancelled: ['cancelled', 'canceled', 'failed', 'refunded']
+};
 
-    // For now, just show all orders (filtering can be implemented with AJAX)
-    alert(`Filter by ${status} - Feature coming soon!`);
+let currentOrderFilter = 'all';
+
+function matchesOrderFilter(card, filter) {
+    if (filter === 'all') {
+        return true;
+    }
+
+    const status = (card.dataset.status || '').toLowerCase();
+    return (orderStatusGroups[filter] || [filter]).includes(status);
+}
+
+function setOrdersPanelTitle(filter, visibleCount) {
+    const title = document.getElementById('ordersPanelTitle');
+    if (!title) {
+        return;
+    }
+
+    const labels = {
+        all: 'Your Orders',
+        pending: 'Pending Orders',
+        delivered: 'Delivered Orders',
+        cancelled: 'Cancelled Orders'
+    };
+
+    title.textContent = `${labels[filter] || 'Your Orders'} (${visibleCount})`;
+}
+
+// Filter orders
+function filterOrders(status, selectedLink = null) {
+    currentOrderFilter = status || 'all';
+
+    document.querySelectorAll('.spx-sidebar-nav a[data-filter]').forEach(link => {
+        link.classList.toggle('active', link.dataset.filter === currentOrderFilter);
+    });
+
+    if (selectedLink) {
+        selectedLink.classList.add('active');
+    }
+
+    let visibleCount = 0;
+    document.querySelectorAll('.spx-order-card').forEach(card => {
+        const shouldShow = matchesOrderFilter(card, currentOrderFilter);
+        card.style.display = shouldShow ? '' : 'none';
+
+        if (shouldShow) {
+            visibleCount++;
+        } else {
+            const details = card.querySelector('.order-details');
+            if (details) {
+                details.style.display = 'none';
+            }
+        }
+    });
+
+    const emptyState = document.getElementById('ordersFilterEmpty');
+    if (emptyState) {
+        emptyState.style.display = visibleCount === 0 ? '' : 'none';
+    }
+
+    setOrdersPanelTitle(currentOrderFilter, visibleCount);
 }
 
 // Sort orders
 function sortOrders() {
-    const sortBy = document.getElementById('sortOrders').value;
-    alert(`Sort by ${sortBy} - Feature coming soon!`);
+    const sortSelect = document.getElementById('sortOrders');
+    const sortBy = sortSelect ? sortSelect.value : 'newest';
+    const ordersList = document.querySelector('.orders-list');
+    if (!ordersList) {
+        return;
+    }
+
+    const cards = Array.from(ordersList.querySelectorAll('.spx-order-card'));
+    cards.sort((a, b) => {
+        const firstDate = new Date(a.dataset.created || 0).getTime();
+        const secondDate = new Date(b.dataset.created || 0).getTime();
+        return sortBy === 'oldest' ? firstDate - secondDate : secondDate - firstDate;
+    });
+
+    cards.forEach(card => ordersList.appendChild(card));
+    filterOrders(currentOrderFilter);
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    const sortSelect = document.getElementById('sortOrders');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', sortOrders);
+    }
+
+    filterOrders(currentOrderFilter);
+
     // Add click handlers to order cards
     document.querySelectorAll('.spx-order-card').forEach(card => {
         const orderId = card.dataset.orderId;
