@@ -494,40 +494,57 @@ while ($brand = $brands_query->fetch_assoc()) {
                                     }
                                     ?>
                                     <?php
-                                    $brandSlug = strtolower(str_replace([' ', '-'], '', $brand['brand_name']));
-                                    $brandNameUpper = strtoupper($brand['brand_name']);
-
-                                    // Mapping for uploaded brand logos with specific filenames
-                                    $uploadedLogos = [
-                                        'Mercedes-Benz' => 'mercedes-benz-9.svg',
-                                        'Renault' => 'renault-2.svg',
-                                        'Changan' => 'changan-automobile-logo-1.svg',
-                                        'BYD' => 'byd-1.svg',
-                                        'Geely' => 'geely-logo-2.svg',
-                                        'Chery' => 'chery-3.svg',
-                                        'Citroën' => 'citroen-racing-2009-2016-logo.svg',
-                                        'BAIC' => 'BAIC.png',
-                                        'Dongfeng' => 'DONGFENG.png',
-                                        'Great Wall' => 'great-wall-seeklogo.png',
-                                        'JAC' => 'jac-motors-seeklogo.png'
+                                    // Logo mapping: brand name => file path or CDN URL
+                                    $allLogos = [
+                                        'Audi' => 'https://cdn.simpleicons.org/audi/0066CC',
+                                        'BAIC' => '/uploads/brands/BAIC.png',
+                                        'BMW' => '/uploads/brands/bmw_logo.svg',
+                                        'BYD' => '/uploads/brands/byd-1.svg',
+                                        'Changan' => '/uploads/brands/changan-automobile-logo-1.svg',
+                                        'Chery' => '/uploads/brands/chery-3.svg',
+                                        'Chevrolet' => 'https://cdn.simpleicons.org/chevrolet/CC0000',
+                                        'Citroën' => '/uploads/brands/citroen-racing-2009-2016-logo.svg',
+                                        'Dongfeng' => '/uploads/brands/DONGFENG.png',
+                                        'Ford' => '/uploads/brands/ford_logo.svg',
+                                        'Geely' => '/uploads/brands/geely-logo-2.svg',
+                                        'Great Wall' => '/uploads/brands/great-wall-seeklogo.png',
+                                        'Honda' => '/uploads/brands/honda_logo.svg',
+                                        'Hyundai' => '/uploads/brands/hyundai_logo.svg',
+                                        'Isuzu' => 'https://cdn.simpleicons.org/isuzu/CC0000',
+                                        'JAC' => '/uploads/brands/jac-motors-seeklogo.png',
+                                        'Kia' => 'https://cdn.simpleicons.org/kia/05141F',
+                                        'Land Rover' => 'https://cdn.simpleicons.org/landrover/005A2B',
+                                        'Lexus' => 'https://cdn.simpleicons.org/lexus/1A1A1A',
+                                        'Mazda' => 'https://cdn.simpleicons.org/mazda/101820',
+                                        'Mercedes-Benz' => '/uploads/brands/mercedes-benz-9.svg',
+                                        'MG' => 'https://cdn.simpleicons.org/mg/CC0000',
+                                        'Mitsubishi' => 'https://cdn.simpleicons.org/mitsubishi/E60012',
+                                        'Nissan' => 'https://cdn.simpleicons.org/nissan/C3002F',
+                                        'Peugeot' => 'https://cdn.simpleicons.org/peugeot/00267E',
+                                        'Renault' => '/uploads/brands/renault-2.svg',
+                                        'Skoda' => 'https://cdn.simpleicons.org/skoda/4BA82E',
+                                        'Subaru' => 'https://cdn.simpleicons.org/subaru/013C74',
+                                        'Suzuki' => 'https://cdn.simpleicons.org/suzuki/E30613',
+                                        'Toyota' => '/uploads/brands/toyota_logo.svg',
+                                        'Volkswagen' => '/uploads/brands/volkswagen_logo.svg',
+                                        'Volvo' => 'https://cdn.simpleicons.org/volvo/003057',
+                                        'Wuling' => 'https://cdn.simpleicons.org/wuling/FF6600',
                                     ];
 
-                                    // Try uploaded logos first (let browser handle loading/errors)
-                                    $logoPath = null;
-                                    if (isset($uploadedLogos[$brand['brand_name']])) {
-                                        $logoPath = "/uploads/brands/" . $uploadedLogos[$brand['brand_name']];
-                                    }
-
-                                    if ($logoPath): ?>
-                                        <img src="<?php echo $logoPath; ?>"
+                                    $logoSrc = $allLogos[$brand['brand_name']] ?? null;
+                                    $brandColor = '#2563eb';
+                                    ?>
+                                    <?php if ($logoSrc): ?>
+                                        <img src="<?php echo $logoSrc; ?>"
                                              alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
                                              class="brand-logo"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                        <i class="fas fa-car fa-3x text-primary" style="display: none;"></i>
+                                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                        <div class="text-logo" style="display:none;">
+                                            <span class="brand-initial"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
+                                        </div>
                                     <?php else: ?>
                                         <div class="text-logo">
                                             <span class="brand-initial"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
-                                            <span class="brand-text"><?php echo htmlspecialchars($brand['brand_name']); ?></span>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -651,45 +668,35 @@ while ($brand = $brands_query->fetch_assoc()) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f8f9fa 0%, #007bff 100%);
-    border-radius: 50%;
-    border: 3px solid #007bff;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
     color: white;
-    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+    overflow: hidden;
 }
 
 .brand-logo {
-    width: 100%;
-    height: 100%;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
-    border-radius: 50%;
 }
 
 .text-logo {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border-radius: 50%;
+    background: #2563eb;
+    border-radius: 12px;
     color: white;
     font-weight: bold;
-    text-align: center;
-    padding: 8px;
 }
 
 .brand-initial {
-    font-size: 24px;
+    font-size: 28px;
     line-height: 1;
-    margin-bottom: 2px;
 }
-
-.brand-text {
-    font-size: 10px;
-    line-height: 1;
-    word-break: break-word;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
