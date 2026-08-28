@@ -25,10 +25,35 @@ if (empty($name) || empty($email) || empty($phone) || empty($subject) || empty($
     exit;
 }
 
-// Validate email
+// Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Invalid email address']);
+    exit;
+}
+
+// Validate email domain exists (anti-spam)
+$email_domain = substr(strrchr($email, '@'), 1);
+$mx_records = [];
+if (!getmxrr($email_domain, $mx_records) && !checkdnsrr($email_domain, 'A')) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Email address does not exist. Please check and try again.']);
+    exit;
+}
+
+// Rate limit: max 3 submissions per IP per hour
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$rate_check = $conn->prepare("SELECT COUNT(*) as cnt FROM messages m 
+    JOIN conversations c ON m.conversation_id = c.id 
+    JOIN customers_enhanced cu ON c.client_id = cu.id 
+    WHERE cu.email = ? AND m.created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+$rate_check->bind_param('s', $email);
+$rate_check->execute();
+$rate_count = $rate_check->get_result()->fetch_assoc()['cnt'] ?? 0;
+$rate_check->close();
+if ($rate_count >= 3) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => 'Too many messages. Please wait before sending another one.']);
     exit;
 }
 

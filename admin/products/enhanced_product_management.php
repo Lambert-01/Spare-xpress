@@ -756,13 +756,20 @@ function buildProductPageUrl($page) {
                             </div>
                         </div>
 
-                        <!-- Status and Actions -->
+                        <!-- Status Toggle and Actions -->
                         <div class="card-footer-section">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="status-badge <?php echo $product['is_active'] ? 'status-active' : 'status-inactive'; ?>">
-                                    <i class="bi bi-circle-fill me-1"></i>
-                                    <?php echo $product['is_active'] ? 'Active' : 'Inactive'; ?>
-                                </span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox"
+                                               <?= $product['is_active'] ? 'checked' : '' ?>
+                                               onchange="toggleStatus('product', <?= $product['id'] ?>, this)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label <?= $product['is_active'] ? 'active' : 'inactive' ?>">
+                                        <?= $product['is_active'] ? 'Active' : 'Inactive' ?>
+                                    </span>
+                                </div>
                                 <div class="action-buttons">
                                     <a href="#" class="btn btn-danger btn-sm action-btn" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['product_name']); ?>')">
                                         <i class="bi bi-trash-fill"></i>

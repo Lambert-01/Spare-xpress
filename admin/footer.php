@@ -258,6 +258,45 @@ function saveSettings() {
     bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();
     showToast('Settings saved!', 'success');
 }
+
+// ── Toggle Status (Brands/Models/Products) ──
+function toggleStatus(type, id, checkbox) {
+    const is_active = checkbox.checked ? 1 : 0;
+    const label = checkbox.closest('.toggle-switch')?.nextElementSibling;
+    
+    fetch('/api/toggle_status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, id, is_active })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message, 'success');
+            if (label) {
+                label.textContent = is_active ? 'Active' : 'Inactive';
+                label.className = 'toggle-label ' + (is_active ? 'active' : 'inactive');
+            }
+            // Update status badge if present
+            const badge = document.querySelector(`[data-status-id="${id}"]`);
+            if (badge) {
+                badge.className = `badge ${is_active ? 'bg-success' : 'bg-danger'}`;
+                badge.textContent = is_active ? 'Active' : 'Inactive';
+            }
+            // Reload page after cascade to show updated statuses
+            if (data.affected && (data.affected.models > 0 || data.affected.products > 0)) {
+                setTimeout(() => location.reload(), 1500);
+            }
+        } else {
+            checkbox.checked = !is_active;
+            showToast(data.message || 'Failed to update status', 'danger');
+        }
+    })
+    .catch(err => {
+        checkbox.checked = !is_active;
+        showToast('Network error. Please try again.', 'danger');
+    });
+}
 </script>
 </body>
 </html>

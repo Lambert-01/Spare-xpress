@@ -727,13 +727,20 @@ function generateSlug($string) {
                                 </div>
                             </div>
 
-                            <!-- Status and Actions -->
+                            <!-- Status Toggle and Actions -->
                             <div class="card-footer-section">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="status-badge <?php echo $brand['is_active'] ? 'status-active' : 'status-inactive'; ?>">
-                                        <i class="bi bi-circle-fill me-1"></i>
-                                        <?php echo $brand['is_active'] ? 'Active' : 'Inactive'; ?>
-                                    </span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" 
+                                                   <?= $brand['is_active'] ? 'checked' : '' ?>
+                                                   onchange="toggleStatus('brand', <?= $brand['id'] ?>, this)">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label <?= $brand['is_active'] ? 'active' : 'inactive' ?>">
+                                            <?= $brand['is_active'] ? 'Active' : 'Inactive' ?>
+                                        </span>
+                                    </div>
                                     <div class="action-buttons">
                                         <a href="../models/enhanced_model_management.php?brand=<?php echo $brand['id']; ?>"
                                            class="btn btn-primary btn-sm action-btn" title="View Models">

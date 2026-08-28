@@ -366,6 +366,65 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+
+        /* ── Toggle Switch ── */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #cbd5e0;
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background: #198754;
+        }
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+        .toggle-switch input:disabled + .toggle-slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .toggle-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            min-width: 50px;
+        }
+        .toggle-label.active { color: #198754; }
+        .toggle-label.inactive { color: #dc3545; }
+
+        /* ── Enhanced Card Hover ── */
+        .enhanced-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .enhanced-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
     </style>
 </head>
 <body>
