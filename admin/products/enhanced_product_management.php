@@ -718,15 +718,15 @@ function buildProductPageUrl($page) {
                             <?php elseif ($product['sale_price'] && $product['sale_price'] < $product['regular_price']): ?>
                                 <div class="price-sale">
                                     <span class="original-price text-decoration-line-through text-muted small">
-                                        RWF <?php echo number_format($product['regular_price'], 0); ?>
+                                        RWF <?php echo number_format($product['regular_price'] ?? 0, 0); ?>
                                     </span>
                                     <div class="sale-price text-danger fw-bold">
-                                        RWF <?php echo number_format($product['sale_price'], 0); ?>
+                                        RWF <?php echo number_format($product['sale_price'] ?? 0, 0); ?>
                                     </div>
                                 </div>
                             <?php else: ?>
                                 <div class="regular-price text-primary fw-bold">
-                                    RWF <?php echo number_format($product['regular_price'], 0); ?>
+                                    RWF <?php echo number_format($product['regular_price'] ?? 0, 0); ?>
                                 </div>
                             <?php endif; ?>
                         </div>

@@ -1,6 +1,8 @@
 <?php
 // API endpoint to get products with filtering, sorting, and pagination
 // SPARE XPRESS LTD - Dynamic Shop API
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+ini_set('display_errors', 0);
 
 include_once '../includes/config.php';
 require_once __DIR__ . '/../includes/cloudinary.php';
@@ -228,7 +230,8 @@ try {
         }
 
         // Format gallery images - ensure correct path (uploads are in admin/uploads/)
-        $gallery_images = json_decode($row['gallery_images'], true) ?: [];
+        $gallery_images = !empty($row['gallery_images']) ? json_decode($row['gallery_images'], true) : [];
+        if (!is_array($gallery_images)) $gallery_images = [];
         $formatted_gallery = [];
         foreach ($gallery_images as $gallery_image) {
             if (!empty($gallery_image)) {
