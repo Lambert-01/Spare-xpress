@@ -58,38 +58,6 @@ while ($brand = $brands_query->fetch_assoc()) {
         </div>
     </div>
 </div>
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-car fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold">Complete Coverage</h6>
-                            <small class="text-white-50">All Vehicle Types</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center text-white">
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-tools fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold">Expert Support</h6>
-                            <small class="text-white-50">Professional Advice</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 text-center wow fadeInUp" data-wow-delay="0.7s">
-                <div class="position-relative">
-                    <img src="/img/logo/logox.jpg" alt="SPARE XPRESS" class="img-fluid rounded shadow-lg" style="max-width: 280px; filter: brightness(1.1);">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-r from-primary to-secondary rounded opacity-25"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Background Pattern -->
-    <div class="position-absolute top-0 end-0 opacity-10" style="font-size: 200px;">
-        <i class="fas fa-cogs text-white"></i>
-    </div>
-</div>
 <!-- Page Header End -->
 
 <!-- Breadcrumb Navigation -->
@@ -630,7 +598,7 @@ while ($brand = $brands_query->fetch_assoc()) {
 
         <div class="row g-4">
             <?php
-            $categories = $conn->query("SELECT * FROM categories ORDER BY category_name LIMIT 8");
+            $categories = $conn->query("SELECT category_name as name, slug, icon_class as icon, description FROM categories_enhanced WHERE is_active = 1 ORDER BY display_order, category_name LIMIT 8");
             while ($category = $categories->fetch_assoc()):
             ?>
                 <div class="col-lg-3 col-md-6">
