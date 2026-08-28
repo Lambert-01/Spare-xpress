@@ -433,14 +433,14 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="brand-full">
-            <img src="/img/logo/icon.jpg" alt="Logo" style="width:32px;height:32px;border-radius:6px;object-fit:cover;flex-shrink:0;">
+            <img src="/img/logo/logox.jpg" alt="SPARE XPRESS" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,0.2);">
             <div>
-                <div style="font-weight:700;font-size:0.9rem;color:#fff;line-height:1.1;">SPARE XPRESS</div>
-                <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);letter-spacing:0.8px;">ADMIN PANEL</div>
+                <div style="font-weight:700;font-size:0.95rem;color:#fff;line-height:1.1;">SPARE XPRESS</div>
+                <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);letter-spacing:1px;margin-top:2px;">ADMIN PANEL</div>
             </div>
         </div>
         <div class="brand-icon">
-            <img src="/img/logo/icon.jpg" alt="Logo" style="width:32px;height:32px;border-radius:6px;object-fit:cover;">
+            <img src="/img/logo/logox.jpg" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,0.2);">
         </div>
     </div>
 
@@ -587,7 +587,7 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
             </button>
 
             <a class="navbar-brand d-flex align-items-center" href="/admin/enhanced_dashboard.php">
-                <img src="/img/logo/icon.jpg" alt="Icon" class="me-2 rounded" style="height:26px;width:26px;object-fit:cover;">
+                <img src="/img/logo/logox.jpg" alt="SPARE XPRESS" class="me-2 rounded" style="height:30px;width:30px;object-fit:cover;border:1px solid rgba(255,255,255,0.3);">
                 <span class="d-none d-sm-inline">SPARE XPRESS <small class="opacity-75 fw-normal">Admin</small></span>
             </a>
 
