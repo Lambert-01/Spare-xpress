@@ -23,28 +23,41 @@ while ($brand = $brands_query->fetch_assoc()) {
 }
 ?>
 
-<!-- Page Header Start -->
-<div class="container-fluid page-header py-3 py-lg-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
-    <div class="container py-3 py-lg-5">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 text-white fw-bold mb-2 mb-lg-4 wow fadeInUp" data-wow-delay="0.1s" style="font-size: clamp(1.4rem, 4vw, 2.5rem);">
-                    <i class="fas fa-tags me-2"></i>Browse Our Brands
-                </h1>
-                <p class="lead text-white-50 mb-3 mb-lg-4 wow fadeInUp" data-wow-delay="0.3s" style="font-size: clamp(0.85rem, 2vw, 1rem);">
-                    Discover genuine auto parts from trusted brands.
-                </p>
-                <div class="d-flex gap-3 flex-wrap wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="d-flex align-items-center text-white">
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-shield-alt fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold"><?php echo count($brands); ?> Premium Brands</h6>
-                            <small class="text-white-50">Worldwide Manufacturers</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center text-white">
+<!-- Page Header -->
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+    <div class="container">
+        <h1 class="fw-bold mb-2" style="color:#fff; font-size:clamp(1.3rem,4vw,2rem);">
+            <i class="fas fa-tags me-2"></i>Browse Our Brands
+        </h1>
+        <p class="mb-3" style="color:rgba(255,255,255,0.85); font-size:clamp(0.82rem,2vw,0.95rem);">
+            <?php echo count($brands); ?> premium brands. Find parts for your vehicle.
+        </p>
+        <div class="row g-2">
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.85rem,2vw,1rem);"><i class="fas fa-tags me-1"></i> <?php echo count($brands); ?> Brands</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <?php $total_models = array_sum(array_column($brands, 'model_count')); ?>
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.85rem,2vw,1rem);"><i class="fas fa-car me-1"></i> <?php echo number_format($total_models); ?> Models</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <?php $total_products = array_sum(array_column($brands, 'active_product_count')); ?>
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.85rem,2vw,1rem);"><i class="fas fa-boxes me-1"></i> <?php echo number_format($total_products); ?> Parts</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.85rem,2vw,1rem);"><i class="fas fa-shield-alt me-1"></i> Genuine</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                         <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
                             <i class="fas fa-car fa-lg text-white"></i>
                         </div>
@@ -123,69 +136,6 @@ while ($brand = $brands_query->fetch_assoc()) {
                                 <option value="newest">Recently Added</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Brands Statistics -->
-        <div class="row g-2 g-lg-4 mb-4 mb-lg-5">
-            <div class="col-xl-3 col-lg-6">
-                <div class="stats-card">
-                    <div class="card-body text-center p-4">
-                        <div class="card-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
-                            <i class="bi bi-tags-fill fs-1"></i>
-                        </div>
-                        <h3 class="card-value text-primary mb-2"><?php echo count($brands); ?></h3>
-                        <p class="card-title mb-0">Total Brands</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <div class="stats-card">
-                    <div class="card-body text-center p-4">
-                        <div class="card-icon bg-success bg-opacity-10 text-success mx-auto mb-3">
-                            <i class="bi bi-car-front-fill fs-1"></i>
-                        </div>
-                        <h3 class="card-value text-success mb-2">
-                            <?php
-                            $total_models = array_sum(array_column($brands, 'model_count'));
-                            echo number_format($total_models);
-                            ?>
-                        </h3>
-                        <p class="card-title mb-0">Total Models</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <div class="stats-card">
-                    <div class="card-body text-center p-4">
-                        <div class="card-icon bg-warning bg-opacity-10 text-warning mx-auto mb-3">
-                            <i class="bi bi-box-seam-fill fs-1"></i>
-                        </div>
-                        <h3 class="card-value text-warning mb-2">
-                            <?php
-                            $total_products = array_sum(array_column($brands, 'active_product_count'));
-                            echo number_format($total_products);
-                            ?>
-                        </h3>
-                        <p class="card-title mb-0">Active Products</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <div class="stats-card">
-                    <div class="card-body text-center p-4">
-                        <div class="card-icon bg-info bg-opacity-10 text-info mx-auto mb-3">
-                            <i class="bi bi-globe fs-1"></i>
-                        </div>
-                        <h3 class="card-value text-info mb-2">
-                            <?php
-                            $countries = array_unique(array_column($brands, 'country'));
-                            echo count(array_filter($countries));
-                            ?>
-                        </h3>
-                        <p class="card-title mb-0">Countries</p>
                     </div>
                 </div>
             </div>

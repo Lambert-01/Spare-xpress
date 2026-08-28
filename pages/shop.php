@@ -5,88 +5,46 @@ include '../includes/navigation.php';
 include '../includes/toast_notifications.php';
 ?>
 
-<!-- Page Header Start - Premium Design -->
-<div class="container-fluid bg-mesh-gradient bg-particles py-5 position-relative overflow-hidden" style="min-height: 400px;">
-    <!-- Animated background -->
-    <div class="position-absolute w-100 h-100 top-0 start-0" style="z-index: 0;">
-        <div class="position-absolute" style="top: 20%; right: 10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; animation: float 7s ease-in-out infinite;"></div>
-    </div>
-
-    <div class="container py-4 position-relative" style="z-index: 1;">
+<!-- Page Header -->
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7 fade-in">
-                <!-- Badge -->
-                <div class="mb-3">
-                    <span class="badge-modern badge-bestseller">
-                        <i class="fas fa-shopping-bag me-2"></i>Auto Parts Shopping
-                    </span>
-                </div>
-
-                <!-- Main Heading -->
-                <h1 class="display-4 fw-bold mb-3 text-white">
-                    <span class="text-gradient-accent">Premium Auto Parts</span>
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-2" style="color:#fff; font-size:clamp(1.3rem,4vw,2rem);">
+                    <i class="fas fa-shopping-bag me-2"></i>Premium Auto Parts
                 </h1>
-                
-                <!-- Subheading -->
-                <p class="lead text-white mb-4" style="opacity: 0.95; max-width: 600px;">
-                    Discover genuine automotive parts for all vehicle brands. Quality parts with expert support and fast delivery across Rwanda.
+                <p class="mb-3" style="color:rgba(255,255,255,0.85); font-size:clamp(0.82rem,2vw,0.95rem); max-width:550px;">
+                    Genuine parts for all vehicle brands. Fast delivery across Rwanda.
                 </p>
-                
-                <!-- Trust Indicators - Vibrant Design -->
-                <div class="row g-3">
-                    <div class="col-6 col-lg-3">
-                        <div class="p-3 text-center rounded-xl hover-lift transition h-100" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);">
-                            <div class="bg-white bg-opacity-25 rounded-circle p-2 mb-2 d-inline-flex">
-                                <i class="fas fa-shield-alt fa-lg text-white"></i>
-                            </div>
-                            <p class="text-white fw-bold mb-1 small">Genuine Parts</p>
-                            <small class="text-white d-block" style="opacity: 0.9; font-size: 0.7rem;">OEM & Aftermarket</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="p-3 text-center rounded-xl hover-lift transition h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
-                            <div class="bg-white bg-opacity-25 rounded-circle p-2 mb-2 d-inline-flex">
-                                <i class="fas fa-truck fa-lg text-white"></i>
-                            </div>
-                            <p class="text-white fw-bold mb-1 small">Fast Delivery</p>
-                            <small class="text-white d-block" style="opacity: 0.9; font-size: 0.7rem;">24-72 Hours</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="p-3 text-center rounded-xl hover-lift transition h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);">
-                            <div class="bg-white bg-opacity-25 rounded-circle p-2 mb-2 d-inline-flex">
-                                <i class="fas fa-tools fa-lg text-white"></i>
-                            </div>
-                            <p class="text-white fw-bold mb-1 small">Expert Support</p>
-                            <small class="text-white d-block" style="opacity: 0.9; font-size: 0.7rem;">Professional Advice</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="p-3 text-center rounded-xl hover-lift transition h-100" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);">
-                            <div class="bg-white bg-opacity-25 rounded-circle p-2 mb-2 d-inline-flex">
-                                <i class="fas fa-certificate fa-lg text-white"></i>
-                            </div>
-                            <p class="text-white fw-bold mb-1 small">Warranty</p>
-                            <small class="text-white d-block" style="opacity: 0.9; font-size: 0.7rem;">Quality Guaranteed</small>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <!-- Stats Row -->
+        <div class="row g-2 g-lg-3">
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-shield-alt me-1"></i> Genuine Parts</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">OEM & Aftermarket</div>
                 </div>
             </div>
-            
-            <!-- Image/Logo Column -->
-            <div class="col-lg-5 text-center mt-4 mt-lg-0 fade-in">
-                <div class="position-relative" data-parallax="0.2">
-                    <div class="glass-card p-4 rounded-2xl">
-                        <img src="/img/logo/logox.jpg" alt="SPARE XPRESS" class="img-fluid rounded-xl shadow-xl" style="max-width: 280px; filter: brightness(1.1);">
-                    </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-truck me-1"></i> Fast Delivery</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">24-72 Hours</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-tools me-1"></i> Expert Support</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">Professional Advice</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-certificate me-1"></i> Warranty</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">Quality Guaranteed</div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Background Pattern -->
-    <div class="position-absolute top-0 end-0 opacity-10" style="font-size: 200px; z-index: 0;">
-        <i class="fas fa-cogs text-white"></i>
     </div>
 </div>
 <!-- Page Header End -->
@@ -371,69 +329,7 @@ include '../includes/toast_notifications.php';
 </div>
 <!-- Check Today's Price Section End -->
 
-<!-- Trust Signals Section - Premium -->
-<div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);">
-    <div class="container">
-        <div class="row g-4 justify-content-center">
-            <div class="col-lg-2 col-md-4 col-6 fade-in">
-                <div class="glass-card p-4 text-center hover-lift transition rounded-xl h-100">
-                    <div class="mb-3">
-                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex">
-                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1">Genuine Parts</h6>
-                    <small class="text-muted">100% Authentic</small>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-6 fade-in">
-                <div class="glass-card p-4 text-center hover-lift transition rounded-xl h-100">
-                    <div class="mb-3">
-                        <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-flex">
-                            <i class="fas fa-truck fa-2x text-success"></i>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1">Fast Delivery</h6>
-                    <small class="text-muted">24-72 Hours</small>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-6 fade-in">
-                <div class="glass-card p-4 text-center hover-lift transition rounded-xl h-100">
-                    <div class="mb-3">
-                        <div class="bg-info bg-opacity-10 rounded-circle p-3 d-inline-flex">
-                            <i class="fas fa-tools fa-2x text-info"></i>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1">Expert Support</h6>
-                    <small class="text-muted">Professional Team</small>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-6 fade-in">
-                <div class="glass-card p-4 text-center hover-lift transition rounded-xl h-100">
-                    <div class="mb-3">
-                        <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-flex">
-                            <i class="fas fa-certificate fa-2x text-warning"></i>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1">Warranty</h6>
-                    <small class="text-muted">Quality Guaranteed</small>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-6 fade-in">
-                <div class="glass-card p-4 text-center hover-lift transition rounded-xl h-100">
-                    <div class="mb-3">
-                        <div class="bg-danger bg-opacity-10 rounded-circle p-3 d-inline-flex">
-                            <i class="fas fa-headset fa-2x text-danger"></i>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1">24/7 Support</h6>
-                    <small class="text-muted">Always Available</small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Trust Signals End -->
+
 
 <!-- Quick View Modal -->
 <div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
