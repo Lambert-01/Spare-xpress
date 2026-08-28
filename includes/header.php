@@ -49,6 +49,9 @@
 
     <!-- Unified Client Portal Design -->
     <link href="/css/client-portal.css" rel="stylesheet">
+
+    <!-- Mobile Responsive -->
+    <link href="/css/mobile.css" rel="stylesheet">
 </head>
 
 <body>
