@@ -474,6 +474,15 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
                 </a>
             </li>
 
+            <!-- Analytics -->
+            <li class="nav-section-label">Analytics</li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/visitor_tracking.php" title="Visitor Tracking" data-bs-placement="right">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Visitor Tracking</span>
+                </a>
+            </li>
+
             <!-- System -->
             <li class="nav-section-label">System</li>
             <li class="nav-item">
