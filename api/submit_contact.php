@@ -19,6 +19,21 @@ $project = trim($_POST['project'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
+// Honeypot anti-bot: if this hidden field is filled, it's a bot
+$honeypot = $_POST['website_url'] ?? '';
+if (!empty($honeypot)) {
+    // Silently reject bots
+    echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+    exit;
+}
+
+// Time check: reject if submitted in under 3 seconds (bots are too fast)
+$form_time = (int)($_POST['form_timestamp'] ?? 0);
+if ($form_time > 0 && (time() - $form_time) < 3) {
+    echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+    exit;
+}
+
 if (empty($name) || empty($email) || empty($phone) || empty($subject) || empty($message)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'All required fields must be filled']);
@@ -41,7 +56,34 @@ if (!getmxrr($email_domain, $mx_records) && !checkdnsrr($email_domain, 'A')) {
     exit;
 }
 
-// Rate limit: max 3 submissions per IP per hour
+// Block non-Rwandan phone numbers (Rwanda: +250XXXXXXXXX)
+$clean_phone = preg_replace('/[^0-9+]/', '', $phone);
+if (!preg_match('/^\+?250[0-9]{9}$/', $clean_phone) && !preg_match('/^0[0-9]{9}$/', $clean_phone)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Please enter a valid Rwandan phone number (+250 7XX XXX XXX)']);
+    exit;
+}
+
+// Block known spam keywords in message
+$spam_keywords = ['viagra', 'casino', 'bitcoin', 'crypto', 'loan', 'winner', 'congratulations', 'claim your', 'click here', 'free money', 'nigerian', 'prince'];
+$message_lower = strtolower($message);
+foreach ($spam_keywords as $kw) {
+    if (strpos($message_lower, $kw) !== false) {
+        echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+        exit;
+    }
+}
+
+// Block disposable email domains
+$blocked_domains = ['mailinator.com', 'guerrillamail.com', 'tempmail.com', 'throwaway.email', '10minutemail.com', 'yopmail.com', 'sharklasers.com', 'guerrillamailblock.com', 'grr.la', 'dispostable.com', 'tempail.com', 'temp-mail.org', 'fakeinbox.com', 'tempinbox.com'];
+$email_domain = strtolower(substr(strrchr($email, '@'), 1));
+if (in_array($email_domain, $blocked_domains)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Please use your real email address']);
+    exit;
+}
+
+// Rate limit: max 2 submissions per IP per hour
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 $rate_check = $conn->prepare("SELECT COUNT(*) as cnt FROM messages m 
     JOIN conversations c ON m.conversation_id = c.id 
@@ -51,9 +93,20 @@ $rate_check->bind_param('s', $email);
 $rate_check->execute();
 $rate_count = $rate_check->get_result()->fetch_assoc()['cnt'] ?? 0;
 $rate_check->close();
-if ($rate_count >= 3) {
+if ($rate_count >= 2) {
     http_response_code(429);
     echo json_encode(['success' => false, 'message' => 'Too many messages. Please wait before sending another one.']);
+    exit;
+}
+
+// IP rate limit: max 5 submissions per IP per hour
+$ip_check = $conn->prepare("SELECT COUNT(*) as cnt FROM conversations WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+$ip_check->execute();
+$ip_count = $ip_check->get_result()->fetch_assoc()['cnt'] ?? 0;
+$ip_check->close();
+if ($ip_count >= 5) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => 'Too many submissions. Please try again later.']);
     exit;
 }
 

@@ -74,6 +74,11 @@ include '../includes/navigation.php';
                     <div class="spx-panel-body">
                         <div id="formAlert"></div>
                         <form id="contact-form" action="/api/submit_contact.php" method="POST">
+                            <!-- Anti-spam honeypot (hidden from humans) -->
+                            <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+                                <input type="text" name="website_url" tabindex="-1" autocomplete="off">
+                            </div>
+                            <input type="hidden" name="form_timestamp" value="">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="spx-input-group">
@@ -163,6 +168,9 @@ include '../includes/navigation.php';
 </div>
 
 <script>
+// Set timestamp on form load (anti-spam: reject if submitted too fast)
+document.querySelector('input[name="form_timestamp"]').value = Math.floor(Date.now() / 1000);
+
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = document.getElementById('submit-btn');
