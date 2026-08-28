@@ -1220,3 +1220,284 @@ body > * {
         border-radius: 14px;
     }
 }
+
+/* ---------- WHATSAPP & FAQ FLOATING ---------- */
+@media (max-width: 767px) {
+    #whatsapp-float { bottom: 15px !important; right: 15px !important; }
+    #whatsapp-popup { width: calc(100vw - 30px) !important; right: 0 !important; bottom: 65px !important; max-width: 300px; }
+    #whatsapp-float button { width: 52px !important; height: 52px !important; }
+    #whatsapp-float button i { font-size: 24px !important; }
+    #faq-float { bottom: 78px !important; right: 15px !important; }
+    #faq-float button { width: 42px !important; height: 42px !important; }
+    #faq-popup { width: calc(100vw - 30px) !important; right: 0 !important; bottom: 125px !important; max-width: 300px; }
+    .back-to-top { bottom: 140px !important; right: 15px !important; width: 40px !important; height: 40px !important; }
+}
+
+@media (max-width: 575px) {
+    #whatsapp-popup { width: calc(100vw - 20px) !important; }
+    #faq-popup { width: calc(100vw - 20px) !important; }
+}
+
+/* ---------- PAGE HEADER OVERLAPPING FIX ---------- */
+@media (max-width: 767px) {
+    .page-header .display-4,
+    .page-header h1 {
+        font-size: clamp(1.3rem, 4vw, 1.8rem) !important;
+        line-height: 1.2 !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .page-header .lead,
+    .page-header p {
+        font-size: clamp(0.82rem, 2vw, 0.95rem) !important;
+        line-height: 1.5 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .page-header .d-flex.gap-3 {
+        flex-wrap: wrap;
+        gap: 0.75rem !important;
+    }
+
+    .page-header .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .page-header .bg-white.bg-opacity-20.rounded-circle {
+        display: none;
+    }
+
+    .page-header .position-absolute {
+        display: none;
+    }
+}
+
+/* ---------- BRAND CARDS OVERLAPPING FIX ---------- */
+@media (max-width: 767px) {
+    .brand-card .card,
+    .card.border-0.shadow-sm {
+        border-radius: 10px !important;
+    }
+
+    .brand-card .card-header {
+        padding: 1rem 0.75rem !important;
+    }
+
+    .brand-card .card-title,
+    .card.border-0 .card-title {
+        font-size: 0.88rem !important;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .brand-card .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .brand-card .card-footer {
+        padding: 0.75rem !important;
+    }
+
+    .brand-card .card-footer .btn {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .brand-card .stat-item {
+        padding: 0.35rem;
+    }
+
+    .brand-card .stat-number {
+        font-size: 0.85rem !important;
+    }
+
+    .brand-card .stat-label {
+        font-size: 0.68rem !important;
+    }
+
+    .brand-card .card-text {
+        font-size: 0.75rem !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+/* ---------- STATS CARDS OVERLAPPING FIX ---------- */
+@media (max-width: 767px) {
+    .stats-card .card-body {
+        padding: 1rem !important;
+    }
+
+    .stats-card .card-value {
+        font-size: 1.4rem !important;
+    }
+
+    .stats-card .card-title {
+        font-size: 0.75rem !important;
+    }
+
+    .stats-card .card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .stats-card .card-icon i {
+        font-size: 1rem;
+    }
+}
+
+/* ---------- NAVIGATION FIX ---------- */
+@media (max-width: 991px) {
+    .spx-nav-bar .navbar-toggler {
+        display: none !important;
+    }
+
+    .spx-nav-bar .navbar-collapse {
+        padding: 0.5rem;
+    }
+
+    .spx-nav-bar .nav-link {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.88rem !important;
+    }
+}
+
+/* ---------- GENERAL OVERLAPPING FIX ---------- */
+@media (max-width: 767px) {
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .row {
+        margin-left: -0.375rem;
+        margin-right: -0.375rem;
+    }
+
+    .row > [class*="col-"] {
+        padding-left: 0.375rem;
+        padding-right: 0.375rem;
+    }
+
+    h1, .display-4 {
+        font-size: clamp(1.25rem, 4vw, 1.75rem) !important;
+    }
+
+    h2 {
+        font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+    }
+
+    h3 {
+        font-size: clamp(1rem, 2.5vw, 1.25rem) !important;
+    }
+
+    h4, h5, h6 {
+        font-size: clamp(0.9rem, 2vw, 1.1rem) !important;
+    }
+
+    .lead {
+        font-size: clamp(0.82rem, 2vw, 0.95rem) !important;
+    }
+
+    .form-control, .form-select {
+        font-size: 16px !important;
+    }
+
+    .form-label {
+        font-size: 0.82rem !important;
+    }
+}
+
+/* ---------- CATEGORY CARDS FIX ---------- */
+@media (max-width: 767px) {
+    .category-card-enhanced {
+        padding: 1.25rem 1rem !important;
+    }
+
+    .category-card-enhanced .fa-3x {
+        font-size: 2rem !important;
+    }
+
+    .category-card-enhanced h5 {
+        font-size: 0.9rem !important;
+    }
+
+    .category-card-enhanced p {
+        font-size: 0.75rem !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+/* ---------- SEARCH & FILTER FIX ---------- */
+@media (max-width: 767px) {
+    #brandSearchInput, #brandSortSelect {
+        font-size: 0.88rem;
+        padding: 0.55rem 0.75rem;
+    }
+
+    .form-control-lg {
+        font-size: 0.88rem;
+        padding: 0.55rem 0.75rem;
+    }
+}
+
+/* ---------- CHECKOUT & FORMS FIX ---------- */
+@media (max-width: 767px) {
+    .spx-input-group {
+        margin-bottom: 0.75rem;
+    }
+
+    .spx-input-group label {
+        font-size: 0.82rem !important;
+    }
+
+    .spx-input-group input,
+    .spx-input-group textarea,
+    .spx-input-group select {
+        font-size: 16px !important;
+        padding: 0.6rem 0.75rem;
+    }
+}
+
+/* ---------- TABLES FIX ---------- */
+@media (max-width: 767px) {
+    .table-responsive {
+        border-radius: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        font-size: 0.78rem !important;
+    }
+
+    .table th, .table td {
+        padding: 0.5rem !important;
+        white-space: nowrap;
+    }
+}
+
+/* ---------- EMPTY STATE FIX ---------- */
+@media (max-width: 767px) {
+    .empty-state .display-1 {
+        font-size: 2.5rem !important;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem !important;
+    }
+
+    .empty-state p {
+        font-size: 0.82rem !important;
+    }
+}

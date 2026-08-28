@@ -96,9 +96,6 @@ include_once 'config.php';
         <!-- Navigation Menu -->
         <nav class="navbar navbar-expand-lg spx-nav-bar mb-3">
             <div class="container-fluid px-2">
-                <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
-                    <i class="fas fa-bars"></i>
-                </button>
                 <div class="collapse navbar-collapse" id="mobileNav">
                     <div class="navbar-nav mx-auto">
                         <?php foreach ($nav_menu as $item): ?>

@@ -82,6 +82,74 @@
 </div>
 <!-- Copyright End -->
 
+<!-- WhatsApp Floating Button -->
+<div id="whatsapp-float" style="position:fixed;bottom:20px;right:20px;z-index:9980;">
+    <div id="whatsapp-popup" style="display:none;position:absolute;bottom:70px;right:0;width:300px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);overflow:hidden;animation:fadeInUp 0.3s ease;">
+        <div style="background:linear-gradient(135deg,#25d366,#128c7e);padding:16px 20px;color:#fff;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <img src="/img/logo/logox.jpg" alt="Logo" style="width:36px;height:36px;border-radius:8px;border:2px solid rgba(255,255,255,0.3);">
+                <div>
+                    <div style="font-weight:700;font-size:0.9rem;">SPARE XPRESS LTD</div>
+                    <div style="font-size:0.72rem;opacity:0.85;">Typically replies in minutes</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:16px;">
+            <div style="background:#f0f9f0;border-radius:12px;padding:12px;margin-bottom:12px;border-left:3px solid #25d366;">
+                <div style="font-size:0.82rem;color:#333;line-height:1.5;">Hello! 👋 How can we help you today? Ask about parts, prices, or delivery.</div>
+                <div style="font-size:0.68rem;color:#999;margin-top:4px;">Just now</div>
+            </div>
+            <a href="https://wa.me/250792865114?text=Hello%20SPARE%20XPRESS!%20I%20need%20help%20with%20auto%20parts." target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;padding:12px;border-radius:12px;text-decoration:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;">
+                <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> Start Chat
+            </a>
+            <div style="text-align:center;margin-top:8px;">
+                <small style="color:#999;font-size:0.7rem;">Powered by WhatsApp Business</small>
+            </div>
+        </div>
+    </div>
+    <button onclick="document.getElementById('whatsapp-popup').style.display=document.getElementById('whatsapp-popup').style.display==='none'?'block':'none'" style="width:60px;height:60px;border-radius:50%;background:#25d366;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,0.4);display:flex;align-items:center;justify-content:center;transition:transform 0.2s;animation:pulse 2s infinite;">
+        <i class="fab fa-whatsapp" style="font-size:28px;color:#fff;"></i>
+    </button>
+</div>
+
+<!-- FAQ Floating Button -->
+<div id="faq-float" style="position:fixed;bottom:90px;right:20px;z-index:9979;">
+    <button onclick="document.getElementById('faq-popup').style.display=document.getElementById('faq-popup').style.display==='none'?'block':'none'" style="width:48px;height:48px;border-radius:50%;background:#2563eb;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,0.4);display:flex;align-items:center;justify-content:center;transition:transform 0.2s;">
+        <i class="fas fa-question" style="font-size:18px;color:#fff;"></i>
+    </button>
+</div>
+
+<!-- FAQ Popup -->
+<div id="faq-popup" style="display:none;position:fixed;bottom:148px;right:20px;width:300px;max-height:400px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);z-index:9980;overflow:hidden;animation:fadeInUp 0.3s ease;">
+    <div style="background:linear-gradient(135deg,#2563eb,#1a365d);padding:14px 18px;color:#fff;">
+        <div style="font-weight:700;font-size:0.95rem;">Frequently Asked Questions</div>
+        <div style="font-size:0.72rem;opacity:0.8;">Quick answers to common questions</div>
+    </div>
+    <div style="padding:12px;max-height:320px;overflow-y:auto;">
+        <details style="margin-bottom:8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            <summary style="padding:10px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:#f8fafc;">How do I order a part?</summary>
+            <div style="padding:0 12px 10px;font-size:0.78rem;color:#666;line-height:1.5;">Browse our shop for in-stock parts, or submit a special order request. We source from Japan, Dubai, Europe & China.</div>
+        </details>
+        <details style="margin-bottom:8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            <summary style="padding:10px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:#f8fafc;">What payment methods do you accept?</summary>
+            <div style="padding:0 12px 10px;font-size:0.78rem;color:#666;line-height:1.5;">Mobile Money (MoMo), Bank Transfer, Cash on delivery, and Card payments.</div>
+        </details>
+        <details style="margin-bottom:8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            <summary style="padding:10px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:#f8fafc;">How long does delivery take?</summary>
+            <div style="padding:0 12px 10px;font-size:0.78rem;color:#666;line-height:1.5;">In-stock parts: 24-48 hours. Special orders: 1-3 weeks depending on sourcing.</div>
+        </details>
+        <details style="margin-bottom:8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            <summary style="padding:10px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:#f8fafc;">Do you offer warranties?</summary>
+            <div style="padding:0 12px 10px;font-size:0.78rem;color:#666;line-height:1.5;">Yes! All genuine parts come with manufacturer warranty. Aftermarket parts have 30-day warranty.</div>
+        </details>
+        <details style="margin-bottom:8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            <summary style="padding:10px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:#f8fafc;">Can I track my order?</summary>
+            <div style="padding:0 12px 10px;font-size:0.78rem;color:#666;line-height:1.5;">Yes! Log into your account to view order status and tracking information.</div>
+        </details>
+        <a href="/pages/contact.php" style="display:block;text-align:center;padding:10px;background:#eff6ff;border-radius:10px;color:#2563eb;font-weight:600;font-size:0.82rem;text-decoration:none;margin-top:8px;">View All FAQs →</a>
+    </div>
+</div>
+
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 

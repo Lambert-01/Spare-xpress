@@ -24,15 +24,15 @@ while ($brand = $brands_query->fetch_assoc()) {
 ?>
 
 <!-- Page Header Start -->
-<div class="container-fluid page-header py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
-    <div class="container py-5">
+<div class="container-fluid page-header py-3 py-lg-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
+    <div class="container py-3 py-lg-5">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 text-white fw-bold mb-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <i class="fas fa-tags me-3"></i>Browse Our Brands
+                <h1 class="display-4 text-white fw-bold mb-2 mb-lg-4 wow fadeInUp" data-wow-delay="0.1s" style="font-size: clamp(1.4rem, 4vw, 2.5rem);">
+                    <i class="fas fa-tags me-2"></i>Browse Our Brands
                 </h1>
-                <p class="lead text-white-50 mb-4 wow fadeInUp" data-wow-delay="0.3s">
-                    Discover genuine auto parts from trusted brands. Find the perfect parts for your vehicle across all major manufacturers.
+                <p class="lead text-white-50 mb-3 mb-lg-4 wow fadeInUp" data-wow-delay="0.3s" style="font-size: clamp(0.85rem, 2vw, 1rem);">
+                    Discover genuine auto parts from trusted brands.
                 </p>
                 <div class="d-flex gap-3 flex-wrap wow fadeInUp" data-wow-delay="0.5s">
                     <div class="d-flex align-items-center text-white">
@@ -129,7 +129,7 @@ while ($brand = $brands_query->fetch_assoc()) {
         </div>
 
         <!-- Brands Statistics -->
-        <div class="row g-4 mb-5">
+        <div class="row g-2 g-lg-4 mb-4 mb-lg-5">
             <div class="col-xl-3 col-lg-6">
                 <div class="stats-card">
                     <div class="card-body text-center p-4">
@@ -192,7 +192,7 @@ while ($brand = $brands_query->fetch_assoc()) {
         </div>
 
         <!-- Brands Grid -->
-        <div class="row g-4" id="brandsContainer">
+        <div class="row g-3 g-lg-4" id="brandsContainer">
             <?php foreach ($brands as $brand): ?>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                     <div class="brand-card h-100" data-brand-name="<?php echo htmlspecialchars(strtolower($brand['brand_name'])); ?>">
@@ -1026,22 +1026,57 @@ while ($brand = $brands_query->fetch_assoc()) {
     }
 }
 
+@media (max-width: 767px) {
+    .page-header .row { text-align: center; }
+    .page-header .d-flex.gap-3 { justify-content: center; flex-wrap: wrap; gap: 0.75rem !important; }
+    .page-header .d-flex.align-items-center { flex-direction: column; text-align: center; }
+    .page-header .bg-white.bg-opacity-20 { display: none; }
+    .stats-card .card-body { padding: 1rem !important; }
+    .stats-card .card-value { font-size: 1.5rem !important; }
+    .stats-card .card-title { font-size: 0.75rem !important; }
+    .stats-card .card-icon { width: 40px; height: 40px; font-size: 1rem; }
+    .brand-logo-container { width: 56px; height: 56px; }
+    .brand-initial { font-size: 20px; }
+    .brand-text { font-size: 8px; }
+    .card-title { font-size: 0.88rem !important; }
+    .stat-number { font-size: 0.85rem !important; }
+    .stat-label { font-size: 0.68rem !important; }
+    .card-body .row.g-2 { gap: 0.25rem; }
+    .card-body .col-4 { padding: 0; }
+    .stat-item { padding: 0.35rem; }
+    .card-footer .btn { font-size: 0.78rem; padding: 0.4rem; }
+    .brand-card .card { border-radius: 10px !important; }
+    .brand-card .card-header { padding: 1rem 0.75rem !important; }
+    .brand-card .card-footer { padding: 0.75rem !important; }
+    .category-card-enhanced { padding: 1.25rem 1rem !important; }
+    .category-card-enhanced .fa-3x { font-size: 2rem !important; }
+    #brandSearchInput, #brandSortSelect { font-size: 0.88rem; padding: 0.5rem; }
+}
+
 @media (max-width: 576px) {
     .brand-logo-container {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
 
     .brand-logo-container i {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .card-title {
-        font-size: 1rem;
+        font-size: 0.85rem !important;
     }
 
     .stat-number {
-        font-size: 0.9rem;
+        font-size: 0.82rem !important;
+    }
+
+    .stat-item {
+        padding: 0.3rem;
+    }
+
+    .card-body p {
+        font-size: 0.75rem;
     }
 }
 </style>
