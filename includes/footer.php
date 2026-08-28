@@ -96,5 +96,64 @@
 
 <!-- Template Javascript -->
 <script src="/js/main.js"></script>
+
+<!-- Visitor Tracking -->
+<script>
+(function() {
+    // Generate or retrieve session ID
+    function getSessionId() {
+        let sid = localStorage.getItem('spx_visitor_sid');
+        if (!sid) {
+            sid = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 12);
+            localStorage.setItem('spx_visitor_sid', sid);
+        }
+        return sid;
+    }
+
+    // Detect device type
+    function getDeviceType() {
+        const w = window.innerWidth;
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return 'mobile';
+        if (/Tablet|iPad/i.test(navigator.userAgent)) return 'tablet';
+        if (w <= 768) return 'mobile';
+        if (w <= 1024) return 'tablet';
+        return 'desktop';
+    }
+
+    // Send tracking data
+    function trackVisit() {
+        const data = {
+            session_id: getSessionId(),
+            page_url: window.location.pathname + window.location.search,
+            screen_width: window.screen.width,
+            screen_height: window.screen.height,
+            language: navigator.language || ''
+        };
+
+        fetch('/api/track_visitor.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            keepalive: true
+        }).catch(() => {});
+    }
+
+    // Track on page load
+    trackVisit();
+
+    // Track time spent on page
+    let startTime = Date.now();
+    window.addEventListener('beforeunload', function() {
+        const duration = Math.round((Date.now() - startTime) / 1000);
+        if (duration > 2) {
+            navigator.sendBeacon('/api/track_visitor.php', JSON.stringify({
+                session_id: getSessionId(),
+                page_url: window.location.pathname + window.location.search,
+                duration: duration
+            }));
+        }
+    });
+})();
+</script>
 </body>
 </html>
