@@ -1,8 +1,17 @@
 <?php
 $page_title = 'Shop Automotive Parts - SPARE XPRESS LTD';
+$page_description = 'Browse our complete catalog of genuine auto parts in Rwanda. Filter by brand, model, year & category. Toyota, Honda, BMW, Mercedes parts available. Fast delivery across Rwanda.';
+$page_keywords = 'buy auto parts online Rwanda, shop spare parts, car parts catalog, vehicle parts store, Toyota parts, Honda parts, BMW parts, engine parts, brake pads, oil filters';
+$page_canonical = '/pages/shop.php';
 include '../includes/header.php';
 include '../includes/navigation.php';
 include '../includes/toast_notifications.php';
+
+// Breadcrumb Schema
+spx_jsonld_breadcrumbs([
+    ['name' => 'Home', 'url' => '/'],
+    ['name' => 'Shop Auto Parts', 'url' => '/pages/shop.php'],
+]);
 ?>
 
 <!-- Page Header -->

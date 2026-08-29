@@ -1,10 +1,12 @@
 <?php
-$page_title = 'Browse Models - SPARE XPRESS LTD';
-include '../includes/header.php';
-include '../includes/navigation.php';
-
-// Get brand parameter
+// Get brand parameter first (needed for SEO tags)
 $brand_slug = isset($_GET['brand']) ? trim($_GET['brand']) : '';
+
+// SEO defaults (in case brand query fails)
+$page_title = 'Browse Models - SPARE XPRESS LTD';
+$page_description = 'Browse all vehicle models available at SPARE XPRESS LTD.';
+$page_keywords = 'auto parts Rwanda, vehicle models';
+$page_canonical = '/pages/models.php?brand=' . urlencode($brand_slug ?? '');
 
 if (empty($brand_slug)) {
     header('Location: brands.php');
@@ -48,72 +50,56 @@ $models = [];
 while ($model = $models_result->fetch_assoc()) {
     $models[] = $model;
 }
+
+// Update SEO with brand info after it's available
+$page_title = htmlspecialchars($brand['brand_name']) . ' Models - Browse Auto Parts | SPARE XPRESS LTD';
+$page_description = 'Browse all ' . htmlspecialchars($brand['brand_name']) . ' vehicle models available at SPARE XPRESS LTD. Find compatible auto parts for your specific vehicle model in Rwanda.';
+$page_keywords = $brand['brand_name'] . ' models Rwanda, ' . $brand['brand_name'] . ' parts, auto parts Rwanda';
+$page_canonical = '/pages/models.php?brand=' . urlencode($brand_slug);
+include '../includes/header.php';
+include '../includes/navigation.php';
 ?>
 
 <!-- Page Header Start -->
-<div class="container-fluid page-header py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
-    <div class="container py-5">
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+    <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 text-white fw-bold mb-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <i class="fas fa-car me-3"></i><?php echo htmlspecialchars($brand['brand_name']); ?> Models
+                <h1 class="fw-bold mb-2" style="color:#fff; font-size:clamp(1.3rem,4vw,2rem);">
+                    <?php echo htmlspecialchars($brand['brand_name']); ?> Models
                 </h1>
-                <p class="lead text-white-50 mb-4 wow fadeInUp" data-wow-delay="0.3s">
-                    Browse all available models for <?php echo htmlspecialchars($brand['brand_name']); ?>. Find compatible parts for your specific vehicle model.
+                <p class="mb-3" style="color:rgba(255,255,255,0.85); font-size:clamp(0.82rem,2vw,0.95rem); max-width:550px;">
+                    Browse all available models. Find compatible parts for your specific vehicle.
                 </p>
-                <div class="d-flex gap-3 flex-wrap wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="d-flex align-items-center text-white">
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-car-side fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold"><?php echo count($models); ?> Models Available</h6>
-                            <small class="text-white-50">Complete Range</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center text-white">
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-boxes fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold">
-                                <?php
-                                $total_products = array_sum(array_column($models, 'active_product_count'));
-                                echo number_format($total_products);
-                                ?> Parts
-                            </h6>
-                            <small class="text-white-50">In Stock</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center text-white">
-                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="fas fa-tools fa-lg text-white"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 fw-bold">Expert Support</h6>
-                            <small class="text-white-50">Professional Advice</small>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <!-- Stats Row -->
+        <div class="row g-2 g-lg-3">
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-car me-1"></i> <?php echo count($models); ?> Models</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">Complete Range</div>
                 </div>
             </div>
-            <div class="col-lg-4 text-center wow fadeInUp" data-wow-delay="0.7s">
-                <div class="position-relative">
-                    <?php if ($brand['logo_image']): ?>
-                        <img src="<?php echo htmlspecialchars($brand['logo_image']); ?>" alt="<?php echo htmlspecialchars($brand['brand_name']); ?>"
-                             class="img-fluid rounded shadow-lg" style="max-width: 200px; background: white; padding: 20px;">
-                    <?php else: ?>
-                        <div class="bg-white rounded shadow-lg d-inline-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
-                            <i class="bi bi-tag text-primary fs-1"></i>
-                        </div>
-                    <?php endif; ?>
-                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-r from-primary to-secondary rounded opacity-25"></div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-box-open me-1"></i> <?php $total_products = array_sum(array_column($models, 'active_product_count')); echo number_format($total_products); ?> Parts</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">In Stock</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-shield-alt me-1"></i> Genuine Parts</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">OEM & Aftermarket</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="text-center p-2 rounded" style="background:rgba(255,255,255,0.12);">
+                    <div style="color:#fff; font-weight:700; font-size:clamp(0.9rem,2vw,1.1rem);"><i class="fas fa-truck me-1"></i> Fast Delivery</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.72rem;">24-72 Hours</div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Background Pattern -->
-    <div class="position-absolute top-0 end-0 opacity-10" style="font-size: 200px;">
-        <i class="fas fa-cogs text-white"></i>
     </div>
 </div>
 <!-- Page Header End -->

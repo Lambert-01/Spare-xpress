@@ -1,7 +1,24 @@
 <?php
 $page_title = 'Home';
+$page_canonical = '/';
 include 'includes/header.php';
 include 'includes/navigation.php';
+
+// FAQ Schema
+$faqs = [
+    ['question' => 'Where can I buy genuine auto parts in Rwanda?', 'answer' => 'SPARE XPRESS LTD is located in Kagarama, Kicukiro, Kigali. We stock genuine OEM and aftermarket parts for 30+ automotive brands including Toyota, Honda, BMW, Mercedes-Benz, Hyundai, Kia, Nissan, and more. Visit us or order online with delivery across Rwanda.'],
+    ['question' => 'What car brands do you have parts for?', 'answer' => 'We stock parts for over 30 automotive brands including Toyota, Honda, BMW, Mercedes-Benz, Hyundai, Kia, Nissan, Volkswagen, Subaru, Mazda, Suzuki, Lexus, Audi, Chevrolet, Ford, Mitsubishi, and many more. We also source special-order parts from Japan, Dubai, Europe, and China.'],
+    ['question' => 'Do you offer delivery across Rwanda?', 'answer' => 'Yes! We offer fast delivery across Rwanda, typically within 24-72 hours for in-stock parts. Special orders from international suppliers take 1-3 weeks. Contact us via WhatsApp at +250 792 865 114 for delivery inquiries.'],
+    ['question' => 'How do I order a part that is not in stock?', 'answer' => 'Submit a Special Order Request on our website. Our team will source the part from our trusted suppliers in Japan, Dubai, Europe, or China. You will receive a quote within 24 hours, and a 50% deposit is required to confirm the order.'],
+    ['question' => 'What payment methods do you accept?', 'answer' => 'We accept Mobile Money (MoMo), Bank Transfer, Cash on delivery, and Card payments. For special orders, a 50% deposit is required to confirm, with the remaining 50% payable on delivery.'],
+    ['question' => 'Do you offer warranties on auto parts?', 'answer' => 'Yes! All genuine OEM parts come with manufacturer warranty. Aftermarket parts have a 30-day warranty. We stand behind the quality of every part we sell.'],
+];
+spx_jsonld_faq($faqs);
+
+// Breadcrumb Schema
+spx_jsonld_breadcrumbs([
+    ['name' => 'Home', 'url' => '/'],
+]);
 ?>
 
 <!-- ===================== HERO ===================== -->

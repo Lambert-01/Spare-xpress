@@ -1,5 +1,8 @@
 <?php
-$page_title = 'Order Spare Parts On Demand - SPARE XPRESS LTD';
+$page_title = 'Request Auto Parts | Special Order Vehicle Spare Parts - SPARE XPRESS Rwanda';
+$page_description = "Can't find a part? Submit a special order request at SPARE XPRESS LTD. We source from Japan, Dubai, Europe & China. Get a quote within 24 hours. Genuine parts guaranteed.";
+$page_keywords = 'order auto parts Rwanda, special order car parts, request spare parts, import auto parts Rwanda';
+$page_canonical = '/pages/order_request.php';
 include '../includes/header.php';
 include '../includes/navigation.php';
 

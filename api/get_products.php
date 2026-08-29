@@ -1,15 +1,17 @@
 <?php
 // API endpoint to get products with filtering, sorting, and pagination
 // SPARE XPRESS LTD - Dynamic Shop API
+
+// CRITICAL: Start output buffer BEFORE any includes to prevent HTML in JSON
+ob_start();
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 ini_set('display_errors', 0);
 
 include_once '../includes/config.php';
 require_once __DIR__ . '/../includes/cloudinary.php';
 
-// Prevent any HTML output for API responses
-ob_clean();
-
+// Clear any accidental HTML output and switch to JSON mode
+ob_end_clean();
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -298,4 +300,3 @@ try {
 }
 
 $conn->close();
-?>

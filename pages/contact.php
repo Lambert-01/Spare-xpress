@@ -1,5 +1,8 @@
 <?php
-$page_title = 'Contact Us';
+$page_title = 'Contact Us | SPARE XPRESS LTD - Auto Parts Store in Kigali, Rwanda';
+$page_description = 'Contact SPARE XPRESS LTD for genuine auto parts in Rwanda. Visit us at Kagarama, Kicukiro, Kigali. Call +250 792 865 114 or WhatsApp us. Open Mon-Sat 8AM-6PM.';
+$page_keywords = 'contact spare xpress, auto parts Kigali, car parts shop Rwanda, spare parts store Kigali, automotive shop Kicukiro';
+$page_canonical = '/pages/contact.php';
 include '../includes/header.php';
 include '../includes/navigation.php';
 ?>

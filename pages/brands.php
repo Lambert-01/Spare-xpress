@@ -1,7 +1,16 @@
 <?php
 $page_title = 'Browse Brands - SPARE XPRESS LTD';
+$page_description = 'Find genuine auto parts by brand at SPARE XPRESS LTD. We stock parts for 30+ automotive brands including Toyota, Honda, BMW, Mercedes-Benz, Hyundai, Kia, Nissan & more. All brands available in Rwanda.';
+$page_keywords = 'Toyota parts Rwanda, Honda parts, BMW parts, Mercedes parts, Hyundai parts, Kia parts, Nissan parts, Volkswagen parts, Subaru parts, automotive brands Rwanda';
+$page_canonical = '/pages/brands.php';
 include '../includes/header.php';
 include '../includes/navigation.php';
+
+// Breadcrumb Schema
+spx_jsonld_breadcrumbs([
+    ['name' => 'Home', 'url' => '/'],
+    ['name' => 'Brands', 'url' => '/pages/brands.php'],
+]);
 
 // Get all brands with product counts
 $brands_query = $conn->query("

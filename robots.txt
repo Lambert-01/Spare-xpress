@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════
+# SPARE XPRESS LTD - robots.txt
+# Auto Parts Store in Rwanda
+# ═══════════════════════════════════════════════════════
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /vendor/
+Disallow: /includes/
+Disallow: /config/
+Disallow: /sql/
+Disallow: /css/
+Disallow: /js/
+Disallow: /lib/
+Disallow: /uploads/brands/
+Disallow: /pages/process_checkout.php
+Disallow: /pages/google_callback.php
+Disallow: /pages/export.php
+Disallow: /pages/logout.php
+Disallow: /pages/reset_password.php
+Disallow: /pages/password_reset.php
+
+# Sitemap
+Sitemap: https://sparexpressltd.com/sitemap.xml
+
+# Crawl-delay for polite bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+# Allow Googlebot full access
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Allow Bingbot
+User-agent: bingbot
+Allow: /
+Crawl-delay: 2

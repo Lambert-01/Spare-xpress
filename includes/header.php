@@ -1,29 +1,42 @@
 <?php include_once 'config.php'; ?>
+<?php include_once __DIR__ . '/seo.php'; ?>
+
+<?php
+// Get SEO data for current page
+$seo_page = spx_get_seo_page_key();
+$seo = spx_get_seo_data($seo_page);
+// Allow page-specific overrides via $page_title, $page_description, etc.
+if (isset($page_title) && $page_title !== 'Home') {
+    $seo['title'] = $page_title . ' - SPARE XPRESS LTD';
+}
+if (isset($page_description)) {
+    $seo['description'] = $page_description;
+}
+if (isset($page_keywords)) {
+    $seo['keywords'] = $page_keywords;
+}
+if (isset($page_image)) {
+    $seo['image'] = $page_image;
+}
+if (isset($page_canonical)) {
+    $seo['canonical'] = $page_canonical;
+}
+?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 
 <head>
     <meta charset="utf-8">
-    <title><?php echo isset($page_title) ? $page_title . ' - ' . SITE_NAME : SITE_NAME; ?></title>
+    <title><?php echo htmlspecialchars($seo['title'], ENT_QUOTES, 'UTF-8'); ?></title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- SEO Keywords -->
-    <meta name="keywords" content="auto parts Rwanda, vehicle spare parts, car accessories, motorcycle parts, genuine parts, automotive store Kigali, car spares, vehicle maintenance parts, auto shop Rwanda, engine parts, brake pads, filters, vehicle tools, auto repair supplies">
-
-    <!-- SEO Description -->
-    <meta name="description" content="SPARE XPRESS LTD is your trusted source for genuine vehicle spare parts in Rwanda. Buy local-stock parts directly, or request today's price for special-order parts sourced through our sales team.">
-
-    <!-- Open Graph for Social Media -->
-    <meta property="og:title" content="SPARE XPRESS LTD - Genuine Vehicle Spare Parts in Rwanda">
-    <meta property="og:description" content="Buy in-stock vehicle parts directly or request today's price for special-order spare parts. Reliable service, clear quotes, and delivery support across Rwanda.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="/img/logo/logox.jpg">
-    <meta property="og:url" content="<?php echo SITE_URL; ?>">
+    <?php spx_render_meta_tags($seo); ?>
+    <?php spx_preload_hints(); ?>
 
     <!-- Favicon -->
-    <link rel="icon" href="/img/logo/icon.jpg">
+    <link rel="icon" type="image/jpeg" href="/img/logo/icon.jpg">
+    <link rel="apple-touch-icon" href="/img/logo/icon.jpg">
+    <link rel="shortcut icon" href="/img/logo/icon.jpg">
 
     <!-- Google Web Fonts - Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +65,15 @@
 
     <!-- Mobile Responsive -->
     <link href="/css/mobile.css" rel="stylesheet">
+
+    <?php
+    // Structured Data - Website SearchAction (on all pages)
+    spx_jsonld_website();
+    // Structured Data - LocalBusiness (on homepage only)
+    if ($seo_page === 'home') {
+        spx_jsonld_local_business();
+    }
+    ?>
 </head>
 
 <body>
