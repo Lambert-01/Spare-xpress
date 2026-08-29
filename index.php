@@ -42,9 +42,8 @@ spx_jsonld_breadcrumbs([
             </div>
             <div class="col-lg-6 d-none d-lg-block text-center">
                 <div class="spx-hero-card-wrap">
-                    <img src="img/logo/logox.jpg" alt="SPARE XPRESS" class="spx-hero-img">
-                    <div class="spx-hero-float spx-hero-float-1"><i class="fas fa-check-circle text-success me-1"></i>Verified Quality</div>
-                    <div class="spx-hero-float spx-hero-float-2"><i class="fas fa-globe text-primary me-1"></i>Global Sourcing</div>
+
+
                 </div>
             </div>
         </div>

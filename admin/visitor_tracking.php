@@ -104,9 +104,7 @@ if ($r) {
 }
 
 // Online now (last 5 minutes)
-$online_now = countRowsWhere('visitor_tracking', "updated_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
-
-// Peak hour
+$online_now = countRowsWhere('visitor_tracking', "updated_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)");// Peak hour
 $peak_hour = 'N/A';
 $r = $conn->query("SELECT HOUR(created_at) as h, COUNT(*) as cnt FROM visitor_tracking 
                     WHERE created_at >= DATE_SUB(NOW(), INTERVAL {$days} DAY)
@@ -115,7 +113,61 @@ if ($r && $r->num_rows > 0) {
     $peak = $r->fetch_assoc();
     $peak_hour = date('g A', strtotime($peak['h'] . ':00:00'));
 }
-?>
+
+// Session Navigation Paths — show how visitors navigate through the site
+$session_paths = [];
+$r = $conn->query("SELECT session_id, page_url, browser, os, device_type, ip_address, created_at
+                    FROM visitor_tracking
+                    WHERE created_at >= DATE_SUB(NOW(), INTERVAL {$days} DAY)
+                    ORDER BY session_id, created_at ASC");
+if ($r) {
+    $temp = [];
+    while ($row = $r->fetch_assoc()) {
+        $sid = $row['session_id'];
+        if (!isset($temp[$sid])) {
+            $temp[$sid] = [
+                'session_id' => $sid,
+                'browser' => $row['browser'],
+                'os' => $row['os'],
+                'device_type' => $row['device_type'],
+                'ip_address' => $row['ip_address'],
+                'pages' => [],
+                'started' => $row['created_at'],
+            ];
+        }
+        $temp[$sid]['pages'][] = $row['page_url'];
+        $temp[$sid]['ended'] = $row['created_at'];
+    }
+    // Sort by most recently ended first, show sessions with 2+ pages (actual navigation)
+    usort($temp, function($a, $b) {
+        return strtotime($b['ended'] ?? $b['started']) - strtotime($a['ended'] ?? $a['started']);
+    });
+    foreach ($temp as $session) {
+        if (count($session['pages']) >= 1) {
+            $session_paths[] = $session;
+        }
+    }
+    // Limit to 30 most recent sessions
+    $session_paths = array_slice($session_paths, 0, 30);
+}
+
+// Page-to-page flow (what pages lead to what)
+$page_flows = [];
+$r = $conn->query("SELECT vt1.page_url as from_page, vt2.page_url as to_page, COUNT(*) as flow_count
+                    FROM visitor_tracking vt1
+                    INNER JOIN visitor_tracking vt2 ON vt1.session_id = vt2.session_id
+                        AND vt2.created_at > vt1.created_at
+                        AND vt2.created_at <= DATE_ADD(vt1.created_at, INTERVAL 5 MINUTE)
+                    WHERE vt1.created_at >= DATE_SUB(NOW(), INTERVAL {$days} DAY)
+                    GROUP BY vt1.page_url, vt2.page_url
+                    HAVING flow_count >= 2
+                    ORDER BY flow_count DESC
+                    LIMIT 15");
+if ($r) {
+    while ($row = $r->fetch_assoc()) {
+        $page_flows[] = $row;
+    }
+}?>
 
 <style>
 .visitor-stat-card {
@@ -470,6 +522,104 @@ if ($r && $r->num_rows > 0) {
             <?php endforeach; ?>
             <?php if (empty($operating_systems)): ?>
                 <p class="text-muted text-center" style="font-size:0.82rem;">No data yet</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Session Navigation Paths -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-8">
+        <div class="chart-card">
+            <div class="p-4 pb-2">
+                <h6 class="fw-bold"><i class="bi bi-signpost-split me-2 text-primary"></i>Visitor Navigation Paths</h6>
+                <p class="text-muted" style="font-size:0.78rem;">Shows the pages each visitor browsed through, in order</p>
+            </div>
+            <div class="px-4 pb-3" style="max-height:450px;overflow-y:auto;">
+                <?php foreach ($session_paths as $sp): ?>
+                    <?php
+                    $device_icons = ['desktop' => 'bi-pc-display', 'mobile' => 'bi-phone', 'tablet' => 'bi-tablet', 'unknown' => 'bi-question-circle'];
+                    $device_colors = ['desktop' => 'text-primary', 'mobile' => 'text-success', 'tablet' => 'text-warning', 'unknown' => 'text-secondary'];
+                    $d_icon = $device_icons[$sp['device_type']] ?? 'bi-question-circle';
+                    $d_color = $device_colors[$sp['device_type']] ?? 'text-secondary';
+                    $d_label = ucfirst($sp['device_type']);
+                    $diff = strtotime($sp['ended'] ?? $sp['started']) - strtotime($sp['started']);
+                    $duration = $diff > 0 ? $diff . 's' : '';
+                    $page_count = count($sp['pages']);
+                    ?>
+                    <div class="mb-3 p-3 rounded" style="background:var(--admin-light);border-left:3px solid #3b82f6;">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi <?= $d_icon ?> <?= $d_color ?>"></i>
+                                <span class="fw-semibold" style="font-size:0.8rem;">
+                                    <?= htmlspecialchars($sp['browser'] ?? 'Unknown') ?> &middot; <?= htmlspecialchars($sp['os'] ?? 'Unknown') ?>
+                                </span>
+                                <span style="font-size:0.72rem;color:var(--text-muted);"><?= $d_label ?></span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span style="font-size:0.72rem;color:var(--text-muted);" title="<?= $sp['ip_address'] ?>">
+                                    <i class="bi bi-geo-alt me-1"></i><?= $sp['ip_address'] ?>
+                                </span>
+                                <span style="font-size:0.72rem;color:var(--text-muted);">
+                                    <?= $page_count ?> page<?= $page_count !== 1 ? 's' : '' ?><?= $duration ? ' &middot; ' . $duration : '' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap gap-1">
+                            <?php foreach ($sp['pages'] as $pi => $page): ?>
+                                <?php if ($pi > 0): ?>
+                                    <i class="bi bi-chevron-right" style="font-size:0.6rem;color:#94a3b8;"></i>
+                                <?php endif; ?>
+                                <span style="font-size:0.72rem;padding:2px 8px;border-radius:4px;<?php if ($pi === count($sp['pages']) - 1): ?>background:#3b82f6;color:#fff;font-weight:600;<?php else: ?>background:#e9ecef;color:#495057;<?php endif; ?>" title="<?= htmlspecialchars($page) ?>">
+                                    <?= htmlspecialchars(strlen($page) > 30 ? substr($page, 0, 27) . '...' : $page) ?>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                        <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">
+                            <?= date('M d, g:i A', strtotime($sp['started'])) ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                <?php if (empty($session_paths)): ?>
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-signpost-split" style="font-size:2rem;"></i>
+                        <p class="mt-2">No navigation paths recorded yet</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page-to-Page Flow -->
+    <div class="col-lg-4">
+        <div class="chart-card p-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Page Flow</h6>
+            <p class="text-muted mb-3" style="font-size:0.75rem;">Most common navigation paths between pages</p>
+            <?php foreach ($page_flows as $pf): ?>
+                <?php
+                $short_from = strlen($pf['from_page']) > 20 ? substr($pf['from_page'], 0, 17) . '...' : $pf['from_page'];
+                $short_to = strlen($pf['to_page']) > 20 ? substr($pf['to_page'], 0, 17) . '...' : $pf['to_page'];
+                $max_flow = max(1, $page_flows[0]['flow_count'] ?? 1);
+                $flow_pct = round(($pf['flow_count'] / $max_flow) * 100);
+                ?>
+                <div class="mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-1" style="font-size:0.78rem;">
+                        <span class="fw-semibold" style="color:#3b82f6;" title="<?= htmlspecialchars($pf['from_page']) ?>"><?= htmlspecialchars($short_from) ?></span>
+                        <i class="bi bi-arrow-right" style="font-size:0.7rem;color:#94a3b8;"></i>
+                        <span class="fw-semibold" style="color:#10b981;" title="<?= htmlspecialchars($pf['to_page']) ?>"><?= htmlspecialchars($short_to) ?></span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="mini-bar flex-fill">
+                            <div class="mini-bar-fill" style="width:<?= $flow_pct ?>%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);"></div>
+                        </div>
+                        <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;white-space:nowrap;">
+                            <?= $pf['flow_count'] ?>x
+                        </span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <?php if (empty($page_flows)): ?>
+                <p class="text-muted text-center" style="font-size:0.82rem;">No flow data yet</p>
             <?php endif; ?>
         </div>
     </div>

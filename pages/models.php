@@ -123,85 +123,20 @@ include '../includes/navigation.php';
     </ol>
 </nav>
 
-<!-- Brand Info Section -->
-<div class="container-fluid py-4 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="d-flex align-items-center mb-3">
-                    <?php
-                    // Brand logo display logic (same as brands.php)
-                    $brandName = $brand['brand_name'];
-                    $brandSlug = strtolower(str_replace([' ', '-'], '', $brand['brand_name']));
-                    
-                    // Mapping for uploaded brand logos with specific filenames
-                    $uploadedLogos = [
-                        'Mercedes-Benz' => 'mercedes-benz-9.svg',
-                        'Renault' => 'renault-2.svg',
-                        'Changan' => 'changan-automobile-logo-1.svg',
-                        'BYD' => 'byd-1.svg',
-                        'Geely' => 'geely-logo-2.svg',
-                        'Chery' => 'chery-3.svg',
-                        'Citroën' => 'citroen-racing-2009-2016-logo.svg',
-                        'BAIC' => 'BAIC.png',
-                        'Dongfeng' => 'DONGFENG.png',
-                        'Great Wall' => 'great-wall-seeklogo.png',
-                        'JAC' => 'jac-motors-seeklogo.png'
-                    ];
-                    
-                    // Try uploaded logos first
-                    $logoPath = null;
-                    if (isset($uploadedLogos[$brand['brand_name']])) {
-                        $logoPath = "/uploads/brands/" . $uploadedLogos[$brand['brand_name']];
-                    }
-                    
-                    if ($logoPath):
-                    ?>
-                        <img src="<?php echo $logoPath; ?>"
-                             alt="<?php echo htmlspecialchars($brand['brand_name']); ?> logo"
-                             class="me-3 rounded" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px;">
-                    <?php else: ?>
-                            <div class="text-logo me-3" style="width: 60px; height: 60px; object-fit: contain; background: white; padding: 10px; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
-                                <span class="brand-initial" style="font-size: 18px; font-weight: bold; color: #007bff;"><?php echo strtoupper(substr($brand['brand_name'], 0, 1)); ?></span>
-                            </div>
-                    <?php endif; ?>
-                    <div>
-                        <h2 class="mb-1"><?php echo htmlspecialchars($brand['brand_name']); ?></h2>
-                        <?php if ($brand['country']): ?>
-                            <p class="text-muted mb-0">
-                                <i class="bi bi-geo-alt-fill me-1"></i><?php echo htmlspecialchars($brand['country']); ?>
-                                <?php if ($brand['founded_year']): ?>
-                                    • Founded <?php echo $brand['founded_year']; ?>
-                                <?php endif; ?>
-                            </p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php if ($brand['description']): ?>
-                    <p class="text-muted"><?php echo htmlspecialchars($brand['description']); ?></p>
-                <?php endif; ?>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="d-flex gap-2 justify-content-lg-end">
-                    <a href="shop.php?brand=<?php echo urlencode($brand['brand_name']); ?>" class="btn btn-primary">
-                        <i class="bi bi-box-seam-fill me-1"></i>View All Parts
-                    </a>
-                    <a href="brands.php" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-1"></i>Back to Brands
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Models Section Start -->
-<div class="container-fluid py-5 bg-white">
+<div class="container-fluid py-4 bg-white">
     <div class="container">
-        <div class="text-center mb-5">
-            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">Available Models</h4>
-            <h1 class="mb-0 display-5 wow fadeInUp" data-wow-delay="0.3s"><?php echo htmlspecialchars($brand['brand_name']); ?> Models</h1>
-            <p class="text-muted mt-2 wow fadeInUp" data-wow-delay="0.5s">Select your specific model to find compatible parts and accessories</p>
+        <div class="text-center mb-4">
+            <h2 class="fw-bold"><?php echo htmlspecialchars($brand['brand_name']); ?> Models</h2>
+            <p class="text-muted">Select your specific model to find compatible parts</p>
+            <div class="d-flex gap-2 justify-content-center mt-3">
+                <a href="shop.php?brand=<?php echo urlencode($brand['brand_name']); ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-box-open me-1"></i>View All Parts
+                </a>
+                <a href="brands.php" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Brands
+                </a>
+            </div>
         </div>
 
         <!-- Search and Filter Bar -->
