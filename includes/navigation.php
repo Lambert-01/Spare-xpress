@@ -278,14 +278,14 @@ function updateCartQuantity(productId, newQuantity) {
     .then(data => {
         if (data.success) {
             updateCartDisplay();
-            showToast('Cart updated successfully!', 'success');
+            showNavToast('Cart updated successfully!', 'success');
         } else {
-            showToast(data.message, 'error');
+            showNavToast(data.message, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showToast('Failed to update cart', 'error');
+        showNavToast('Failed to update cart', 'error');
     });
 }
 
@@ -302,18 +302,18 @@ function removeFromCart(productId) {
     .then(data => {
         if (data.success) {
             updateCartDisplay();
-            showToast('Item removed from cart!', 'success');
+            showNavToast('Item removed from cart!', 'success');
         } else {
-            showToast(data.message, 'error');
+            showNavToast(data.message, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showToast('Failed to remove item', 'error');
+        showNavToast('Failed to remove item', 'error');
     });
 }
 
-function showToast(message, type = 'info') {
+function showNavToast(message, type = 'info') {
     const toastHtml = `
         <div class="alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed"
              style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">

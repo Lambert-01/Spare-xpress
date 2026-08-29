@@ -1,4 +1,5 @@
 <?php include_once 'config.php'; ?>
+<?php include_once __DIR__ . '/brand_logos.php'; ?>
 <?php include_once __DIR__ . '/seo.php'; ?>
 
 <?php

@@ -21,6 +21,14 @@ $(document).ready(function() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const main = document.getElementById('mainContent');
+    if (!sidebar) return;
+
+    // Mobile: slide the off-canvas sidebar in/out
+    if (window.innerWidth < 768) {
+        sidebar.classList.toggle('show');
+        return;
+    }
+
     const isCollapsed = sidebar.classList.toggle('collapsed');
     main.classList.toggle('expanded', isCollapsed);
     localStorage.setItem('sidebar-collapsed', isCollapsed);

@@ -42,8 +42,26 @@ spx_jsonld_breadcrumbs([
             </div>
             <div class="col-lg-6 d-none d-lg-block text-center">
                 <div class="spx-hero-card-wrap">
-
-
+                    <div class="spx-hero-showcase">
+                        <div class="spx-showcase-head">
+                            <span class="spx-showcase-label"><i class="fas fa-car me-1"></i>30+ Vehicle Brands</span>
+                            <span class="spx-showcase-sub">One stop for all your spare parts</span>
+                        </div>
+                        <div class="spx-showcase-grid">
+                            <?php
+                            $hero_logos = ['toyota_logo.svg','honda_logo.svg','nissan_logo.svg','bmw_logo.svg','mercedes-benz_logo.png','hyundai_logo.svg','ford_logo.svg','mazda_logo.svg','kia_logo.svg','audi_logo.svg'];
+                            foreach ($hero_logos as $lg):
+                                $lg_path = 'uploads/brands/' . $lg;
+                            ?>
+                            <div class="spx-showcase-logo">
+                                <img src="<?php echo $lg_path; ?>" alt="brand logo" loading="lazy" onerror="this.style.visibility='hidden'">
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="spx-hero-float spx-hero-float-1"><i class="fas fa-shield-alt" style="color:#2563eb;margin-right:6px;"></i>100% Genuine</div>
+                    <div class="spx-hero-float spx-hero-float-2"><i class="fas fa-truck" style="color:#2563eb;margin-right:6px;"></i>24–72h Delivery</div>
+                    <div class="spx-hero-float spx-hero-float-3"><i class="fas fa-certificate" style="color:#16a34a;margin-right:6px;"></i>OEM Warranty</div>
                 </div>
             </div>
         </div>
@@ -84,11 +102,7 @@ spx_jsonld_breadcrumbs([
         </div>
         <div class="row g-3 justify-content-center">
             <?php foreach ($brands as $brand):
-                $logo = 'img/no-image.png';
-                if (!empty($brand['logo_image'])) {
-                    $clean = 'uploads/brands/' . basename(str_replace(['../../','../'], '', $brand['logo_image']));
-                    if (file_exists($clean)) $logo = $clean;
-                }
+                $logo = spx_brand_logo_url($brand['name'] ?? '', $brand['logo_image'] ?? null) ?: 'img/no-image.png';
             ?>
             <div class="col-4 col-sm-3 col-md-2">
                 <a href="pages/models.php?brand=<?php echo urlencode($brand['slug']); ?>" class="spx-brand-card">
@@ -269,23 +283,50 @@ spx_jsonld_breadcrumbs([
     transition: color .2s;
 }
 .spx-hero-link:hover { color: #fff; }
-.spx-hero-card-wrap { position: relative; display: inline-block; }
-.spx-hero-img {
-    width: 320px; height: 320px; object-fit: cover;
+.spx-hero-card-wrap { position: relative; display: inline-block; padding: .5rem 1rem; }
+.spx-hero-showcase {
+    width: 380px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(12px);
     border-radius: 1.5rem;
-    box-shadow: 0 24px 60px rgba(0,0,0,.35);
-    border: 4px solid rgba(255,255,255,.15);
+    padding: 1.5rem 1.5rem 1.75rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,.3);
 }
+.spx-showcase-head { text-align: left; margin-bottom: 1.25rem; }
+.spx-showcase-label {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.18); color: #fff;
+    padding: .25rem .75rem; border-radius: 999px;
+    font-size: .72rem; font-weight: 700;
+}
+.spx-showcase-sub { display: block; color: rgba(255,255,255,.85); font-size: .85rem; font-weight: 600; margin-top: .5rem; }
+.spx-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: .55rem;
+}
+.spx-showcase-logo {
+    background: #fff;
+    border-radius: .75rem;
+    height: 58px;
+    display: flex; align-items: center; justify-content: center;
+    padding: .5rem;
+    box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+.spx-showcase-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .spx-hero-float {
     position: absolute;
     background: rgba(255,255,255,.95);
     padding: .5rem 1rem; border-radius: 999px;
-    font-size: .8rem; font-weight: 600; color: #111827;
-    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    font-size: .78rem; font-weight: 600; color: #111827;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
     white-space: nowrap;
+    display: inline-flex; align-items: center;
 }
-.spx-hero-float-1 { top: 1.5rem; right: -1.5rem; }
-.spx-hero-float-2 { bottom: 2rem; left: -1.5rem; }
+.spx-hero-float-1 { top: -.6rem; right: -1.2rem; }
+.spx-hero-float-2 { bottom: 3.4rem; left: -1.6rem; }
+.spx-hero-float-3 { bottom: -.8rem; right: .8rem; }
 
 /* ---- TRUST BAR ---- */
 .spx-trust-bar {

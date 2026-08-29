@@ -196,13 +196,6 @@ spx_jsonld_breadcrumbs([
                     <div id="recentlyViewedContainer" class="d-flex gap-3 overflow-auto pb-2" style="scrollbar-width: thin;"></div>
                 </div>
 
-                <!-- Results Info -->
-                <div class="mb-4">
-                    <div id="resultsInfo" class="results-info text-dark fw-semibold">
-                        <i class="fas fa-spinner fa-spin me-2"></i>Loading products...
-                    </div>
-                </div>
-
                 <!-- Products Grid -->
                 <div id="productsContainer" class="row g-4">
                     <!-- Products will be loaded here dynamically -->
@@ -1165,8 +1158,9 @@ spx_jsonld_breadcrumbs([
     .glass-card small { font-size: 0.65rem !important; }
 }
 @media (max-width: 575px) {
-    #productsContainer > div { width: 100% !important; }
-    .product-card .product-image-container { height: 150px !important; }
+    #productsContainer > div { flex: 0 0 auto; width: 50% !important; padding: 0 0.25rem; }
+    .product-card .product-image-container { height: 130px !important; }
+    .product-card .product-actions { flex-direction: column; }
 }
 
 </style>
@@ -2527,7 +2521,10 @@ function showToastMessage(message, title = 'Notice', type = 'info') {
     `;
 
     container.appendChild(toastEl);
-    const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3500 });
+    // getOrCreateInstance requires Bootstrap 5.2+; use constructor for full 5.x compatibility
+    const toast = (typeof bootstrap.Toast.getOrCreateInstance === 'function')
+        ? bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3500 })
+        : new bootstrap.Toast(toastEl, { delay: 3500 });
     toast.show();
 
     toastEl.addEventListener('hidden.bs.toast', () => {

@@ -564,6 +564,27 @@ for ($i = 6; $i >= 0; $i--) {
     font-family: 'Courier New', monospace;
     font-weight: bold;
 }
+
+/* Mobile: stack dashboard header so it never overflows */
+@media (max-width: 767px) {
+    .admin-page > .d-flex.justify-content-between.mb-4 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+        width: 100%;
+    }
+    .admin-page > .d-flex.justify-content-between.mb-4 .text-end {
+        width: 100%;
+        text-align: left !important;
+    }
+    .admin-page > .d-flex.justify-content-between.mb-4 .text-end .d-flex {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .kpi-card .card-value {
+        font-size: 1.6rem;
+    }
+}
 </style>
 
 <script>

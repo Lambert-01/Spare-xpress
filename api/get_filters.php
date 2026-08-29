@@ -14,16 +14,17 @@ try {
     $filters = [];
 
     // Get brands
-    $brand_sql = "SELECT DISTINCT b.brand_name, b.logo_image, COUNT(p.id) as product_count
+    $brand_sql = "SELECT DISTINCT b.brand_name, b.slug, b.logo_image, COUNT(p.id) as product_count
                   FROM vehicle_brands_enhanced b
                   LEFT JOIN products_enhanced p ON b.id = p.brand_id
-                  GROUP BY b.id, b.brand_name, b.logo_image
+                  GROUP BY b.id, b.brand_name, b.slug, b.logo_image
                   ORDER BY b.brand_name";
     $brand_result = $conn->query($brand_sql);
     $brands = [];
     while ($row = $brand_result->fetch_assoc()) {
         $brands[] = [
             'name' => $row['brand_name'],
+            'slug' => $row['slug'],
             'icon' => $row['logo_image'],
             'count' => (int)$row['product_count']
         ];

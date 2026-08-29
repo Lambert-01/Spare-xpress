@@ -41,8 +41,12 @@ try {
     $brand_row = $brand_result->fetch_assoc();
     $brand_id = $brand_row['id'];
     
-    // Now get all models for this brand
-    $models_query = "SELECT model_name FROM vehicle_models_enhanced WHERE brand_id = ? AND is_active = 1 ORDER BY display_order, model_name";
+    // Now get all models for this brand that have products in stock
+    $models_query = "SELECT m.model_name
+                     FROM vehicle_models_enhanced m
+                     WHERE m.brand_id = ? AND m.is_active = 1
+                       AND EXISTS (SELECT 1 FROM products_enhanced p WHERE p.model_id = m.id)
+                     ORDER BY m.display_order, m.model_name";
     $models_stmt = $conn->prepare($models_query);
     $models_stmt->bind_param("i", $brand_id);
     $models_stmt->execute();
