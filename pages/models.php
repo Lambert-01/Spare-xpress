@@ -1,4 +1,7 @@
 <?php
+// Database connection needed for queries before header
+include_once __DIR__ . '/../includes/config.php';
+
 // Get brand parameter first (needed for SEO tags)
 $brand_slug = isset($_GET['brand']) ? trim($_GET['brand']) : '';
 

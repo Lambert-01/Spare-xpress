@@ -210,13 +210,12 @@ spx_jsonld_breadcrumbs([
 
                 <!-- Loading Spinner -->
                 <div id="loadingSpinner" class="text-center py-5" style="display: none;">
-                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="sr-only">Loading...</span>
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <div class="spinner-grow text-primary" style="width:0.6rem;height:0.6rem;"></div>
+                        <div class="spinner-grow text-primary" style="width:0.6rem;height:0.6rem;animation-delay:.15s;"></div>
+                        <div class="spinner-grow text-primary" style="width:0.6rem;height:0.6rem;animation-delay:.3s;"></div>
                     </div>
-                    <div class="mt-3">
-                        <h5 class="text-muted">Loading Products...</h5>
-                        <p class="text-muted small">Please wait while we fetch the best parts for you</p>
-                    </div>
+                    <p class="text-muted small mb-0">Fetching parts...</p>
                 </div>
 
                 <!-- No Results -->
@@ -1749,37 +1748,22 @@ function renderProducts(products) {
         }
 
         return `
-        <div class="col-lg-4 col-md-6">
-            <div class="product-card h-100" onclick="addToRecentlyViewed(${product.id})">
-                <div class="product-image-container position-relative">
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="product-card h-100 shadow-sm" onclick="addToRecentlyViewed(${product.id})" style="border-radius:12px;border:1px solid #e9ecef;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:pointer;">
+                <div class="product-image-container position-relative" style="height:180px;overflow:hidden;background:#f8f9fa;">
                     ${imageHtml}
-                    <div class="product-badges">
+                    <div class="product-badges" style="position:absolute;top:8px;left:8px;">
                         ${getProductBadges(product)}
-                        <span class="badge ${getStockBadgeClass(product.stock_status)} stock-badge">
+                        <span class="badge ${getStockBadgeClass(product.stock_status)} stock-badge" style="font-size:0.65rem;">
                             ${product.stock_status}
                         </span>
                     </div>
-                    <div class="product-overlay">
-                        <div class="quick-actions">
-                            <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); quickViewProduct(${product.id})" title="Quick View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); toggleWishlist(${product.id})" title="Add to Wishlist">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="btn btn-light btn-sm ${isInComparison(product.id) ? 'active' : ''}"
-                                    onclick="event.stopPropagation(); toggleComparison(${product.id})" title="Compare">
-                                <i class="fas fa-balance-scale"></i>
-                            </button>
-                        </div>
-                    </div>
                 </div>
-                <div class="product-info d-flex flex-column">
-                    <h6 class="product-title">${product.name}</h6>
-                    <div class="product-meta">
-                        ${product.brand ? `<span class="product-meta-item"><i class="fas fa-tag"></i>${product.brand}</span>` : ''}
-                        ${product.model ? `<span class="product-meta-item"><i class="fas fa-car"></i>${product.model}</span>` : ''}
-                        ${product.category ? `<span class="product-meta-item"><i class="fas fa-cogs"></i>${product.category}</span>` : ''}
+                <div class="product-info d-flex flex-column p-3">
+                    <h6 class="product-title" style="font-size:0.85rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${product.name}</h6>
+                    <div class="product-meta" style="font-size:0.72rem;">
+                        ${product.brand ? `<span style="color:#6c757d;"><i class="fas fa-tag" style="font-size:0.6rem;"></i> ${product.brand}</span>` : ''}
+                        ${product.model ? `<span style="color:#6c757d;"><i class="fas fa-car" style="font-size:0.6rem;"></i> ${product.model}</span>` : ''}
                     </div>
                     <div class="product-price">
                         ${product.stock_status === 'Special Order' ?
@@ -2255,6 +2239,9 @@ function addToCart(productId, productName, price) {
     formData.append('product_id', productId);
     formData.append('quantity', 1);
 
+    // Show loading toast
+    const loadingToast = showToastMessage(`${productName}...`, 'Adding to Cart', 'info');
+
     fetch('/api/add_to_cart.php', {
         method: 'POST',
         body: formData
@@ -2267,8 +2254,39 @@ function addToCart(productId, productName, price) {
                 updateCartDisplay();
             }
 
-            // Show success message
-            showToast('Success', `${productName} added to cart!`, 'success');
+            // Show success toast with View Cart button
+            let container = document.getElementById('spxToastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'spxToastContainer';
+                container.className = 'toast-container position-fixed end-0 p-3';
+                container.style.cssText = 'z-index:1080;top:80px;';
+                document.body.appendChild(container);
+            }
+            const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch]);
+            const toastEl = document.createElement('div');
+            toastEl.className = 'toast show border-0';
+            toastEl.style.cssText = 'max-width:340px;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.15);border-radius:12px;overflow:hidden;';
+            toastEl.innerHTML = `
+                <div style="display:flex;align-items:flex-start;padding:14px 16px;gap:10px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#d4edda;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-check" style="color:#28a745;font-size:0.85rem;"></i>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:700;font-size:0.85rem;color:#1a1a1a;">Added to Cart!</div>
+                        <div style="font-size:0.78rem;color:#6c757d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(productName)}</div>
+                        <div style="font-size:0.82rem;font-weight:600;color:#2563eb;margin-top:2px;">RWF ${Number(price).toLocaleString()}</div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <a href="/pages/cart.php" style="padding:5px 14px;border-radius:6px;background:#2563eb;color:#fff;font-size:0.75rem;font-weight:600;text-decoration:none;">View Cart</a>
+                            <button onclick="this.closest('.toast').remove()" style="padding:5px 14px;border-radius:6px;background:#f0f0f0;color:#333;font-size:0.75rem;font-weight:600;border:none;cursor:pointer;">Continue</button>
+                        </div>
+                    </div>
+                    <button onclick="this.closest('.toast').remove()" style="background:none;border:none;font-size:1rem;color:#999;cursor:pointer;padding:0;line-height:1;">&times;</button>
+                </div>
+            `;
+            container.appendChild(toastEl);
+            // Auto remove after 5 seconds
+            setTimeout(() => { toastEl.style.transition = 'opacity .3s'; toastEl.style.opacity = '0'; setTimeout(() => toastEl.remove(), 300); }, 5000);
         } else {
             showToast('Error', data.message, 'error');
         }
