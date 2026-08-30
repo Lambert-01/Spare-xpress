@@ -36,16 +36,16 @@ include_once 'config.php';
         </div>
 
         <!-- Main Header -->
-        <div class="py-3">
+        <div class="py-2">
             <div class="row align-items-center">
                 <!-- Logo -->
-                <div class="col-lg-3 col-md-4 col-6">
-                    <a href="/index.php" class="d-flex align-items-center text-decoration-none">
-                        <img src="/img/logo/logox.jpg" alt="<?php echo SITE_NAME; ?> Logo" class="me-3" style="height: 50px;">
-                        <div>
-                            <h5 class="mb-0 text-dark fw-bold"><?php echo SITE_NAME; ?></h5>
-                            <small class="text-muted">LTD</small>
-                        </div>
+                <div class="col-lg-3 col-md-4 col-4">
+                    <a href="/index.php" class="d-inline-flex align-items-center text-decoration-none">
+                        <img src="/img/logo/logox.jpg" alt="<?php echo SITE_NAME; ?> Logo" class="me-2" style="height: 40px; width: 40px; object-fit: cover; border-radius: 8px;">
+                        <span class="brand-slate fw-bold text-dark lh-1">
+                            SPARE XPRESS <span class="text-primary">LTD</span>
+                        </span>
+                      
                     </a>
                 </div>
 
@@ -60,7 +60,7 @@ include_once 'config.php';
                 </div>
 
                 <!-- Cart & Mobile Menu -->
-                <div class="col-lg-3 col-md-12 col-6 text-end">
+                <div class="col-lg-3 col-md-12 col-8 text-end">
                     <div class="d-flex align-items-center justify-content-end">
                         <!-- Cart Button -->
                         <button class="btn btn-outline-primary me-3 d-none d-lg-inline-flex align-items-center position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
