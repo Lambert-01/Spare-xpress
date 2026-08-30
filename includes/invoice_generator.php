@@ -453,8 +453,8 @@ class InvoicePDF extends TCPDF {
     // Page header
     public function Header() {
         // Logo
-        if (file_exists('../img/logo/logox.jpg')) {
-            $this->Image('../img/logo/logox.jpg', 15, 10, 25);
+        if (file_exists(__DIR__ . '/../img/logo/logox.jpg')) {
+            $this->Image(__DIR__ . '/../img/logo/logox.jpg', 15, 10, 25);
         }
 
         // Company Info
@@ -525,14 +525,14 @@ class InvoicePDF extends TCPDF {
 
         $customer_name = trim(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? ''));
         $this->Cell(0, 5, $customer_name ?: 'Walk-in Customer', 0, 1, '', 0);
-        if ($customer['customer_phone']) {
+        if (!empty($customer['customer_phone'])) {
             $this->Cell(0, 5, 'Phone: ' . $customer['customer_phone'], 0, 1, '', 0);
         }
-        if ($customer['customer_email']) {
+        if (!empty($customer['customer_email'])) {
             $this->Cell(0, 5, 'Email: ' . $customer['customer_email'], 0, 1, '', 0);
         }
-        if ($customer['customer_address'] || $customer['shipping_address']) {
-            $address = $customer['customer_address'] ?: $customer['shipping_address'];
+        $address = $customer['customer_address'] ?? ($customer['shipping_address'] ?? '');
+        if ($address) {
             $this->Cell(0, 5, $address, 0, 1, '', 0);
         }
 
