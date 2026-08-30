@@ -127,8 +127,8 @@ function generateOrderRequestPDF($order_request_id) {
     // Set default monospaced font
     $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-    // Set margins
-    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    // Set margins (top margin below the branded header band so body starts cleanly under it)
+    $pdf->SetMargins(PDF_MARGIN_LEFT, 40, PDF_MARGIN_RIGHT);
     $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
     $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
