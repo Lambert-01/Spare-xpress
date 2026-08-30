@@ -43,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
     <title>Admin Login - SPARE XPRESS LTD</title>
+    <link rel="icon" type="image/jpeg" href="/img/logo/icon.jpg">
+    <link rel="apple-touch-icon" href="/img/logo/icon.jpg">
+    <link rel="shortcut icon" href="/img/logo/icon.jpg">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">

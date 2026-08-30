@@ -13,6 +13,11 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPARE XPRESS LTD - Admin Panel</title>
 
+    <!-- Favicon / Web Icon -->
+    <link rel="icon" type="image/jpeg" href="/img/logo/icon.jpg">
+    <link rel="apple-touch-icon" href="/img/logo/icon.jpg">
+    <link rel="shortcut icon" href="/img/logo/icon.jpg">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="/css/admin-style.css" rel="stylesheet">
