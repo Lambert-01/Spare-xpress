@@ -450,192 +450,246 @@ class OrderRequestPDF extends TCPDF {
 class InvoicePDF extends TCPDF {
     public $order_number = '';
 
+    public $brand_blue = array(13, 110, 253);
+    public $brand_dark = array(26, 35, 126);
+    public $light_gray = array(244, 246, 249);
+    public $mid_gray  = array(226, 232, 240);
+    public $text_color = array(51, 65, 85);
+
     // Page header
     public function Header() {
+        $this->SetFillColor(26, 35, 126);
+        $this->Rect(0, 0, 210, 42, 'F');
+        $this->SetDrawColor(13, 110, 253);
+        $this->SetLineWidth(1.2);
+        $this->Line(0, 42, 210, 42);
+
         // Logo
         if (file_exists(__DIR__ . '/../img/logo/logox.jpg')) {
-            $this->Image(__DIR__ . '/../img/logo/logox.jpg', 15, 10, 25);
+            $this->Image(__DIR__ . '/../img/logo/logox.jpg', 14, 9, 24, 24, '', '', '', false, 300, '', false, false, 0, false, false, true);
         }
 
         // Company Info
-        $this->SetFont('helvetica', 'B', 16);
-        $this->SetXY(50, 10);
-        $this->Cell(0, 8, 'SPARE XPRESS LTD', 0, 1);
+        $this->SetTextColor(255, 255, 255);
+        $this->SetFont('helvetica', 'B', 15);
+        $this->SetXY(44, 10);
+        $this->Cell(0, 6, 'SPARE XPRESS LTD', 0, 1);
 
-        $this->SetFont('helvetica', '', 10);
-        $this->SetX(50);
-        $this->Cell(0, 5, 'Your Auto Parts Store', 0, 1);
-        $this->SetX(50);
-        $this->Cell(0, 5, 'Kagarama, Kicukiro, Kigali, Rwanda', 0, 1);
-        $this->SetX(50);
-        $this->Cell(0, 5, 'Phone: +250 792 865 114 | Email: support@sparexpress.rw', 0, 1);
+        $this->SetFont('helvetica', '', 8.5);
+        $this->SetTextColor(200, 214, 245);
+        $this->SetX(44);
+        $this->Cell(0, 4, 'Your Auto Parts Store', 0, 1);
+        $this->SetX(44);
+        $this->Cell(0, 4, 'Kagarama, Kicukiro, Kigali, Rwanda', 0, 1);
+        $this->SetX(44);
+        $this->Cell(0, 4, 'Phone: +250 792 865 114  |  Email: support@sparexpress.rw', 0, 1);
 
         // Invoice title
-        $this->SetXY(140, 10);
+        $this->SetTextColor(255, 255, 255);
+        $this->SetXY(0, 12);
         $this->SetFont('helvetica', 'B', 20);
-        $this->SetTextColor(0, 123, 255);
         $this->Cell(0, 10, 'INVOICE', 0, 1, 'R');
+        $this->SetX(PDF_MARGIN_RIGHT);
 
-        // Invoice number and date
-        $this->SetXY(140, 25);
-        $this->SetFont('helvetica', '', 10);
-        $this->SetTextColor(0, 0, 0);
-        $this->Cell(0, 5, 'Invoice #: ' . $this->order_number, 0, 1, 'R');
-        $this->SetXY(140, 30);
-        $this->Cell(0, 5, 'Date: ' . date('M d, Y'), 0, 1, 'R');
-        $this->SetXY(140, 35);
-        $this->Cell(0, 5, 'Order #: ' . $this->order_number, 0, 1, 'R');
+        // Invoice meta
+        $this->SetFont('helvetica', '', 9);
+        $this->SetTextColor(220, 227, 248);
+        $this->SetXY(120, 22);
+        $this->Cell(75, 5, 'Invoice #:  ' . $this->order_number, 0, 1, 'R');
+        $this->SetXY(120, 27);
+        $this->Cell(75, 5, 'Order #:  ' . $this->order_number, 0, 1, 'R');
+        $this->SetXY(120, 32);
+        $this->Cell(75, 5, 'Date:  ' . date('M d, Y'), 0, 1, 'R');
 
-        $this->Ln(15);
+        $this->SetY(50);
+        $this->SetTextColor(51, 65, 85);
     }
 
     // Page footer
     public function Footer() {
         $this->SetY(-30);
-        $this->SetFont('helvetica', 'I', 8);
-        $this->SetTextColor(128, 128, 128);
+        $this->SetFont('helvetica', '', 7.5);
+        $this->SetTextColor(120, 130, 150);
 
-        // Terms and conditions
-        $this->Cell(0, 5, 'Terms & Conditions:', 0, 1);
-        $this->Cell(0, 5, '1. Payment is due within 30 days of invoice date.', 0, 1);
-        $this->Cell(0, 5, '2. Warranty covers manufacturing defects only.', 0, 1);
-        $this->Cell(0, 5, '3. Returns accepted within 7 days with original packaging.', 0, 1);
+        $this->SetDrawColor(226, 232, 240);
+        $this->SetLineWidth(0.4);
+        $this->Line(PDF_MARGIN_LEFT, $this->GetY(), 210 - PDF_MARGIN_RIGHT, $this->GetY());
 
-        // Thank you message
-        $this->SetY(-15);
-        $this->SetFont('helvetica', 'B', 10);
-        $this->SetTextColor(0, 123, 255);
-        $this->Cell(0, 5, 'Thank you for choosing SPARE XPRESS LTD!', 0, 0, 'C');
+        $this->Cell(0, 4, 'SPARE XPRESS LTD - Terms: Payment due within 30 days. Warranty covers manufacturing defects only.', 0, 1, 'C');
+        $this->Cell(0, 4, 'Thank you for choosing SPARE XPRESS LTD!', 0, 1, 'C');
 
-        // Page number
-        $this->SetY(-10);
-        $this->SetFont('helvetica', 'I', 8);
-        $this->SetTextColor(128, 128, 128);
-        $this->Cell(0, 5, 'Page ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'C');
+        $this->SetY(-14);
+        $this->SetFont('helvetica', 'B', 9);
+        $this->SetTextColor(13, 110, 253);
+        $this->Cell(0, 5, 'Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages(), 0, 0, 'C');
     }
 
     function CustomerDetails($customer) {
-        $this->SetFont('helvetica', 'B', 12);
-        $this->SetTextColor(0, 123, 255);
-        $this->Cell(0, 8, 'Bill To:', 0, 1, '', 0);
+        // Section label bar
+        $this->SetFillColor(244, 246, 249);
+        $this->SetFont('helvetica', 'B', 9.5);
+        $this->SetTextColor(26, 35, 126);
+        $this->Cell(0, 8, 'BILL TO', 0, 1, '', 1);
+        $this->SetDrawColor(226, 232, 240);
+        $this->Line(PDF_MARGIN_LEFT, $this->GetY(), 210 - PDF_MARGIN_RIGHT, $this->GetY());
         $this->Ln(2);
 
         $this->SetFont('helvetica', '', 10);
-        $this->SetTextColor(0, 0, 0);
+        $this->SetTextColor(51, 65, 85);
 
         $customer_name = trim(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? ''));
-        $this->Cell(0, 5, $customer_name ?: 'Walk-in Customer', 0, 1, '', 0);
+        $this->SetFont('helvetica', 'B', 10.5);
+        $this->Cell(0, 6, $customer_name ?: 'Walk-in Customer', 0, 1);
+        $this->SetFont('helvetica', '', 10);
         if (!empty($customer['customer_phone'])) {
-            $this->Cell(0, 5, 'Phone: ' . $customer['customer_phone'], 0, 1, '', 0);
+            $this->Cell(0, 5.5, 'Phone: ' . $customer['customer_phone'], 0, 1);
         }
         if (!empty($customer['customer_email'])) {
-            $this->Cell(0, 5, 'Email: ' . $customer['customer_email'], 0, 1, '', 0);
+            $this->Cell(0, 5.5, 'Email: ' . $customer['customer_email'], 0, 1);
         }
         $address = $customer['customer_address'] ?? ($customer['shipping_address'] ?? '');
         if ($address) {
-            $this->Cell(0, 5, $address, 0, 1, '', 0);
+            $this->Cell(0, 5.5, $address, 0, 1);
         }
 
-        $this->Ln(5);
+        $this->Ln(7);
     }
 
     function OrderItems($items) {
-        // Table header
-        $this->SetFont('helvetica', 'B', 10);
-        $this->SetFillColor(248, 249, 250);
-        $this->SetTextColor(0, 0, 0);
+        // Height of the asset
+        $col_desc = 100;
+        $col_qty  = 20;
+        $col_unit = 28;
+        $col_amt  = 32;
 
-        $this->Cell(80, 8, 'Item Description', 1, 0, 'L', 1, '', 1);
-        $this->Cell(20, 8, 'Qty', 1, 0, 'C', 1, '', 1);
-        $this->Cell(30, 8, 'Unit Price', 1, 0, 'R', 1, '', 1);
-        $this->Cell(30, 8, 'Total', 1, 1, 'R', 1, '', 1);
+        $this->SetFillColor(26, 35, 126);
+        $this->SetTextColor(255, 255, 255);
+        $this->SetFont('helvetica', 'B', 9);
+        $this->Cell($col_desc, 9, 'ITEM DESCRIPTION', 1, 0, 'L', 1);
+        $this->Cell($col_qty, 9, 'QTY', 1, 0, 'C', 1);
+        $this->Cell($col_unit, 9, 'UNIT PRICE', 1, 0, 'R', 1);
+        $this->Cell($col_amt, 9, 'AMOUNT', 1, 1, 'R', 1);
 
-        // Table body
         $this->SetFont('helvetica', '', 9);
-        $this->SetFillColor(255, 255, 255);
+        $this->SetTextColor(51, 65, 85);
 
         $fill = false;
+        $row_h = 8;
         while ($item = $items->fetch_assoc()) {
-            $this->SetFillColor($fill ? 248 : 255, $fill ? 249 : 255, $fill ? 250 : 255);
-
-            // Item name and details
+            $desc_lines = 1;
             $item_desc = $item['product_name'];
-            if ($item['product_brand']) $item_desc .= "\n" . $item['product_brand'];
-            if ($item['product_model']) $item_desc .= " " . $item['product_model'];
+            if ($item['product_brand'] || $item['product_model']) {
+                $meta = trim(($item['product_brand'] ?? '') . ' ' . ($item['product_model'] ?? ''));
+                if ($meta) {
+                    $item_desc .= "\n" . $meta;
+                    $desc_lines = 2;
+                }
+            }
 
-            $this->MultiCell(80, 6, $item_desc, 1, 'L', $fill, 1, '', '', true, 0, false, true, 6, 'M');
+            // Compute row height based on description width
+            $text_w = $this->GetStringWidth($item_desc);
+            $est_lines = max(1, (int)ceil($text_w / ($col_desc - 4)));
+            $row_h = 8 * $est_lines;
 
-            // Get current position
-            $currentY = $this->GetY();
-            $currentX = $this->GetX();
+            $this->SetFillColor($fill ? 244 : 255, $fill ? 246 : 255, $fill ? 249 : 255);
+            $startY = $this->GetY();
+
+            // Draw description (left)
+            $this->SetXY(PDF_MARGIN_LEFT, $startY);
+            $this->MultiCell($col_desc, 7, $item_desc, 'LR', 'L', $fill, 0, '', '', true, 0, false, true, 7, 'M', false);
 
             // Qty
-            $this->SetXY($currentX + 80, $currentY - 6);
-            $this->Cell(20, 6, $item['quantity'], 1, 0, 'C', $fill, '', 1);
+            $this->SetXY(PDF_MARGIN_LEFT + $col_desc, $startY);
+            $this->Cell($col_qty, $row_h, (string)$item['quantity'], 0, 0, 'C', $fill, '', 0, false, 'M');
 
-            // Unit Price
-            $this->Cell(30, 6, 'RWF ' . number_format($item['unit_price'], 0), 1, 0, 'R', $fill, '', 1);
+            // Unit price
+            $this->Cell($col_unit, $row_h, number_format($item['unit_price'], 0), 0, 0, 'R', $fill, '', 0, false, 'M');
 
-            // Total
-            $this->Cell(30, 6, 'RWF ' . number_format($item['unit_price'] * $item['quantity'], 0), 1, 1, 'R', $fill, '', 1);
+            // Amount
+            $this->Cell($col_amt, $row_h, number_format($item['unit_price'] * $item['quantity'], 0), 0, 1, 'R', $fill, '', 0, false, 'M');
 
+            // Bottom border for the row
+            $y_end = $startY + $row_h;
+            $this->SetDrawColor(226, 232, 240);
+            $this->Line(PDF_MARGIN_LEFT, $y_end, PDF_MARGIN_LEFT + $col_desc, $y_end);
+            $y = $startY + $row_h;
+            $this->Line(PDF_MARGIN_LEFT, $y, 210 - PDF_MARGIN_RIGHT, $y);
+
+            $this->SetY($y_end);
             $fill = !$fill;
         }
 
-        $this->Ln(5);
+        // Bottom border
+        $this->SetDrawColor(26, 35, 126);
+        $this->SetLineWidth(0.8);
+        $this->Line(PDF_MARGIN_LEFT, $this->GetY(), 210 - PDF_MARGIN_RIGHT, $this->GetY());
+        $this->SetLineWidth(0.2);
+
+        $this->Ln(8);
     }
 
     function OrderSummary($order) {
-        $this->SetFont('helvetica', 'B', 10);
+        // Boxed summary on the right
+        $box_w = 80;
+        $x = 210 - PDF_MARGIN_RIGHT - $box_w;
 
-        // Summary table
-        $summary_data = [
-            ['Subtotal:', 'RWF ' . number_format($order['subtotal'], 0)],
-        ];
-
+        $summary_data = array(
+            array('Subtotal', 'RWF ' . number_format($order['subtotal'], 0)),
+        );
         if ($order['tax_amount'] > 0) {
-            $summary_data[] = ['Tax:', 'RWF ' . number_format($order['tax_amount'], 0)];
+            $summary_data[] = array('Tax', 'RWF ' . number_format($order['tax_amount'], 0));
         }
-
         if ($order['shipping_fee'] > 0) {
-            $summary_data[] = ['Shipping:', 'RWF ' . number_format($order['shipping_fee'], 0)];
+            $summary_data[] = array('Shipping', 'RWF ' . number_format($order['shipping_fee'], 0));
         }
-
         if ($order['discount_amount'] > 0) {
-            $summary_data[] = ['Discount:', '-RWF ' . number_format($order['discount_amount'], 0)];
+            $summary_data[] = array('Discount', '-RWF ' . number_format($order['discount_amount'], 0));
         }
 
-        $summary_data[] = ['TOTAL:', 'RWF ' . number_format($order['total_amount'], 0)];
-
-        // Position summary on the right
-        $this->SetX(120);
+        $startY = $this->GetY();
+        $this->SetXY($x, $startY);
+        $this->SetFont('helvetica', '', 9.5);
+        $this->SetTextColor(51, 65, 85);
 
         foreach ($summary_data as $row) {
-            $this->SetFont('helvetica', count($summary_data) === 1 ? 'B' : '', 10);
-            $this->Cell(40, 8, $row[0], 0, 0, 'R', 0, '', 0);
-            $this->Cell(40, 8, $row[1], 0, 1, 'R', 0, '', 0);
+            $this->SetX($x);
+            $this->Cell($box_w - 42, 7.5, $row[0], 0, 0, 'R');
+            $this->Cell(42, 7.5, $row[1], 0, 1, 'R');
         }
 
+        // Total row (highlighted)
+        $this->SetX($x);
+        $this->SetFillColor(26, 35, 126);
+        $this->SetTextColor(255, 255, 255);
+        $this->SetFont('helvetica', 'B', 10.5);
+        $this->Cell($box_w - 42, 9, 'TOTAL', 0, 0, 'R', 1);
+        $this->Cell(42, 9, 'RWF ' . number_format($order['total_amount'], 0), 0, 1, 'R', 1);
+
+        $this->SetTextColor(51, 65, 85);
         $this->Ln(10);
     }
 
     function PaymentInfo($order) {
-        $this->SetFont('helvetica', 'B', 12);
-        $this->SetTextColor(0, 123, 255);
-        $this->Cell(0, 8, 'Payment Information:', 0, 1, '', 0);
+        // Section label bar
+        $this->SetFillColor(244, 246, 249);
+        $this->SetFont('helvetica', 'B', 9.5);
+        $this->SetTextColor(26, 35, 126);
+        $this->Cell(0, 8, 'PAYMENT INFORMATION', 0, 1, '', 1);
+        $this->SetDrawColor(226, 232, 240);
+        $this->Line(PDF_MARGIN_LEFT, $this->GetY(), 210 - PDF_MARGIN_RIGHT, $this->GetY());
         $this->Ln(2);
 
         $this->SetFont('helvetica', '', 10);
-        $this->SetTextColor(0, 0, 0);
+        $this->SetTextColor(51, 65, 85);
 
-        $this->Cell(0, 5, 'Payment Method: ' . ucfirst($order['payment_method']), 0, 1, '', 0);
-        $this->Cell(0, 5, 'Payment Status: ' . ucfirst($order['payment_status']), 0, 1, '', 0);
+        $this->Cell(90, 6, 'Payment Method:  ' . ucfirst($order['payment_method']), 0, 0);
+        $this->Cell(90, 6, 'Payment Status:  ' . ucfirst($order['payment_status']), 0, 1);
 
-        if ($order['transaction_id']) {
-            $this->Cell(0, 5, 'Transaction ID: ' . $order['transaction_id'], 0, 1, '', 0);
+        if (!empty($order['transaction_id'])) {
+            $this->Cell(90, 6, 'Transaction ID:  ' . $order['transaction_id'], 0, 1);
         }
 
-        $this->Ln(5);
+        $this->Ln(3);
     }
 }
 ?>
