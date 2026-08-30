@@ -11,11 +11,11 @@ $current_year = date('Y');
 $revenue_query = $conn->query("
     SELECT
         DATE_FORMAT(created_at, '%Y-%m') as month,
-        SUM(total) as revenue,
+        SUM(total_amount) as revenue,
         COUNT(*) as order_count
     FROM orders_enhanced
     WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-        AND order_status NOT IN ('Cancelled', 'Failed')
+        AND order_status NOT IN ('cancelled', 'failed')
     GROUP BY DATE_FORMAT(created_at, '%Y-%m')
     ORDER BY month
 ");
@@ -51,12 +51,11 @@ while ($row = $daily_orders_query->fetch_assoc()) {
 // Top selling products
 $top_products_query = $conn->query("
     SELECT
-        p.product_name,
+        oi.product_name,
         SUM(oi.quantity) as total_quantity,
         SUM(oi.subtotal) as total_revenue
-    FROM order_items oi
-    JOIN orders o ON oi.order_id = o.id
-    LEFT JOIN products p ON oi.product_id = p.id
+    FROM order_items_enhanced oi
+    JOIN orders_enhanced o ON oi.order_id = o.id
     WHERE o.order_status NOT IN ('cancelled', 'failed')
     GROUP BY oi.product_id, oi.product_name
     ORDER BY total_quantity DESC
@@ -90,10 +89,10 @@ $brand_performance_query = $conn->query("
         COALESCE(vb.brand_name, oi.product_brand) as brand,
         COUNT(DISTINCT o.id) as orders,
         SUM(oi.subtotal) as revenue
-    FROM order_items oi
-    JOIN orders o ON oi.order_id = o.id
-    LEFT JOIN products p ON oi.product_id = p.id
-    LEFT JOIN vehicle_brands vb ON p.brand_id = vb.id
+    FROM order_items_enhanced oi
+    JOIN orders_enhanced o ON oi.order_id = o.id
+    LEFT JOIN products_enhanced p ON oi.product_id = p.id
+    LEFT JOIN vehicle_brands_enhanced vb ON p.brand_id = vb.id
     WHERE o.order_status NOT IN ('cancelled', 'failed')
         AND COALESCE(vb.brand_name, oi.product_brand) IS NOT NULL
     GROUP BY COALESCE(vb.brand_name, oi.product_brand)
