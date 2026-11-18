@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/part_images.php';
 // API endpoint to get products with filtering, sorting, and pagination
 // SPARE XPRESS LTD - Dynamic Shop API
 
@@ -253,7 +254,7 @@ try {
             'category' => $row['category_name'],
             'stock' => (int)$row['stock_quantity'],
             'stock_status' => $row['stock_status'],
-            'image' => $image_path ?: '/img/no-image.png',
+            'image' => spx_part_image($image_path, $row['product_name'], $row['category_name']),
             'gallery_images' => $formatted_gallery,
             'year_from' => $row['year_from'] ?? null,
             'year_to' => $row['year_to'] ?? null,

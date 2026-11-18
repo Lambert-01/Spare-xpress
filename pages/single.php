@@ -49,6 +49,9 @@ try {
             $image_path = '/admin/' . ltrim($image_path, '/');
         }
     }
+    // Fall back to a branded demo illustration when no real image is uploaded.
+    require_once __DIR__ . '/../includes/part_images.php';
+    $image_path = spx_part_image($image_path, $product['product_name'] ?? '', $product['category_name'] ?? '');
 
     $requires_price_request = !empty($product['price_request_only']) || (int)$product['stock_quantity'] <= 0;
 
