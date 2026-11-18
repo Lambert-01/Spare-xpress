@@ -1,6 +1,6 @@
 # Exclude installed libraries and dependencies
 lib/
-vendor/
+/vendor/
 composer.lock
 
 # Exclude backup directories
