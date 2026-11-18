@@ -1,6 +1,8 @@
 <?php
 // Client Reply API - Send message from client to admin
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+spx_csrf_require_origin();
 
 header('Content-Type: application/json');
 

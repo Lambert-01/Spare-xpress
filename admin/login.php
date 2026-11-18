@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start();
+require_once __DIR__ . '/../includes/csrf.php';
 include 'includes/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    spx_csrf_require_token();
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -65,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h2 class="text-center mb-4">Admin Login</h2>
             <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
             <form method="POST">
+                <?php spx_csrf_field(); ?>
                 <div class="mb-3">
                     <label>Username:</label>
                     <input type="text" name="username" class="form-control" required>

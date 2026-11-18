@@ -1,6 +1,7 @@
 <?php
 include_once '../includes/config.php';
 require_once __DIR__ . '/../includes/google_auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 if (isset($_GET['logout'])) { session_destroy(); header('Location: login.php'); exit(); }
 if (isset($_SESSION['customer_id'])) { header('Location: ../index.php'); exit(); }
@@ -14,6 +15,7 @@ if (!empty($_SESSION['google_auth_error'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    spx_csrf_require_token();
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -92,6 +94,7 @@ include '../includes/toast_notifications.php';
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <?php spx_csrf_field(); ?>
                 <div class="spx-input-group">
                     <label for="email">Email Address</label>
                     <i class="fas fa-envelope spx-input-icon"></i>

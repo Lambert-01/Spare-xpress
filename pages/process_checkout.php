@@ -5,6 +5,8 @@
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start();
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+spx_csrf_require_origin();
 
 // Always respond with JSON (avoid HTML warnings breaking fetch().json())
 header('Content-Type: application/json; charset=utf-8');

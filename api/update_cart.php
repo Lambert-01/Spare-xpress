@@ -6,6 +6,8 @@ ob_start();
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start(['secure' => false]);
 include_once '../includes/config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+spx_csrf_require_origin();
 
 // Prevent any HTML output for API responses
 ob_clean();

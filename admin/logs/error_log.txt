@@ -48,3 +48,6 @@
 [2026-01-07 07:42:08] SUCCESS: Existing logo: uploads/brands/BAIC.png
 [2026-01-07 07:42:08] SUCCESS: Update query prepared | Context: {"query":"UPDATE vehicle_brands_enhanced SET\r\n            brand_name = ?, slug = ?, logo_image = ?, brand_image = ?, description = ?,\r\n            country = ?, founded_year = ?, manufacturer_details = ?, website = ?,\r\n            contact_email = ?, contact_phone = ?, seo_title = ?, seo_description = ?, is_active = ?\r\n            WHERE id = ?"}
 [2026-01-07 07:42:09] SUCCESS: Brand updated successfully for ID: 23
+[2026-11-18 09:46:25] SUCCESS: Fetching brand data for ID: 1'
+[2026-11-18 09:46:25] SUCCESS: Brand data fetched successfully for ID: 1' | Context: {"brand_name":"Toyota"}
+[2026-11-18 09:46:25] ERROR: Invalid category ID in get_category | Context: {"id":"1'"}

@@ -3,6 +3,8 @@ require_once __DIR__ . '/includes/session_init.php';
 spx_session_start(['secure' => false]);
 
 include __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/csrf.php';
+spx_csrf_require_origin();
 
 header('Content-Type: application/json');
 

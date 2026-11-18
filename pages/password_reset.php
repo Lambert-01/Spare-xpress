@@ -2,6 +2,7 @@
 // Start session check at the very beginning
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start(['secure' => false]);
+require_once __DIR__ . '/../includes/csrf.php';
 
 // Check if already logged in
 if (isset($_SESSION['customer_id'])) {
@@ -20,6 +21,7 @@ $success = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    spx_csrf_require_token();
     $email = trim($_POST['email'] ?? '');
 
     // Validation
@@ -93,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
 
                         <form method="POST" action="" novalidate>
+                <?php spx_csrf_field(); ?>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Address *</label>
                                 <div class="input-group">

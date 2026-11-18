@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start(['secure' => false]);
 require_once __DIR__ . '/../includes/google_auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 if (isset($_SESSION['customer_id'])) { header('Location: ../index.php'); exit(); }
 
@@ -14,6 +15,7 @@ $success = '';
 $full_name = $email = $phone = $address = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    spx_csrf_require_token();
     $full_name = trim($_POST['full_name'] ?? '');
     $email     = trim($_POST['email'] ?? '');
     $phone     = trim($_POST['phone'] ?? '');
@@ -91,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <?php spx_csrf_field(); ?>
                 <div class="spx-input-group">
                     <label>Full Name *</label>
                     <i class="fas fa-user spx-input-icon"></i>
