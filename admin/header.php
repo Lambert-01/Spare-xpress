@@ -460,6 +460,12 @@ if (!defined('ADMIN_FUNCTIONS_LOADED')) {
                     <span>Dashboard</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/sales_dashboard.php" title="Sales &amp; Inventory" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Sales &amp; Inventory</span>
+                </a>
+            </li>
 
             <!-- Catalog -->
             <li class="nav-section-label">Catalog</li>
