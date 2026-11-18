@@ -43,7 +43,7 @@ $final_total = $cart_total + $shipping_cost;
 ?>
 
 <!-- Page Header -->
-<div class="container-fluid page-header py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
+<div class="container-fluid page-header py-5" style="background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%); position: relative; overflow: hidden;">
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-8">

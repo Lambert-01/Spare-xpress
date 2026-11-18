@@ -59,8 +59,8 @@ spx_jsonld_breadcrumbs([
                             <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="spx-hero-float spx-hero-float-1"><i class="fas fa-shield-alt" style="color:#2563eb;margin-right:6px;"></i>100% Genuine</div>
-                    <div class="spx-hero-float spx-hero-float-2"><i class="fas fa-truck" style="color:#2563eb;margin-right:6px;"></i>24–72h Delivery</div>
+                    <div class="spx-hero-float spx-hero-float-1"><i class="fas fa-shield-alt" style="color:#0EA5E9;margin-right:6px;"></i>100% Genuine</div>
+                    <div class="spx-hero-float spx-hero-float-2"><i class="fas fa-truck" style="color:#0EA5E9;margin-right:6px;"></i>24–72h Delivery</div>
                     <div class="spx-hero-float spx-hero-float-3"><i class="fas fa-certificate" style="color:#16a34a;margin-right:6px;"></i>OEM Warranty</div>
                 </div>
             </div>
@@ -237,7 +237,7 @@ spx_jsonld_breadcrumbs([
 <style>
 /* ---- HERO ---- */
 .spx-hero {
-    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     position: relative;
     overflow: hidden;
     padding: 4rem 0 3.5rem;
@@ -262,7 +262,7 @@ spx_jsonld_breadcrumbs([
     line-height: 1.15; margin-bottom: 1rem;
 }
 .spx-hero-accent {
-    background: linear-gradient(90deg, #fbbf24, #f97316);
+    background: linear-gradient(90deg, #2DD4FF, #38BDF8);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -344,7 +344,7 @@ spx_jsonld_breadcrumbs([
     padding: .75rem 1rem;
 }
 .spx-trust-item i {
-    font-size: 1.5rem; color: #2563eb;
+    font-size: 1.5rem; color: #0EA5E9;
     flex-shrink: 0;
 }
 .spx-trust-item strong { display: block; font-size: .875rem; color: #111827; }
@@ -354,7 +354,7 @@ spx_jsonld_breadcrumbs([
 .spx-section-head { text-align: center; margin-bottom: 2.5rem; }
 .spx-section-tag {
     display: inline-block;
-    background: #eff6ff; color: #2563eb;
+    background: #E0F2FE; color: #0EA5E9;
     padding: .3rem .9rem; border-radius: 999px;
     font-size: .78rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: .5px;
@@ -373,7 +373,7 @@ spx_jsonld_breadcrumbs([
     transition: all .2s;
     min-height: 110px;
 }
-.spx-brand-card:hover { border-color: #2563eb; box-shadow: 0 4px 16px rgba(37,99,235,.12); transform: translateY(-3px); }
+.spx-brand-card:hover { border-color: #0EA5E9; box-shadow: 0 4px 16px rgba(14,165,233,.12); transform: translateY(-3px); }
 .spx-brand-card img { width: 52px; height: 52px; object-fit: contain; }
 .spx-brand-card span { font-size: .75rem; font-weight: 600; color: #374151; text-align: center; }
 
@@ -387,13 +387,13 @@ spx_jsonld_breadcrumbs([
     transition: all .2s;
     min-height: 110px;
 }
-.spx-cat-card:hover { border-color: #2563eb; background: #eff6ff; transform: translateY(-3px); box-shadow: 0 4px 16px rgba(37,99,235,.1); }
-.spx-cat-card i { font-size: 1.75rem; color: #2563eb; }
+.spx-cat-card:hover { border-color: #0EA5E9; background: #E0F2FE; transform: translateY(-3px); box-shadow: 0 4px 16px rgba(14,165,233,.1); }
+.spx-cat-card i { font-size: 1.75rem; color: #0EA5E9; }
 .spx-cat-card span { font-size: .75rem; font-weight: 600; color: #374151; text-align: center; }
 
 /* ---- SEARCH SECTION ---- */
 .spx-search-section {
-    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     padding: 3.5rem 0;
     position: relative;
 }
@@ -414,21 +414,21 @@ spx_jsonld_breadcrumbs([
     height: 100%;
     transition: all .2s;
 }
-.spx-how-card:hover { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,.1); transform: translateY(-3px); }
+.spx-how-card:hover { border-color: #0EA5E9; box-shadow: 0 4px 20px rgba(14,165,233,.1); transform: translateY(-3px); }
 .spx-how-num {
     width: 32px; height: 32px; border-radius: 50%;
-    background: #2563eb; color: #fff;
+    background: #0EA5E9; color: #fff;
     font-size: .85rem; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto .75rem;
 }
-.spx-how-icon { font-size: 1.75rem; color: #2563eb; margin-bottom: .75rem; }
+.spx-how-icon { font-size: 1.75rem; color: #0EA5E9; margin-bottom: .75rem; }
 .spx-how-card h6 { font-weight: 700; color: #111827; font-size: .9rem; margin-bottom: .5rem; }
 .spx-how-card p { font-size: .78rem; color: #6b7280; margin: 0; line-height: 1.5; }
 
 /* ---- CTA BANNER ---- */
 .spx-cta-banner {
-    background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     padding: 3rem 0;
 }
 

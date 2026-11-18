@@ -17,7 +17,7 @@ include_once '../includes/navigation.php';
 }
 
 .export-card:hover {
-    border-color: #667eea;
+    border-color: #0F172A;
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
     transform: translateY(-3px);
 }
@@ -25,11 +25,11 @@ include_once '../includes/navigation.php';
 .export-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: #667eea;
+    color: #0F172A;
 }
 
 .download-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     border: none;
     color: white;
     padding: 12px 30px;

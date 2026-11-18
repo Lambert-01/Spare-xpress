@@ -1,7 +1,7 @@
 
 /* Automotive Theme Variables */
 :root {
-  --bs-primary: #1a365d; /* Dark blue for trust and strength */
+  --bs-primary: #0F172A; /* Dark blue for trust and strength */
   --bs-secondary: #e53e3e; /* Red for energy and bold */
   --bs-success: #38a169; /* Green for success */
   --bs-info: #3182ce; /* Blue for info */
@@ -22,7 +22,7 @@
   --bs-gray-800: #2d3748;
   --bs-gray-900: #1a202c;
   /* Automotive theme colors */
-  --automotive-primary: #1a365d;
+  --automotive-primary: #0F172A;
   --automotive-secondary: #e53e3e;
   --automotive-accent: #2d3748;
   --automotive-light: #f7fafc;

@@ -256,7 +256,7 @@ if (isset($_SESSION['customer_id'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe;">
+                        <div class="mt-4 p-3 rounded" style="background:#E0F2FE;border:1px solid #bfdbfe;">
                             <label class="d-flex align-items-start gap-2 mb-0" style="cursor:pointer;">
                                 <input type="checkbox" name="terms_agree" id="terms_agree" required style="margin-top:3px;">
                                 <span class="small">I agree to the <a href="#" class="text-primary">Terms &amp; Conditions</a> and understand that a 50% deposit is required to confirm special orders.</span>
