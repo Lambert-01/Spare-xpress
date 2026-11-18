@@ -4,15 +4,8 @@
  * Exports all products with brands, models, categories, and prices to Excel
  */
 
-require_once __DIR__ . '/../includes/session_init.php';
-spx_session_start();
-include_once '../includes/config.php';
-
-// Check if user is admin (optional - remove if you want public access)
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: /login.php');
-    exit;
-}
+require_once __DIR__ . '/includes/auth.php';
+// auth.php starts the session, enforces the admin login, and provides $conn.
 
 // Set headers for Excel download
 header('Content-Type: application/vnd.ms-excel');

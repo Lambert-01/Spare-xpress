@@ -2,6 +2,7 @@
 // Start session check at the very beginning
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start(['secure' => false]);
+require_once __DIR__ . '/../includes/csrf.php';
 
 // Check if already logged in
 if (isset($_SESSION['customer_id'])) {
@@ -43,6 +44,7 @@ if ($result->num_rows !== 1) {
 $stmt->close();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($errors)) {
+    spx_csrf_require_token();
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
@@ -110,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($errors)) {
                             </div>
                         <?php elseif (empty($errors)): ?>
                             <form method="POST" action="" novalidate>
+                <?php spx_csrf_field(); ?>
                                 <div class="mb-3">
                                     <label for="new_password" class="form-label">New Password *</label>
                                     <div class="input-group">

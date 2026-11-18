@@ -1,0 +1,8 @@
+# Prevent execution of any server-side scripts in the uploads tree.
+# Uploaded files are user data and must only ever be served as static files.
+php_flag engine off
+AddType application/octet-stream .php .php3 .php4 .php5 .php7 .phtml .pht .phar .cgi .pl .py .asp .aspx .jsp .sh
+<FilesMatch "\.(php|php3|php4|php5|php7|phtml|pht|phar|cgi|pl|py|asp|aspx|jsp|sh)$">
+    Require all denied
+</FilesMatch>
+RemoveHandler .php .phtml .phar

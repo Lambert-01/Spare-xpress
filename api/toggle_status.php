@@ -4,7 +4,6 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -12,6 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit(0);
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+// SECURITY: this endpoint activates/deactivates catalogue entries (and cascades
+// a brand to all its models and products). It must only be callable by a
+// logged-in admin. No wildcard CORS.
+require_once __DIR__ . '/../includes/session_init.php';
+spx_session_start();
+if (!isset($_SESSION['admin'])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Forbidden']);
     exit;
 }
 

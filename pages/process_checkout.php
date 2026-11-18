@@ -5,6 +5,8 @@
 require_once __DIR__ . '/../includes/session_init.php';
 spx_session_start();
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+spx_csrf_require_origin();
 
 // Always respond with JSON (avoid HTML warnings breaking fetch().json())
 header('Content-Type: application/json; charset=utf-8');
@@ -50,13 +52,7 @@ if (!empty($errors)) {
     exit();
 }
 
-// Calculate totals
-$subtotal = 0;
-foreach ($cart_data as $item) {
-    $subtotal += $item['subtotal'];
-}
-
-// Calculate shipping based on region
+// Calculate shipping based on region (server-controlled)
 $shipping_cost = 0;
 switch ($region) {
     case 'kigali':
@@ -70,8 +66,6 @@ switch ($region) {
         break;
 }
 
-$total_amount = $subtotal + $shipping_cost;
-
 // Generate order ID
 $order_id = 'SPX-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
 
@@ -79,18 +73,69 @@ $order_id = 'SPX-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_P
 $conn->begin_transaction();
 
 try {
-    foreach ($cart_data as $item) {
-        $product_check = $conn->prepare("SELECT stock_quantity, COALESCE(price_request_only, 0) AS price_request_only FROM products_enhanced WHERE id = ?");
-        $product_id = (int)($item['id'] ?? 0);
-        $product_check->bind_param('i', $product_id);
-        $product_check->execute();
-        $product_row = $product_check->get_result()->fetch_assoc();
-        $product_check->close();
+    // SECURITY: never trust prices, names or stock from the browser. Re-derive
+    // every price-sensitive field from the database and validate stock here.
+    $validated_items = [];
+    $subtotal = 0;
 
-        if (!$product_row || !empty($product_row['price_request_only']) || (int)$product_row['stock_quantity'] <= 0) {
+    $lookup = $conn->prepare(
+        "SELECT p.id, p.product_name, p.main_image,
+                COALESCE(p.regular_price, p.price, 0) AS unit_price,
+                p.stock_quantity, COALESCE(p.price_request_only, 0) AS price_request_only,
+                b.brand_name, m.model_name
+         FROM products_enhanced p
+         LEFT JOIN vehicle_brands_enhanced b ON p.brand_id = b.id
+         LEFT JOIN vehicle_models_enhanced m ON p.model_id = m.id
+         WHERE p.id = ?"
+    );
+
+    foreach ($cart_data as $item) {
+        $product_id = (int)($item['id'] ?? 0);
+        $quantity   = (int)($item['quantity'] ?? 0);
+
+        if ($product_id <= 0 || $quantity <= 0) {
+            throw new Exception('Invalid cart item.');
+        }
+
+        $lookup->bind_param('i', $product_id);
+        $lookup->execute();
+        $product_row = $lookup->get_result()->fetch_assoc();
+
+        if (!$product_row || !empty($product_row['price_request_only'])) {
             throw new Exception('One or more cart items require a price request and cannot be checked out directly.');
         }
+
+        $available = (int)$product_row['stock_quantity'];
+        if ($available <= 0) {
+            throw new Exception('"' . $product_row['product_name'] . '" is out of stock.');
+        }
+        if ($quantity > $available) {
+            throw new Exception('Only ' . $available . ' of "' . $product_row['product_name'] . '" are in stock.');
+        }
+
+        $unit_price   = (float)$product_row['unit_price'];
+        $line_total   = $unit_price * $quantity;
+        $subtotal    += $line_total;
+
+        $validated_items[] = [
+            'id'           => $product_id,
+            'name'         => $product_row['product_name'],
+            'brand'        => $product_row['brand_name'] ?? '',
+            'model'        => $product_row['model_name'] ?? '',
+            'image'        => $product_row['main_image'] ?? '',
+            'vehicle_year' => isset($item['selected_year']) ? (int)$item['selected_year'] : null,
+            'unit_price'   => $unit_price,
+            'quantity'     => $quantity,
+            'subtotal'     => $line_total,
+        ];
     }
+    $lookup->close();
+
+    if (empty($validated_items)) {
+        throw new Exception('Cart is empty.');
+    }
+
+    $total_amount = $subtotal + $shipping_cost;
 
     // Insert order
     $customer_name = $first_name . ' ' . $last_name;
@@ -104,66 +149,56 @@ try {
         default => 'cash'
     };
 
-    // Use direct SQL INSERT to avoid prepared statement issues
-    $order_sql = "INSERT INTO orders_enhanced (
-        order_number, customer_id, order_type, order_status, payment_status, payment_method,
-        subtotal, shipping_fee, total_amount, shipping_address, shipping_city,
-        delivery_notes, special_instructions
-    ) VALUES (
-        '" . $conn->real_escape_string($order_id) . "',
-        " . (int)$_SESSION['customer_id'] . ",
-        'stock',
-        'pending',
-        'unpaid',
-        '" . $conn->real_escape_string($payment_enum) . "',
-        " . (float)$subtotal . ",
-        " . (float)$shipping_cost . ",
-        " . (float)$total_amount . ",
-        '" . $conn->real_escape_string($full_address) . "',
-        '" . $conn->real_escape_string($city) . "',
-        '" . $conn->real_escape_string($order_notes) . "',
-        '" . $conn->real_escape_string($vehicle_info) . "'
-    )";
-
-    if (!$conn->query($order_sql)) {
+    $customer_id = (int)$_SESSION['customer_id'];
+    $order_stmt = $conn->prepare(
+        "INSERT INTO orders_enhanced (
+            order_number, customer_id, order_type, order_status, payment_status, payment_method,
+            subtotal, shipping_fee, total_amount, shipping_address, shipping_city,
+            delivery_notes, special_instructions
+        ) VALUES (?, ?, 'stock', 'pending', 'unpaid', ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+    $order_stmt->bind_param(
+        'sisdddssss',
+        $order_id, $customer_id, $payment_enum,
+        $subtotal, $shipping_cost, $total_amount,
+        $full_address, $city, $order_notes, $vehicle_info
+    );
+    if (!$order_stmt->execute()) {
         throw new Exception("Order insert failed: " . $conn->error);
     }
-
     $order_db_id = $conn->insert_id;
+    $order_stmt->close();
 
-    // Insert order items with vehicle year - USE ENHANCED order_items TABLE
-    foreach ($cart_data as $item) {
-        $vehicle_year = isset($item['selected_year']) ? (int)$item['selected_year'] : null;
-
-        $item_sql = "INSERT INTO order_items_enhanced (
+    // Insert order items from the validated (server-side) values
+    $item_stmt = $conn->prepare(
+        "INSERT INTO order_items_enhanced (
             order_id, product_id, product_name, product_brand, product_model,
             vehicle_year, product_image, unit_price, quantity, subtotal
-        ) VALUES (
-            " . (int)$order_db_id . ",
-            " . (int)$item['id'] . ",
-            '" . $conn->real_escape_string($item['name']) . "',
-            '" . $conn->real_escape_string($item['brand'] ?? '') . "',
-            '" . $conn->real_escape_string($item['model'] ?? '') . "',
-            " . ($vehicle_year ? (int)$vehicle_year : 'NULL') . ",
-            '" . $conn->real_escape_string($item['image'] ?? '') . "',
-            " . (float)($item['price'] ?? 0) . ",
-            " . (int)($item['quantity'] ?? 0) . ",
-            " . (float)($item['subtotal'] ?? 0) . "
-        )";
-
-        if (!$conn->query($item_sql)) {
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+    foreach ($validated_items as $item) {
+        $item_stmt->bind_param(
+            'iisssissdd',
+            $order_db_id, $item['id'], $item['name'], $item['brand'], $item['model'],
+            $item['vehicle_year'], $item['image'], $item['unit_price'], $item['quantity'], $item['subtotal']
+        );
+        if (!$item_stmt->execute()) {
             throw new Exception("Order item insert failed: " . $conn->error);
         }
     }
+    $item_stmt->close();
 
-    // Update product stock (for in-stock items)
-    $stock_sql = "UPDATE products_enhanced SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity > 0";
+    // Decrement stock from validated quantities. The WHERE guard ensures the
+    // row still has enough stock; if a concurrent order drained it, affected_rows
+    // is 0 and we abort rather than oversell.
+    $stock_sql = "UPDATE products_enhanced SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity >= ?";
     $stmt = $conn->prepare($stock_sql);
 
-    foreach ($cart_data as $item) {
-        if ($item['stock'] > 0) {
-            $stmt->bind_param('ii', $item['quantity'], $item['id']);
-            $stmt->execute();
+    foreach ($validated_items as $item) {
+        $stmt->bind_param('iii', $item['quantity'], $item['id'], $item['quantity']);
+        $stmt->execute();
+        if ($stmt->affected_rows !== 1) {
+            throw new Exception('"' . $item['name'] . '" just went out of stock. Please review your cart.');
         }
     }
     $stmt->close();

@@ -1,6 +1,8 @@
 <?php
 // Send Message API - Admin replies to client conversations
 include '../../includes/config.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+spx_csrf_require_origin();
 include '../includes/auth.php'; // Ensure admin is logged in
 
 header('Content-Type: application/json');
@@ -11,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$conversation_id = $_POST['conversation_id'] ?? null;
+$conversation_id = (int)($_POST['conversation_id'] ?? 0);
 $message_text = trim($_POST['message'] ?? '');
 $send_email = isset($_POST['send_email']) && $_POST['send_email'] === 'on';
 

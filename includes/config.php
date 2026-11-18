@@ -9,12 +9,7 @@ if (!defined('SITE_PHONE')) define('SITE_PHONE', spx_env('SITE_PHONE', '+250 792
 if (!defined('SITE_ADDRESS')) define('SITE_ADDRESS', spx_env('SITE_ADDRESS', 'Kagarama, Kicukiro, Kigali, Rwanda'));
 
 // Database Configuration
-$db_config = spx_database_config();
-if (!defined('DB_HOST')) define('DB_HOST', $db_config['host']);
-if (!defined('DB_PORT')) define('DB_PORT', $db_config['port']);
-if (!defined('DB_NAME')) define('DB_NAME', $db_config['name']);
-if (!defined('DB_USER')) define('DB_USER', $db_config['user']);
-if (!defined('DB_PASS')) define('DB_PASS', $db_config['pass']);
+spx_define_db_constants();
 
 // Email Configuration
 if (!defined('MAIL_PROVIDER')) define('MAIL_PROVIDER', strtolower(spx_env('MAIL_PROVIDER', 'smtp') ?: 'smtp'));
@@ -41,10 +36,7 @@ spx_session_start([
 ]);
 
 // Database Connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT ?: null);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$conn = spx_db_connect();
 
 // Fetch Brands from Database
 $brands = [];

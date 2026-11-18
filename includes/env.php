@@ -76,5 +76,32 @@ if (!function_exists('spx_database_config')) {
     }
 }
 
+if (!function_exists('spx_define_db_constants')) {
+    /** Define DB_* constants from the resolved config (idempotent). */
+    function spx_define_db_constants()
+    {
+        $cfg = spx_database_config();
+        if (!defined('DB_HOST')) define('DB_HOST', $cfg['host']);
+        if (!defined('DB_PORT')) define('DB_PORT', $cfg['port']);
+        if (!defined('DB_NAME')) define('DB_NAME', $cfg['name']);
+        if (!defined('DB_USER')) define('DB_USER', $cfg['user']);
+        if (!defined('DB_PASS')) define('DB_PASS', $cfg['pass']);
+    }
+}
+
+if (!function_exists('spx_db_connect')) {
+    /** Open a single shared MySQLi connection using the resolved config. */
+    function spx_db_connect(): mysqli
+    {
+        spx_define_db_constants();
+        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT ?: null);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        $conn->set_charset('utf8mb4');
+        return $conn;
+    }
+}
+
 spx_load_env(dirname(__DIR__) . '/.env');
 ?>

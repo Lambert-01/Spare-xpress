@@ -1,6 +1,8 @@
 <?php
 // Contact Form Submission API
 include '../includes/config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+spx_csrf_require_origin();
 require_once __DIR__ . '/../includes/email.php';
 
 header('Content-Type: application/json');
