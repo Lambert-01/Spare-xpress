@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Pistons &amp; Rings">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#F8FAFC"/><stop offset="1" stop-color="#E0F2FE"/></linearGradient></defs>
+<rect width="400" height="300" fill="url(#bg)"/>
+<rect x="14" y="14" width="372" height="272" rx="20" fill="#ffffff" stroke="#E2E8F0" stroke-width="2"/>
+<rect x="170" y="80" width="60" height="55" rx="8" fill="#E0F2FE" stroke="#0F172A" stroke-width="9"/><line x1="176" y1="98" x2="224" y2="98" stroke="#0EA5E9" stroke-width="5"/><line x1="176" y1="110" x2="224" y2="110" stroke="#0EA5E9" stroke-width="5"/><path d="M200 135 v40 a14 14 0 1 0 0.1 0" fill="none" stroke="#0F172A" stroke-width="9"/>
+<text x="200" y="250" text-anchor="middle" font-family="'Space Grotesk',Inter,sans-serif" font-size="20" font-weight="700" fill="#0F172A">Pistons &amp; Rings</text>
+<text x="200" y="274" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#64748B" letter-spacing="1">SPARE XPRESS · DEMO IMAGE</text>
+</svg>

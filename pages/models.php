@@ -64,7 +64,7 @@ include '../includes/navigation.php';
 ?>
 
 <!-- Page Header Start -->
-<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">

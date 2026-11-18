@@ -33,7 +33,7 @@ while ($brand = $brands_query->fetch_assoc()) {
 ?>
 
 <!-- Page Header -->
-<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);">
     <div class="container">
         <h1 class="fw-bold mb-2" style="color:#fff; font-size:clamp(1.3rem,4vw,2rem);">
             <i class="fas fa-tags me-2"></i>Browse Our Brands
@@ -509,7 +509,7 @@ while ($brand = $brands_query->fetch_assoc()) {
                                     ];
 
                                     $logoSrc = $allLogos[$brand['brand_name']] ?? null;
-                                    $brandColor = '#2563eb';
+                                    $brandColor = '#0EA5E9';
                                     ?>
                                     <?php if ($logoSrc): ?>
                                         <img src="<?php echo $logoSrc; ?>"
@@ -664,7 +664,7 @@ while ($brand = $brands_query->fetch_assoc()) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #2563eb;
+    background: #0EA5E9;
     border-radius: 12px;
     color: white;
     font-weight: bold;

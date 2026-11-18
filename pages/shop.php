@@ -15,7 +15,7 @@ spx_jsonld_breadcrumbs([
 ?>
 
 <!-- Page Header -->
-<div class="container-fluid py-4" style="background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);">
+<div class="container-fluid py-4" style="background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -601,7 +601,7 @@ spx_jsonld_breadcrumbs([
 }
 
 .btn-quick-view {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     border: none;
     color: white;
 }
@@ -894,7 +894,7 @@ spx_jsonld_breadcrumbs([
 
 .btn-quick-view {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #0EA5E9 100%);
     border: none;
     color: white;
     font-weight: 600;
@@ -2269,9 +2269,9 @@ function addToCart(productId, productName, price) {
                     <div style="flex:1;min-width:0;">
                         <div style="font-weight:700;font-size:0.85rem;color:#1a1a1a;">Added to Cart!</div>
                         <div style="font-size:0.78rem;color:#6c757d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(productName)}</div>
-                        <div style="font-size:0.82rem;font-weight:600;color:#2563eb;margin-top:2px;">RWF ${Number(price).toLocaleString()}</div>
+                        <div style="font-size:0.82rem;font-weight:600;color:#0EA5E9;margin-top:2px;">RWF ${Number(price).toLocaleString()}</div>
                         <div style="display:flex;gap:8px;margin-top:8px;">
-                            <a href="/pages/cart.php" style="padding:5px 14px;border-radius:6px;background:#2563eb;color:#fff;font-size:0.75rem;font-weight:600;text-decoration:none;">View Cart</a>
+                            <a href="/pages/cart.php" style="padding:5px 14px;border-radius:6px;background:#0EA5E9;color:#fff;font-size:0.75rem;font-weight:600;text-decoration:none;">View Cart</a>
                             <button onclick="this.closest('.toast').remove()" style="padding:5px 14px;border-radius:6px;background:#f0f0f0;color:#333;font-size:0.75rem;font-weight:600;border:none;cursor:pointer;">Continue</button>
                         </div>
                     </div>

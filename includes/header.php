@@ -42,7 +42,7 @@ if (isset($page_canonical)) {
     <!-- Google Web Fonts - Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
@@ -66,6 +66,9 @@ if (isset($page_canonical)) {
 
     <!-- Mobile Responsive -->
     <link href="/css/mobile.css" rel="stylesheet">
+
+    <!-- Brand theme (Electric Modern) — must load last -->
+    <link href="/css/theme.css" rel="stylesheet">
 
     <?php
     // Structured Data - Website SearchAction (on all pages)

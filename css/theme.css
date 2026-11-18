@@ -1,0 +1,163 @@
+/* =====================================================================
+   SPARE XPRESS LTD — "Electric Modern" brand theme
+   Single source of truth for the visual identity. Loaded LAST so it
+   overrides the older token blocks in premium-design.css / style.css.
+   Palette: deep slate base + electric blue accent on clean white.
+   ===================================================================== */
+
+:root {
+    /* --- Brand palette --- */
+    --spx-slate-900: #0F172A;   /* primary dark / hero base / headings */
+    --spx-slate-800: #1E293B;
+    --spx-slate-700: #334155;
+    --spx-ink:        #0F172A;   /* body headings */
+    --spx-body:       #334155;   /* body text */
+    --spx-muted:      #64748B;   /* secondary text */
+
+    --spx-accent:        #0EA5E9; /* primary action (good contrast w/ white) */
+    --spx-accent-600:    #0284C7; /* hover */
+    --spx-accent-700:    #0369A1; /* active */
+    --spx-accent-bright: #2DD4FF; /* glow / gradient highlight */
+    --spx-accent-tint:   #E0F2FE; /* light fill behind accent elements */
+
+    --spx-surface:    #FFFFFF;
+    --spx-surface-2:  #F8FAFC;   /* page background sections */
+    --spx-border:     #E2E8F0;
+
+    --spx-gradient-brand: linear-gradient(135deg, #0F172A 0%, #0C4A6E 55%, #0EA5E9 100%);
+    --spx-gradient-accent: linear-gradient(135deg, #0EA5E9 0%, #2DD4FF 100%);
+    --spx-shadow-accent: 0 10px 30px rgba(14, 165, 233, .25);
+
+    /* --- Re-map the legacy design tokens so var() users flip automatically --- */
+    --primary-dark: var(--spx-slate-900);
+    --primary:      var(--spx-accent);
+    --primary-light:var(--spx-accent-bright);
+    --primary-lighter:#7DD3FC;
+    --gradient-primary: var(--spx-gradient-brand);
+    --gradient-hero:    var(--spx-gradient-brand);
+    --font-primary: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* --- Re-map Bootstrap's CSS variables --- */
+    --bs-primary: var(--spx-accent);
+    --bs-primary-rgb: 14, 165, 233;
+    --bs-secondary: var(--spx-slate-800);
+    --bs-link-color: var(--spx-accent-600);
+    --bs-link-hover-color: var(--spx-accent-700);
+    --bs-body-color: var(--spx-body);
+    --bs-body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* --- Typography --- */
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--spx-body); }
+h1, h2, h3, h4, h5, h6, .fw-bold, .display-1, .display-2, .display-3, .display-4 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    --bs-btn-bg: var(--spx-accent);
+    --bs-btn-border-color: var(--spx-accent);
+    --bs-btn-hover-bg: var(--spx-accent-600);
+    --bs-btn-hover-border-color: var(--spx-accent-600);
+    --bs-btn-active-bg: var(--spx-accent-700);
+    --bs-btn-active-border-color: var(--spx-accent-700);
+    --bs-btn-disabled-bg: var(--spx-accent);
+    --bs-btn-disabled-border-color: var(--spx-accent);
+    box-shadow: var(--spx-shadow-accent);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--spx-accent-600);
+    --bs-btn-border-color: var(--spx-accent);
+    --bs-btn-hover-bg: var(--spx-accent);
+    --bs-btn-hover-border-color: var(--spx-accent);
+    --bs-btn-active-bg: var(--spx-accent-600);
+    --bs-btn-active-border-color: var(--spx-accent-600);
+}
+.btn-secondary, .btn-dark {
+    --bs-btn-bg: var(--spx-slate-800);
+    --bs-btn-border-color: var(--spx-slate-800);
+    --bs-btn-hover-bg: var(--spx-slate-900);
+    --bs-btn-hover-border-color: var(--spx-slate-900);
+}
+.btn { font-weight: 600; border-radius: .65rem; }
+
+/* --- Accent text / backgrounds / badges --- */
+.text-primary { color: var(--spx-accent-600) !important; }
+.bg-primary { background-color: var(--spx-accent) !important; }
+.badge.bg-primary { background-color: var(--spx-accent) !important; }
+a { color: var(--spx-accent-600); }
+a:hover { color: var(--spx-accent-700); }
+
+/* --- Top info bar + navbar chrome --- */
+.bg-dark, .navbar-dark, .spx-topbar { background-color: var(--spx-slate-900) !important; }
+.spx-nav-bar {
+    background: var(--spx-gradient-brand) !important;
+}
+.navbar .nav-link { font-weight: 600; }
+.navbar .nav-link.active,
+.navbar .nav-link:hover { color: var(--spx-accent-bright) !important; }
+
+/* Make the active top-level pill (Home) read as electric, not navy */
+.navbar .nav-link.active {
+    background: rgba(45, 212, 255, .15);
+    border-radius: .5rem;
+}
+
+/* --- Form controls focus --- */
+.form-control:focus, .form-select:focus {
+    border-color: var(--spx-accent);
+    box-shadow: 0 0 0 .2rem rgba(14, 165, 233, .18);
+}
+
+/* --- Cards: slightly softer, consistent radius --- */
+.card { border-radius: .9rem; border-color: var(--spx-border); }
+
+/* --- Footer --- */
+footer, .footer, .site-footer { background-color: var(--spx-slate-900) !important; }
+
+/* --- Floating action buttons (scroll-top / whatsapp) --- */
+.spx-whatsapp-btn { box-shadow: 0 8px 24px rgba(16,185,129,.35); }
+
+/* =====================================================================
+   Premium interactions (Apple-store inspired) — reveal + hover/zoom
+   ===================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    .reveal-up {
+        opacity: 0;
+        transform: translateY(26px);
+        transition: opacity .7s cubic-bezier(.16,1,.3,1),
+                    transform .7s cubic-bezier(.16,1,.3,1);
+        transition-delay: var(--reveal-delay, 0ms);
+        will-change: opacity, transform;
+    }
+    .reveal-up.is-visible { opacity: 1; transform: none; }
+}
+
+/* Product cards: smooth lift + image zoom on hover */
+.product-card,
+.spx-brand-card,
+.spx-cat-card,
+.spx-how-card {
+    transition: transform .45s cubic-bezier(.16,1,.3,1),
+                box-shadow .45s cubic-bezier(.16,1,.3,1),
+                border-color .3s;
+}
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 24px 50px rgba(15,23,42,.16);
+}
+.product-image-container { overflow: hidden; }
+.product-image-container .product-image,
+.product-card img.product-image {
+    transition: transform .6s cubic-bezier(.16,1,.3,1);
+}
+.product-card:hover .product-image { transform: scale(1.07); }
+
+/* Brand / category tiles lift a touch more crisply */
+.spx-brand-card:hover,
+.spx-cat-card:hover { transform: translateY(-6px); }
+
+/* Buttons: subtle press feedback */
+.btn { transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease; }
+.btn:active { transform: translateY(1px); }
